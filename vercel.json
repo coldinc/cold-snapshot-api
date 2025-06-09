@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/latest-snapshot", "dest": "/latest-snapshot.js" },
+    { "src": "/api/new-snapshot", "dest": "/new-snapshot.js" }
+  ]
+}

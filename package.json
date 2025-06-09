@@ -1,7 +1,13 @@
 {
-  "name": "cold-snapshot-api-schema-fixed",
+  "name": "cold-snapshot-api",
   "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "airtable": "^0.11.6"
+    "axios": "^1.6.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2"
   }
 }
