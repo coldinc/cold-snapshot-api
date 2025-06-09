@@ -5,7 +5,7 @@ const base = new Airtable({ apiKey: process.env.AIRTABLE_TOKEN }).base(process.e
 module.exports = async (req, res) => {
   try {
     const records = await base(process.env.AIRTABLE_TABLE_NAME)
-      .select({ sort: [{ field: "Timestamp", direction: "desc" }], maxRecords: 1 })
+      .select({ sort: [{ field: "Date", direction: "desc" }], maxRecords: 1 })
       .firstPage();
     const latest = records.length ? records[0].fields : null;
     res.status(200).json({ snapshot: latest });

@@ -11,7 +11,12 @@ module.exports = async (req, res) => {
     const { content } = req.body;
     if (!content) return res.status(400).json({ error: "Missing snapshot content" });
 
-    await base(process.env.AIRTABLE_TABLE_NAME).create([{ fields: { Content: content, Timestamp: new Date().toISOString() } }]);
+    await base(process.env.AIRTABLE_TABLE_NAME).create([{
+      fields: {
+        "Snapshot Markdown": content,
+        "Date": new Date().toISOString()
+      }
+    }]);
     res.status(200).json({ message: "Snapshot saved" });
   } catch (err) {
     res.status(500).json({ error: "Failed to save snapshot", details: err.message });

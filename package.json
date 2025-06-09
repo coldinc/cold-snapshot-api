@@ -1,5 +1,5 @@
 {
-  "name": "cold-snapshot-api-fixed",
+  "name": "cold-snapshot-api-schema-fixed",
   "version": "1.0.0",
   "dependencies": {
     "airtable": "^0.11.6"
