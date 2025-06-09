@@ -1,8 +1,9 @@
 
 const express = require('express');
+const serverless = require('serverless-http');
 const axios = require('axios');
 const app = express();
-require('dotenv').config();
+
 app.use(express.json());
 
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
@@ -11,7 +12,6 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 
 const airtableURL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
-// Get latest snapshot
 app.get('/latest-snapshot', async (req, res) => {
   try {
     const response = await axios.get(airtableURL, {
@@ -30,7 +30,6 @@ app.get('/latest-snapshot', async (req, res) => {
   }
 });
 
-// Post new snapshot
 app.post('/new-snapshot', async (req, res) => {
   try {
     const { date, markdown, updates, phase, createdBy, tags } = req.body;
@@ -56,3 +55,4 @@ app.post('/new-snapshot', async (req, res) => {
 });
 
 module.exports = app;
+module.exports.handler = serverless(app);
