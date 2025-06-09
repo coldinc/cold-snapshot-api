@@ -13,8 +13,7 @@ module.exports = async (req, res) => {
     const result = await axios.post(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`, {
       records: [{
         fields: {
-          "Snapshot Markdown": content,
-          "Date": new Date().toISOString()
+          "Snapshot Markdown": content
         }
       }]
     }, {
