@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/latest-snapshot", "dest": "/api/latest-snapshot.js" },
+    { "src": "/api/new-snapshot", "dest": "/api/new-snapshot.js" }
+  ]
+}

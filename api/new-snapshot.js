@@ -11,10 +11,12 @@ module.exports = async (req, res) => {
     const tableName = process.env.AIRTABLE_TABLE_NAME;
 
     const result = await axios.post(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`, {
-      fields: {
-        "Snapshot Markdown": content,
-        "Date": new Date().toISOString()
-      }
+      records: [{
+        fields: {
+          "Snapshot Markdown": content,
+          "Date": new Date().toISOString()
+        }
+      }]
     }, {
       headers: {
         Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
@@ -22,7 +24,7 @@ module.exports = async (req, res) => {
       }
     });
 
-    return res.status(200).json({ message: "Snapshot saved", id: result.data.id });
+    return res.status(200).json({ message: "Snapshot saved", id: result.data.records[0].id });
   } catch (error) {
     return res.status(500).json({ error: "Failed to save snapshot", details: error.message });
   }
