@@ -1,13 +1,13 @@
 const axios = require('axios');
 
 module.exports = async (req, res) => {
-  const { content, keyUpdates, phaseId, tags } = req.body;
+  const { content, keyUpdates, phaseId } = req.body;
 
   if (!content) {
     return res.status(400).json({ error: "Missing 'content' in request body" });
   }
 
-  const now = new Date().toISOString().slice(0, 16); // ISO string with HH:mm, no timezone
+  const now = new Date().toISOString().slice(0, 16); // ISO with HH:mm, no TZ
 
   const fields = {
     "Snapshot Markdown": content,
@@ -16,7 +16,6 @@ module.exports = async (req, res) => {
 
   if (keyUpdates) fields["Key Updates"] = keyUpdates;
   if (phaseId) fields["Phase ID"] = phaseId;
-  if (tags && Array.isArray(tags)) fields["Tags"] = tags;
 
   try {
     const baseId = process.env.AIRTABLE_BASE_ID;
