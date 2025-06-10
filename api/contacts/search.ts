@@ -1,12 +1,11 @@
 // /api/contacts/search.ts
 import axios from 'axios';
-import { VercelRequest, VercelResponse } from '@vercel/node';
 
 const searchBaseId = process.env.AIRTABLE_BASE_ID;
 const searchTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: any, res: any) {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
