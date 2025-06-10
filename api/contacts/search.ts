@@ -1,54 +1,53 @@
-// /api/contacts/search.ts
-import axios from 'axios';
+const axios = require('axios');
 
+const searchBaseId = process.env.AIRTABLE_BASE_ID;
+const searchTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
-const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const tableName = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 
-const normalize = (str: string): string => {
+function normalizeString(str: string): string {
   return str
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric characters
+    .replace(/[^a-z0-9]/gi, '') // remove non-alphanumeric characters
     .trim();
-};
+}
+
+function isMatch(a: string, b: string): boolean {
+  return a.includes(b) || b.includes(a);
+}
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   const { name } = req.query;
 
   if (!name) {
-    return res.status(400).json({ error: 'Missing required query parameter: name' });
+    return res.status(400).json({ error: 'Name query parameter is required' });
   }
 
-  if (!airtableBaseId || !tableName) {
-    return res.status(500).json({ error: 'Missing Airtable configuration values' });
-  }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${airtableToken}`,
+    },
+  };
 
-  const normalizedInput = normalize(name as string);
-  const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
+  const url = `https://api.airtable.com/v0/${searchBaseId}/${encodeURIComponent(searchTable)}`;
 
   try {
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${airtableToken}`,
-      },
-    });
+    const response = await axios.get(url, config);
+    const allRecords = response.data.records;
+    const normalizedQuery = normalizeString(name);
 
-    const matchedRecords = response.data.records.filter((record: any) => {
-      const recordName = record.fields.Name || '';
-      return normalize(recordName) === normalizedInput;
+    const matchedRecords = allRecords.filter((record: any) => {
+      const recordName = record.fields?.Name || '';
+      const normalizedRecordName = normalizeString(recordName);
+      return isMatch(normalizedRecordName, normalizedQuery);
     });
 
     if (matchedRecords.length === 0) {
-      return res.status(404).json({ message: 'No matching contacts found' });
+      return res.status(404).json({ error: 'No matching records found' });
     }
 
-    return res.status(200).json(matchedRecords[0]);
+    return res.status(200).json({ records: matchedRecords });
   } catch (error: any) {
-    console.error('API error:', {
+    console.error('Search API error:', {
       message: error.message,
       config: error.config,
       response: error.response?.data,
