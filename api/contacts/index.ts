@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const airtableBaseId = process.env.AIRTABLE_BASE_ID;
 const tableName = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
-const airtableToken = process.env.AIRTABLE_API_KEY;
+const airtableToken = process.env.AIRTABLE_TOKEN;
 
 const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName!)}`;
 

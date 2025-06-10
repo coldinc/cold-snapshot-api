@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const baseId = process.env.AIRTABLE_BASE_ID;
 const contactsTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
-const apiKey = process.env.AIRTABLE_API_KEY;
+const apiKey = process.env.AIRTABLE_TOKEN;
 
 export async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;

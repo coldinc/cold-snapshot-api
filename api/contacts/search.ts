@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const searchBaseId = process.env.AIRTABLE_BASE_ID;
 const searchTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
-const searchToken = process.env.AIRTABLE_API_KEY;
+const searchToken = process.env.AIRTABLE_TOKEN;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { name } = req.query;
