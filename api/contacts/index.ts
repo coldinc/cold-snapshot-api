@@ -24,7 +24,31 @@ module.exports = async function handler(req, res) {
       const newRecord = {
         records: [
           {
-            fields: req.body,
+            const airtableFieldMap = {
+  "Pattern___Match:___Archetype": "Pattern Match: Archetype",
+  "Pattern___Match:___Collaboration": "Pattern Match: Collaboration",
+  "Relationship___Strength": "Relationship Strength",
+  "Relationship___Type": "Relationship Type"
+  // Add others if needed
+};
+
+const transformedFields = {};
+for (const key in req.body) {
+  const airtableKey = airtableFieldMap[key] || key;
+  transformedFields[airtableKey] = req.body[key];
+}
+
+const newRecord = {
+  records: [
+    {
+      fields: transformedFields,
+    },
+  ],
+};
+
+const response = await axios.post(airtableUrl, newRecord, config);
+return res.status(201).json(response.data);
+
           },
         ],
       };
