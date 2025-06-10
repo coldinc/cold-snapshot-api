@@ -1,53 +1,49 @@
-const axios = require('axios');
+// /api/contacts/search.ts
+import axios from 'axios';
 
 const searchBaseId = process.env.AIRTABLE_BASE_ID;
 const searchTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
+const config = {
+  headers: {
+    Authorization: `Bearer ${airtableToken}`,
+  },
+};
+
+// Utility function to normalize names for comparison
 function normalizeString(str: string): string {
   return str
     .toLowerCase()
-    .replace(/[^a-z0-9]/gi, '') // remove non-alphanumeric characters
+    .replace(/[^a-z0-9]/gi, '') // Remove non-alphanumeric
     .trim();
 }
 
-function isMatch(a: string, b: string): boolean {
-  return a.includes(b) || b.includes(a);
+// Fuzzy match using normalization
+function isMatch(input: string, recordName: string): boolean {
+  return normalizeString(recordName).includes(normalizeString(input));
 }
 
 export default async function handler(req: any, res: any) {
-  const name = typeof req.query.name === 'string' ? req.query.name : '';
-
-  if (!name) {
-  return res.status(400).json({ error: 'Name query parameter is required' });
-}
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${airtableToken}`,
-    },
-  };
-
-  const url = `https://api.airtable.com/v0/${searchBaseId}/${encodeURIComponent(searchTable)}`;
-
   try {
-    const response = await axios.get(url, config);
-    const allRecords = response.data.records;
-    const normalizedQuery = normalizeString(name);
+    const rawName = req.query.name;
+    const name = typeof rawName === 'string' ? rawName : '';
 
-    const matchedRecords = allRecords.filter((record: any) => {
-      const recordName = record.fields?.Name || '';
-      const normalizedRecordName = normalizeString(recordName);
-      return isMatch(normalizedRecordName, normalizedQuery);
-    });
-
-    if (matchedRecords.length === 0) {
-      return res.status(404).json({ error: 'No matching records found' });
+    if (!name) {
+      return res.status(400).json({ error: 'Name query parameter is required' });
     }
 
-    return res.status(200).json({ records: matchedRecords });
+    const url = `https://api.airtable.com/v0/${searchBaseId}/${encodeURIComponent(searchTable)}`;
+    const response = await axios.get(url, config);
+
+    const matchingRecords = response.data.records.filter((record: any) => {
+      const recordName = record.fields['Name'];
+      return recordName && isMatch(name, recordName);
+    });
+
+    return res.status(200).json({ matches: matchingRecords });
   } catch (error: any) {
-    console.error('Search API error:', {
+    console.error('API error:', {
       message: error.message,
       config: error.config,
       response: error.response?.data,
