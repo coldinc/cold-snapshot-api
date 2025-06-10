@@ -8,13 +8,14 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "build": "tsc"
   },
   "dependencies": {
     "axios": "^1.6.0"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "@types/node": "^20.4.1"
+    "@types/node": "^20.4.1",
+    "typescript": "^5.8.3"
   }
 }
