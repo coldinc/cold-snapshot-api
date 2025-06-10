@@ -1,40 +1,49 @@
 // /api/contacts/search.ts
 import axios from 'axios';
 
-function normalizeName(name: string): string {
-  return name
+const airtableToken = process.env.AIRTABLE_TOKEN;
+const airtableBaseId = process.env.AIRTABLE_BASE_ID;
+const tableName = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
+
+const normalize = (str: string): string => {
+  return str
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '') // remove non-alphanumeric characters
+    .replace(/[^a-z0-9]/g, '') // Remove non-alphanumeric characters
     .trim();
-}
+};
 
 export default async function handler(req: any, res: any) {
-  const searchBaseId = process.env.AIRTABLE_BASE_ID;
-  const searchTable = encodeURIComponent(process.env.AIRTABLE_CONTACTS_TABLE_NAME || 'Contacts');
-  const airtableToken = process.env.AIRTABLE_TOKEN;
-
-  if (!searchBaseId || !searchTable || !airtableToken) {
-    return res.status(500).json({ error: 'Missing required environment variables' });
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const name = req.query.name as string;
+  const { name } = req.query;
+
   if (!name) {
-    return res.status(400).json({ error: 'Name query parameter is required' });
+    return res.status(400).json({ error: 'Missing required query parameter: name' });
   }
 
-  const normalizedName = normalizeName(name);
+  const normalizedInput = normalize(name as string);
 
-  const url = `https://api.airtable.com/v0/${searchBaseId}/${searchTable}?filterByFormula=SEARCH("${normalizedName}", SUBSTITUTE(LOWER({Name}), " ", ""))`;
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${airtableToken}`,
-    },
-  };
+  const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
 
   try {
-    const response = await axios.get(url, config);
-    return res.status(200).json(response.data);
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${airtableToken}`,
+      },
+    });
+
+    const matchedRecords = response.data.records.filter((record: any) => {
+      const recordName = record.fields.Name || '';
+      return normalize(recordName) === normalizedInput;
+    });
+
+    if (matchedRecords.length === 0) {
+      return res.status(404).json({ message: 'No matching contacts found' });
+    }
+
+    return res.status(200).json(matchedRecords[0]);
   } catch (error: any) {
     console.error('API error:', {
       message: error.message,
