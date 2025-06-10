@@ -1,11 +1,11 @@
 // /api/contacts/[id].ts
-import axios from 'axios';
+const axios = require('axios');
 
 const baseId = process.env.AIRTABLE_BASE_ID;
 const contactsTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const apiKey = process.env.AIRTABLE_TOKEN;
 
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
   const { id } = req.query;
   const config = {
     headers: {
@@ -13,7 +13,7 @@ export default async function handler(req: any, res: any) {
     },
   };
 
-  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(contactsTable!)}/${id}`;
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(contactsTable)}/${id}`;
 
   try {
     if (req.method === 'GET') {
@@ -31,7 +31,7 @@ export default async function handler(req: any, res: any) {
 
     res.setHeader('Allow', ['GET', 'PATCH']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Record error:', {
       message: error.message,
       config: error.config,
@@ -39,4 +39,4 @@ export default async function handler(req: any, res: any) {
     });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};

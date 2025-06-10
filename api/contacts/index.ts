@@ -1,13 +1,13 @@
 // /api/contacts/index.ts
-import axios from 'axios';
+const axios = require('axios');
 
 const airtableBaseId = process.env.AIRTABLE_BASE_ID;
 const tableName = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
-const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName!)}`;
+const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
 
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
@@ -34,7 +34,7 @@ export default async function handler(req: any, res: any) {
 
     res.setHeader('Allow', ['GET', 'POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
-  } catch (error: any) {
+  } catch (error) {
     console.error('API error:', {
       message: error.message,
       config: error.config,
@@ -42,4 +42,4 @@ export default async function handler(req: any, res: any) {
     });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};

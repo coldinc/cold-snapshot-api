@@ -1,11 +1,11 @@
 // /api/contacts/search.ts
-import axios from 'axios';
+const axios = require('axios');
 
 const searchBaseId = process.env.AIRTABLE_BASE_ID;
 const searchTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const searchToken = process.env.AIRTABLE_TOKEN;
 
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req, res) {
   const { name } = req.query;
   const config = {
     headers: {
@@ -14,12 +14,12 @@ export default async function handler(req: any, res: any) {
   };
 
   const formula = `FIND(LOWER('${name}'), LOWER({Name}))`;
-  const url = `https://api.airtable.com/v0/${searchBaseId}/${encodeURIComponent(searchTable!)}?filterByFormula=${encodeURIComponent(formula)}`;
+  const url = `https://api.airtable.com/v0/${searchBaseId}/${encodeURIComponent(searchTable)}?filterByFormula=${encodeURIComponent(formula)}`;
 
   try {
     const response = await axios.get(url, config);
     return res.status(200).json(response.data);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Search error:', {
       message: error.message,
       config: error.config,
@@ -27,4 +27,4 @@ export default async function handler(req: any, res: any) {
     });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
