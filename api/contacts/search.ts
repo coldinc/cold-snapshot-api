@@ -23,8 +23,11 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: 'Missing required query parameter: name' });
   }
 
-  const normalizedInput = normalize(name as string);
+  if (!airtableBaseId || !tableName) {
+    return res.status(500).json({ error: 'Missing Airtable configuration values' });
+  }
 
+  const normalizedInput = normalize(name as string);
   const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
 
   try {
