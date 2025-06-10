@@ -1,12 +1,11 @@
 // /api/contacts/[id].ts
-import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
 const baseId = process.env.AIRTABLE_BASE_ID;
 const contactsTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const apiKey = process.env.AIRTABLE_TOKEN;
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: any, res: any) {
   const { id } = req.query;
   const config = {
     headers: {
@@ -33,7 +32,11 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
     res.setHeader('Allow', ['GET', 'PATCH']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   } catch (error: any) {
-    console.error('Record error:', error.message);
+    console.error('Record error:', {
+      message: error.message,
+      config: error.config,
+      response: error.response?.data,
+    });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }

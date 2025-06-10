@@ -1,5 +1,4 @@
 // /api/contacts/index.ts
-import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
 const airtableBaseId = process.env.AIRTABLE_BASE_ID;
@@ -8,7 +7,7 @@ const airtableToken = process.env.AIRTABLE_TOKEN;
 
 const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName!)}`;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: any, res: any) {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
