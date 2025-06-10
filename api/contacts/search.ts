@@ -16,11 +16,11 @@ function isMatch(a: string, b: string): boolean {
 }
 
 export default async function handler(req: any, res: any) {
-  const { name } = req.query;
+  const name = typeof req.query.name === 'string' ? req.query.name : '';
 
   if (!name) {
-    return res.status(400).json({ error: 'Name query parameter is required' });
-  }
+  return res.status(400).json({ error: 'Name query parameter is required' });
+}
 
   const config = {
     headers: {
