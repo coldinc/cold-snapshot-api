@@ -1,17 +1,21 @@
-// /api/contacts/[id].ts
-const axios = require('axios');
+import axios from 'axios';
 
-const baseId = process.env.AIRTABLE_BASE_ID;
-const contactsTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
-const apiKey = process.env.AIRTABLE_TOKEN;
+export default async function handler(req: any, res: any) {
+  const baseId = process.env.AIRTABLE_BASE_ID || '';
+  const contactsTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME || '';
+  const airtableToken = process.env.AIRTABLE_TOKEN || '';
 
-module.exports = async function handler(req, res) {
-  const { id } = req.query;
   const config = {
     headers: {
-      Authorization: `Bearer ${apiKey}`,
+      Authorization: `Bearer ${airtableToken}`,
+      'Content-Type': 'application/json',
     },
   };
+
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: 'Missing contact ID' });
+  }
 
   const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(contactsTable)}/${id}`;
 
@@ -22,21 +26,23 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.method === 'PATCH') {
-      const updatedRecord = {
-        fields: req.body,
-      };
-      const response = await axios.patch(recordUrl, updatedRecord, config);
+      const response = await axios.patch(
+        recordUrl,
+        { fields: req.body },
+        config
+      );
       return res.status(200).json(response.data);
     }
 
     res.setHeader('Allow', ['GET', 'PATCH']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   } catch (error) {
-    console.error('Record error:', {
-      message: error.message,
-      config: error.config,
-      response: error.response?.data,
+    const err = error as any;
+    console.error('API error:', {
+      message: err.message,
+      config: err.config,
+      response: err.response?.data,
     });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-};
+}

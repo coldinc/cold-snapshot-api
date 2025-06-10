@@ -1,9 +1,9 @@
 import axios from 'axios';
-const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const tableName = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
-const airtableToken = process.env.AIRTABLE_TOKEN;
-const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
 export default async function handler(req, res) {
+    const airtableBaseId = process.env.AIRTABLE_BASE_ID || '';
+    const tableName = process.env.AIRTABLE_CONTACTS_TABLE_NAME || '';
+    const airtableToken = process.env.AIRTABLE_TOKEN || '';
+    const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
     const config = {
         headers: {
             Authorization: `Bearer ${airtableToken}`,
@@ -16,11 +16,13 @@ export default async function handler(req, res) {
             return res.status(200).json(response.data);
         }
         if (req.method === 'POST') {
+            // Field key mappings for Airtable compatibility
             const airtableFieldMap = {
                 "Pattern___Match:___Archetype": "Pattern Match: Archetype",
                 "Pattern___Match:___Collaboration": "Pattern Match: Collaboration",
                 "Relationship___Strength": "Relationship Strength",
-                "Relationship___Type": "Relationship Type"
+                "Relationship___Type": "Relationship Type",
+                // Add others as needed
             };
             const transformedFields = {};
             for (const key in req.body) {
@@ -41,10 +43,11 @@ export default async function handler(req, res) {
         return res.status(405).end(`Method ${req.method} Not Allowed`);
     }
     catch (error) {
+        const err = error;
         console.error('API error:', {
-            message: error.message,
-            config: error.config,
-            response: error.response?.data,
+            message: err.message,
+            config: err.config,
+            response: err.response?.data,
         });
         return res.status(500).json({ error: 'Internal Server Error' });
     }
