@@ -5,6 +5,10 @@ const searchBaseId = process.env.AIRTABLE_BASE_ID;
 const searchTable = process.env.AIRTABLE_CONTACTS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
+if (!searchBaseId || !searchTable || !airtableToken) {
+  throw new Error('Missing required Airtable environment variables');
+}
+
 const config = {
   headers: {
     Authorization: `Bearer ${airtableToken}`,
