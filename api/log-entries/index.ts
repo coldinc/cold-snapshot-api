@@ -1,17 +1,31 @@
-import axios from 'axios';
+// /api/log-entries/index.ts
+
+const axios = require('axios');
 
 const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const tableName = 'Logs';
+const tableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
 const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
 
-export default async function handler(req: any, res: any) {
+module.exports = async function handler(req: any, res: any) {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
       'Content-Type': 'application/json',
     },
+  };
+
+  const airtableFieldMap: Record<string, string> = {
+    "Log___Type": "Log Type",
+    "Content": "Content",
+    "Summary": "Summary",
+    "Date": "Date",
+    "Tags": "Tags",
+    "Follow__Up___Needed": "Follow-up Needed",
+    "Follow__Up___Notes": "Follow-up Notes",
+    "Related___Output": "Related Output",
+    "Contacts___(Linked)": "Contacts (Linked)",
   };
 
   try {
@@ -21,11 +35,10 @@ export default async function handler(req: any, res: any) {
     }
 
     if (req.method === 'POST') {
-      const transformedFields: Record<string, any> = { ...req.body };
-
-      // Ensure linked records are formatted as arrays of record IDs
-      if (transformedFields['Contacts (Linked)'] && !Array.isArray(transformedFields['Contacts (Linked)'])) {
-        transformedFields['Contacts (Linked)'] = [transformedFields['Contacts (Linked)']];
+      const transformedFields: Record<string, any> = {};
+      for (const key in req.body) {
+        const airtableKey = airtableFieldMap[key] || key;
+        transformedFields[airtableKey] = req.body[key];
       }
 
       const newRecord = {
@@ -50,4 +63,4 @@ export default async function handler(req: any, res: any) {
     });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
