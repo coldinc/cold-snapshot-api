@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const logsTableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
+const tableName = 'Logs';
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
-const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(logsTableName!)}`;
+const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
 
 export default async function handler(req: any, res: any) {
   const config = {
@@ -21,9 +21,21 @@ export default async function handler(req: any, res: any) {
     }
 
     if (req.method === 'POST') {
+      const transformedFields: Record<string, any> = { ...req.body };
+
+      // Ensure linked records are formatted as arrays of record IDs
+      if (transformedFields['Contacts (Linked)'] && !Array.isArray(transformedFields['Contacts (Linked)'])) {
+        transformedFields['Contacts (Linked)'] = [transformedFields['Contacts (Linked)']];
+      }
+
       const newRecord = {
-        records: [{ fields: req.body }],
+        records: [
+          {
+            fields: transformedFields,
+          },
+        ],
       };
+
       const response = await axios.post(airtableUrl, newRecord, config);
       return res.status(201).json(response.data);
     }
