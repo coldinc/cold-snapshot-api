@@ -6,7 +6,8 @@ const airtableBaseId = process.env.AIRTABLE_BASE_ID;
 const tableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
-const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
+const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId!}/${encodeURIComponent(tableName!)}`;
+
 
 module.exports = async function handler(req: any, res: any) {
   const config = {
