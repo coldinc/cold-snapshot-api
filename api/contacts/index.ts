@@ -21,32 +21,27 @@ export default async function handler(req: any, res: any) {
     }
 
     if (req.method === 'POST') {
-      // Field key mappings for Airtable compatibility
-      const airtableFieldMap: Record<string, string> = {
-        "Pattern___Match:___Archetype": "Pattern Match: Archetype",
-        "Pattern___Match:___Collaboration": "Pattern Match: Collaboration",
-        "Relationship___Strength": "Relationship Strength",
-        "Relationship___Type": "Relationship Type",
-        // Add others as needed
-      };
-
-      const transformedFields: Record<string, any> = {};
-      for (const key in req.body) {
-        const airtableKey = airtableFieldMap[key] || key;
-        transformedFields[airtableKey] = req.body[key];
+  const airtableData = {
+    records: [
+      {
+        fields: req.body // Send the fields as-is
       }
+    ]
+  };
 
-      const newRecord = {
-        records: [
-          {
-            fields: transformedFields,
-          },
-        ],
-      };
-
-      const response = await axios.post(airtableUrl, newRecord, config);
-      return res.status(201).json(response.data);
+  const response = await axios.post(
+    `https://api.airtable.com/v0/${baseId}/Contacts`,
+    airtableData,
+    {
+      headers: {
+        Authorization: `Bearer ${airtableApiKey}`,
+        'Content-Type': 'application/json'
+      }
     }
+  );
+
+  res.status(201).json(response.data);
+}
 
     res.setHeader('Allow', ['GET', 'POST']);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
