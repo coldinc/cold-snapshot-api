@@ -30,7 +30,7 @@ export default async function handler(req: any, res: any) {
   };
 
   const response = await axios.post(
-    `https://api.airtable.com/v0/${baseId}/Contacts`,
+    `https://api.airtable.com/v0/${airtableBaseId}/Contacts`,
     airtableData,
     {
       headers: {
