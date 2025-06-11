@@ -34,7 +34,7 @@ export default async function handler(req: any, res: any) {
     airtableData,
     {
       headers: {
-        Authorization: `Bearer ${airtableApiKey}`,
+        Authorization: `Bearer ${airtableToken}`,
         'Content-Type': 'application/json'
       }
     }
