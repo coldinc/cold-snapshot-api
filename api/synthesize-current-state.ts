@@ -1,77 +1,73 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import Airtable from 'airtable';
-import { getFieldMap } from '../../lib/resolveFieldMap';
+/** @type {(req: any, res: any) => Promise<void>} */
+const handler = async (req: any, res: any) => {
+  const Airtable = require("airtable");
+  const { getFieldMap } = require("../../lib/resolveFieldMap.js");
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-  process.env.AIRTABLE_BASE_ID as string
-);
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID
+  );
 
-const logsMap = getFieldMap('Cold Logs');
-const contactsMap = getFieldMap('Cold Contacts');
+  const CONTACTS_TABLE = "Contacts";
+  const LOGS_TABLE = "Logs";
+  const SNAPSHOTS_TABLE = "Cold Snapshots";
 
-export default async function synthesizeCurrentState(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', ['GET']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  const contactsMap = getFieldMap(CONTACTS_TABLE);
+  const logsMap = getFieldMap(LOGS_TABLE);
+  const snapshotsMap = getFieldMap(SNAPSHOTS_TABLE);
+
+  if (req.method === "GET") {
+    try {
+      // Fetch latest snapshot (optional, fallback context)
+      const latestSnapshotRecords = await base(SNAPSHOTS_TABLE)
+        .select({
+          sort: [{ field: snapshotsMap["Date"], direction: "desc" }],
+          maxRecords: 1
+        })
+        .all();
+
+      const latestSnapshot = latestSnapshotRecords[0]
+        ? latestSnapshotRecords[0].fields
+        : null;
+
+      // Fetch latest contacts (limit to 10 recent additions or updates)
+      const contactRecords = await base(CONTACTS_TABLE)
+        .select({
+          sort: [{ field: "Last Modified", direction: "desc" }],
+          maxRecords: 10
+        })
+        .all();
+
+      const contacts = contactRecords.map((record) => ({
+        id: record.id,
+        ...record.fields
+      }));
+
+      // Fetch recent logs (limit to 10)
+      const logRecords = await base(LOGS_TABLE)
+        .select({
+          sort: [{ field: logsMap["Date"], direction: "desc" }],
+          maxRecords: 10
+        })
+        .all();
+
+      const logs = logRecords.map((record) => ({
+        id: record.id,
+        ...record.fields
+      }));
+
+      return res.status(200).json({
+        snapshot: latestSnapshot,
+        contacts,
+        logs
+      });
+    } catch (error) {
+      console.error("[SYNTHESIZE ERROR]", error);
+      return res.status(500).json({ error: "Failed to synthesize state" });
+    }
   }
 
-  try {
-    // Step 1: Fetch recent logs (last 14 days)
-    const logsRecords = await base('Cold Logs')
-      .select({
-        filterByFormula: `IS_AFTER({${logsMap['Date']}}, DATEADD(TODAY(), -14, 'days'))`,
-        sort: [{ field: logsMap['Date'], direction: 'desc' }],
-        maxRecords: 25,
-      })
-      .all();
+  res.setHeader("Allow", ["GET"]);
+  return res.status(405).end(`Method ${req.method} Not Allowed`);
+};
 
-    const logsSummary = logsRecords.map((record) => ({
-      id: record.id,
-      date: record.fields[logsMap['Date']],
-      type: record.fields[logsMap['Log Type']],
-      summary: record.fields[logsMap['Summary']],
-      content: record.fields[logsMap['Content']],
-    }));
-
-    // Step 2: Fetch active contacts (strong, warm, or needing followup)
-    const contactFilter = `OR(
-      {${contactsMap['Relationship Strength']}} = 'Strong',
-      {${contactsMap['Relationship Strength']}} = 'Warm',
-      {${contactsMap['Followup Needed']}} = TRUE()
-    )`;
-
-    const contactsRecords = await base('Cold Contacts')
-      .select({
-        filterByFormula: contactFilter,
-        maxRecords: 50,
-      })
-      .all();
-
-    const contactsSummary = contactsRecords.map((record) => ({
-      id: record.id,
-      name: record.fields[contactsMap['Name']],
-      company: record.fields[contactsMap['Company']],
-      role: record.fields[contactsMap['Role']],
-      relationship: record.fields[contactsMap['Relationship Strength']],
-      followupDate: record.fields[contactsMap['Next Followup Date']],
-      followupSummary: record.fields[contactsMap['Followup Summary']],
-    }));
-
-    // Step 3: Compose payload
-    const response = {
-      logsSummary,
-      contactsSummary,
-      emergingPatterns: [], // Optionally computed later by GPT
-      currentPhase: 'P1-B4', // Eventually make dynamic
-      lastUpdated: new Date().toISOString(),
-    };
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.error('[SYNTHESIZE STATE ERROR]', error);
-    return res.status(500).json({ error: 'Failed to synthesize current state' });
-  }
-}
+module.exports = handler;
