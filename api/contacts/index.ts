@@ -11,7 +11,7 @@ export default async function handler(req: any, res: any) {
   const transformFieldsToFieldIds = (input: Record<string, any>) => {
   const transformed: Record<string, any> = {};
   for (const key in input) {
-    const fieldId = (fieldMap.contacts as Record<string, string>)[key] || key;
+    const fieldId = (fieldMap["Contacts"]; as Record<string, string>)[key] || key;
     transformed[fieldId] = input[key];
   }
   return transformed;
