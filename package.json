@@ -12,10 +12,13 @@
     "build": "tsc"
   },
   "dependencies": {
+    "airtable": "^0.12.2",
     "axios": "^1.6.0"
   },
   "devDependencies": {
+    "@types/airtable": "^0.10.0",
     "@types/node": "^20.4.1",
+    "@vercel/node": "^2.3.0",
     "typescript": "^5.8.3"
   }
 }

@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Airtable from 'airtable';
 import fieldMap from '../../lib/fieldMap.json';
 
@@ -8,32 +8,36 @@ const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
 
 const TABLE_NAME = 'Contacts';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'POST') {
     try {
       const logicalInput = req.body;
       const mappedFields: { [key: string]: any } = {};
 
-      // Safely map logical keys to Airtable field IDs
+      // Map logical field names to Airtable field IDs
       for (const [key, value] of Object.entries(logicalInput)) {
-        const fieldId = (fieldMap.contacts || fieldMap)[key];
+        const fieldId = (fieldMap.Contacts || fieldMap)[key];
         if (fieldId) {
           mappedFields[fieldId] = value;
         } else {
-          console.warn(`Field "${key}" not found in fieldMap — skipping`);
+          console.warn(`Unmapped field: ${key}`);
         }
       }
 
-      // Basic validation
-      if (!mappedFields || !Object.values(mappedFields).length) {
-        return res.status(400).json({ error: 'No valid fields provided in request body' });
+      // Validate required fields
+      if (!mappedFields || !mappedFields[(fieldMap.Contacts || fieldMap)['Name']]) {
+        return res.status(400).json({ error: 'Missing required field: Name' });
       }
 
-      const createdRecord = await base(TABLE_NAME).create([{ fields: mappedFields }]);
+      const createdRecords = await base(TABLE_NAME).create([
+        {
+          fields: mappedFields
+        }
+      ]);
 
       return res.status(201).json({
         message: 'Contact created successfully',
-        id: createdRecord[0].id
+        id: createdRecords[0].id
       });
     } catch (error: any) {
       console.error('[Contacts POST Error]', error);
@@ -45,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const records = await base(TABLE_NAME).select().all();
 
-      const contacts = records.map((record) => ({
+      const contacts = records.map((record: Airtable.Record<any>) => ({
         id: record.id,
         ...record.fields
       }));
