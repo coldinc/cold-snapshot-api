@@ -1,8 +1,8 @@
-/** @type {(req: any, res: any) => Promise<void>} */
-const getLatestSnapshotHandler = async (req, res) => {
-  const Airtable = require("airtable");
-  const { getFieldMap } = require("../../lib/resolveFieldMap");
+import { NextApiRequest, NextApiResponse } from "next";
+const Airtable = require("airtable");
+const { getFieldMap } = require("../../lib/resolveFieldMap");
 
+const latestSnapshotHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     process.env.AIRTABLE_BASE_ID
   );
@@ -19,16 +19,12 @@ const getLatestSnapshotHandler = async (req, res) => {
         })
         .all();
 
-      if (records.length === 0) {
-        return res.status(404).json({ error: "No snapshot found" });
-      }
+      const snapshot = records.map((record: any) => ({
+        id: record.id,
+        ...record.fields
+      }));
 
-      const latestSnapshot = {
-        id: records[0].id,
-        ...records[0].fields
-      };
-
-      return res.status(200).json(latestSnapshot);
+      return res.status(200).json(snapshot[0] || null);
     } catch (error) {
       console.error("[Snapshots LATEST Error]", error);
       return res.status(500).json({ error: "Failed to fetch latest snapshot" });
@@ -39,4 +35,4 @@ const getLatestSnapshotHandler = async (req, res) => {
   return res.status(405).end(`Method ${req.method} Not Allowed`);
 };
 
-module.exports = getLatestSnapshotHandler;
+export default latestSnapshotHandler;
