@@ -1,35 +1,39 @@
-import fieldMap from './fieldMap.json';
+const fieldMap = require('./fieldMap.json');
 
 /**
- * Get the field mapping for a specific table.
+ * Gets the field mapping object for a specific table.
+ * @param {string} tableName
+ * @returns {{ [key: string]: string }}
  */
-export function getFieldMap(tableName: string): Record<string, string> {
-  const map = (fieldMap as Record<string, Record<string, string>>)[tableName];
-
-  if (!map) {
-    throw new Error(`No field mapping found for table: ${tableName}`);
-  }
-
-  return map;
+function getFieldMap(tableName: string): { [key: string]: string } {
+  return fieldMap[tableName] || {};
 }
 
 /**
- * Strip any fields from the input that are not in the field mapping.
+ * Filters and maps input fields to Airtable field IDs for a specific table.
+ * @param {{ [key: string]: any }} input
+ * @param {string} tableName
+ * @returns {{ [key: string]: any }}
  */
-export function filterMappedFields(
-  input: Record<string, any>,
+function filterMappedFields(
+  input: { [key: string]: any },
   tableName: string
-): Record<string, any> {
+): { [key: string]: any } {
   const map = getFieldMap(tableName);
-  const result: Record<string, any> = {};
+  const mappedFields: { [key: string]: any } = {};
 
   for (const [key, value] of Object.entries(input)) {
     if (map[key]) {
-      result[map[key]] = value;
+      mappedFields[map[key]] = value;
     } else {
-      console.warn(`[Unmapped Field Warning] '${key}' not found in mapping for '${tableName}'`);
+      console.warn(`Unmapped field: ${key}`);
     }
   }
 
-  return result;
+  return mappedFields;
 }
+
+module.exports = {
+  getFieldMap,
+  filterMappedFields
+};
