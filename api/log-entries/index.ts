@@ -1,17 +1,14 @@
-const Airtable = require('airtable');
-const fieldMap = require('../../lib/fieldMap.json');
-
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-  process.env.AIRTABLE_BASE_ID
-);
-
-const TABLE_NAME = 'Logs';
-
-/**
- * @param {any} req
- * @param {any} res
- */
+/** @type {(req: any, res: any) => Promise<void>} */
 const handler = async (req: any, res: any) => {
+  const Airtable = require('airtable');
+  const fieldMap = require('../../lib/fieldMap.json');
+
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID
+  );
+
+  const TABLE_NAME = 'Logs';
+
   if (req.method === 'POST') {
     try {
       const logicalInput: { [key: string]: any } = req.body;
@@ -27,7 +24,6 @@ const handler = async (req: any, res: any) => {
         }
       }
 
-      // Validate required fields
       if (!mappedFields[logsMap['Log Type']] || !mappedFields[logsMap['Content']]) {
         return res.status(400).json({
           error: 'Missing required fields: Log Type and/or Content'

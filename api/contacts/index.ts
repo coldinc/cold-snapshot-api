@@ -1,17 +1,14 @@
-const Airtable = require('airtable');
-const fieldMap = require('../../lib/fieldMap.json');
-
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-  process.env.AIRTABLE_BASE_ID
-);
-
-const TABLE_NAME = 'Contacts';
-
-/**
- * @param {any} req
- * @param {any} res
- */
+/** @type {(req: any, res: any) => Promise<void>} */
 const handler = async (req: any, res: any) => {
+  const Airtable = require('airtable');
+  const fieldMap = require('../../lib/fieldMap.json');
+
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID
+  );
+
+  const TABLE_NAME = 'Contacts';
+
   if (req.method === 'POST') {
     try {
       const logicalInput: { [key: string]: any } = req.body;
@@ -56,13 +53,4 @@ const handler = async (req: any, res: any) => {
 
       return res.status(200).json(contacts);
     } catch (error) {
-      console.error('[Contacts GET Error]', error);
-      return res.status(500).json({ error: 'Failed to fetch contacts' });
-    }
-  }
-
-  res.setHeader('Allow', ['GET', 'POST']);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
-};
-
-module.exports = handler;
+      console.error('[Contacts GET Error]()
