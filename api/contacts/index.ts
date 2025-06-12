@@ -1,34 +1,52 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import Airtable from 'airtable';
-import { getFieldMap, filterMappedFields } from '../../lib/resolveFieldMap';
+/** @type {(req: any, res: any) => Promise<void>} */
+const contactsHandler = async (req: any, res: any) => {
+  const Airtable = require("airtable");
+  const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY! }).base(
-  process.env.AIRTABLE_BASE_ID!
-);
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
-const TABLE_NAME = 'Contacts';
-const fieldMap = getFieldMap(TABLE_NAME);
+  const TABLE_NAME = "Contacts";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+  if (req.method === "POST") {
   try {
-    const input = req.body;
+    const logicalInput: { [key: string]: any } = req.body;
+    const contactsMap: { [key: string]: string } = getFieldMap("Contacts");
+    const mappedFields = filterMappedFields(logicalInput, "Contacts");
 
-    // Validate required fields
-    if (!input['Name']) {
-      return res.status(400).json({ error: 'Missing required field: Name' });
+    if (!mappedFields[contactsMap["Name"]]) {
+      return res.status(400).json({ error: "Missing required field: Name" });
     }
 
-    const airtableFields = filterMappedFields(input, TABLE_NAME);
+    const createdRecords = await base(TABLE_NAME).create([{ fields: mappedFields }]);
 
-    const createdRecord = await base(TABLE_NAME).create([{ fields: airtableFields }]);
-
-    res.status(201).json({ id: createdRecord[0].id, fields: createdRecord[0].fields });
-  } catch (error: any) {
-    console.error('[Contacts POST Error]', error);
-    res.status(500).json({ error: error.message || 'Unknown error' });
+    return res.status(201).json({
+      message: "Contact created successfully",
+      id: createdRecords[0].id
+    });
+  } catch (error) {
+    console.error("[Contacts POST Error]", error);
+    return res.status(500).json({ error: "Failed to create contact" });
   }
 }
+
+  if (req.method === "GET") {
+    try {
+      const records: any[] = await base(TABLE_NAME).select().all();
+
+      const contacts = records.map((record: any) => ({
+        id: record.id,
+        ...record.fields
+      }));
+
+      return res.status(200).json(contacts);
+    } catch (error) {
+      console.error("[Contacts GET Error]", error);
+      return res.status(500).json({ error: "Failed to fetch contacts" });
+    }
+  }
+
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).end(`Method ${req.method} Not Allowed`);
+};
+
+module.exports = contactsHandler;
