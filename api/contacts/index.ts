@@ -24,50 +24,21 @@ export default async function handler(req: any, res: any) {
     },
   };
 
-  try {
+ try {
     if (req.method === 'GET') {
       const response = await axios.get(airtableUrl, config);
       return res.status(200).json(response.data);
+    } else if (req.method === 'POST') {
+      const transformedFields = transformFieldsToFieldIds(req.body);
+      const newRecord = {
+        records: [{ fields: transformedFields }],
+      };
+      const response = await axios.post(airtableUrl, newRecord, config);
+      return res.status(201).json(response.data);
+    } else {
+      return res.status(405).json({ error: 'Method not allowed' });
     }
-
-    if (req.method === 'POST') {
-  const transformedFields = transformFieldsToFieldIds(req.body);
-
-  const newRecord = {
-    records: [
-      {
-        fields: transformedFields,
-      },
-    ],
-  };
-
-  const response = await axios.post(airtableUrl, newRecord, config);
-  return res.status(201).json(response.data);
-}
-
-  const response = await axios.post(
-    `https://api.airtable.com/v0/${airtableBaseId}/Contacts`,
-    airtableData,
-    {
-      headers: {
-        Authorization: `Bearer ${airtableToken}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-
-  res.status(201).json(response.data);
-}
-
-    res.setHeader('Allow', ['GET', 'POST']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-  } catch (error) {
-    const err = error as any;
-    console.error('API error:', {
-      message: err.message,
-      config: err.config,
-      response: err.response?.data,
-    });
-    return res.status(500).json({ error: 'Internal Server Error' });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 }
