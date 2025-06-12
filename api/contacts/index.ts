@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+const { VercelRequest, VercelResponse } = require('@vercel/node');
 const Airtable = require('airtable');
 const fieldMap = require('../../lib/fieldMap.json');
 
@@ -8,14 +8,13 @@ const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
 
 const TABLE_NAME = 'Contacts';
 
-type FieldMap = { [key: string]: string };
-const contactsMap = fieldMap.Contacts as FieldMap;
-
-const handler = async (req: VercelRequest, res: VercelResponse) => {
+/** @type {(req: typeof VercelRequest, res: typeof VercelResponse) => Promise<void>} */
+const handler = async (req, res) => {
   if (req.method === 'POST') {
     try {
       const logicalInput = req.body;
-      const mappedFields: { [key: string]: any } = {};
+      const contactsMap = fieldMap.Contacts;
+      const mappedFields = {};
 
       for (const [key, value] of Object.entries(logicalInput)) {
         const fieldId = contactsMap[key];
@@ -38,7 +37,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
         message: 'Contact created successfully',
         id: createdRecords[0].id
       });
-    } catch (error: any) {
+    } catch (error) {
       console.error('[Contacts POST Error]', error);
       return res.status(500).json({ error: 'Failed to create contact' });
     }
@@ -47,14 +46,13 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
   if (req.method === 'GET') {
     try {
       const records = await base(TABLE_NAME).select().all();
-
-      const contacts = records.map((record: any) => ({
+      const contacts = records.map((record) => ({
         id: record.id,
         ...record.fields
       }));
 
       return res.status(200).json(contacts);
-    } catch (error: any) {
+    } catch (error) {
       console.error('[Contacts GET Error]', error);
       return res.status(500).json({ error: 'Failed to fetch contacts' });
     }
