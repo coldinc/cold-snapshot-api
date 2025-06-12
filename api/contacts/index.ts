@@ -1,6 +1,10 @@
-const { VercelRequest, VercelResponse } = require('@vercel/node');
 const Airtable = require('airtable');
 const fieldMap = require('../../lib/fieldMap.json');
+
+/**
+ * @typedef {import('@vercel/node').VercelRequest} VercelRequest
+ * @typedef {import('@vercel/node').VercelResponse} VercelResponse
+ */
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
   process.env.AIRTABLE_BASE_ID
@@ -8,13 +12,16 @@ const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
 
 const TABLE_NAME = 'Contacts';
 
-/** @type {(req: typeof VercelRequest, res: typeof VercelResponse) => Promise<void>} */
+/**
+ * @param {VercelRequest} req
+ * @param {VercelResponse} res
+ */
 const handler = async (req, res) => {
   if (req.method === 'POST') {
     try {
       const logicalInput = req.body;
-      const contactsMap = fieldMap.Contacts;
-      const mappedFields = {};
+      const contactsMap = /** @type {{ [key: string]: string }} */ (fieldMap.Contacts);
+      const mappedFields = /** @type {{ [key: string]: any }} */ ({});
 
       for (const [key, value] of Object.entries(logicalInput)) {
         const fieldId = contactsMap[key];
@@ -46,10 +53,13 @@ const handler = async (req, res) => {
   if (req.method === 'GET') {
     try {
       const records = await base(TABLE_NAME).select().all();
-      const contacts = records.map((record) => ({
-        id: record.id,
-        ...record.fields
-      }));
+
+      const contacts = records.map(
+        /** @param {{ id: string, fields: any }} record */ (record) => ({
+          id: record.id,
+          ...record.fields
+        })
+      );
 
       return res.status(200).json(contacts);
     } catch (error) {
