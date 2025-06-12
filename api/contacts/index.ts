@@ -1,12 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Airtable from 'airtable';
-import fieldMap from '../../lib/fieldMap.json';
+import rawFieldMap from '../../lib/fieldMap.json';
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
   process.env.AIRTABLE_BASE_ID as string
 );
 
 const TABLE_NAME = 'Contacts';
+
+// Enable indexing of field map
+type FieldMap = { [key: string]: string };
+const contactsMap = rawFieldMap.Contacts as FieldMap;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'POST') {
@@ -16,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Map logical field names to Airtable field IDs
       for (const [key, value] of Object.entries(logicalInput)) {
-        const fieldId = (fieldMap.Contacts || fieldMap)[key];
+        const fieldId = contactsMap[key];
         if (fieldId) {
           mappedFields[fieldId] = value;
         } else {
@@ -24,8 +28,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
       }
 
-      // Validate required fields
-      if (!mappedFields || !mappedFields[(fieldMap.Contacts || fieldMap)['Name']]) {
+      // Validate required field
+      if (!mappedFields[contactsMap['Name']]) {
         return res.status(400).json({ error: 'Missing required field: Name' });
       }
 
