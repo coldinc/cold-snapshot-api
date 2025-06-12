@@ -1,15 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import Airtable from 'airtable';
-import fieldMapRaw from '../../lib/fieldMap.json';
+const Airtable = require('airtable');
+const fieldMap = require('../../lib/fieldMap.json');
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-  process.env.AIRTABLE_BASE_ID as string
+  process.env.AIRTABLE_BASE_ID
 );
 
 const TABLE_NAME = 'Contacts';
 
 type FieldMap = { [key: string]: string };
-const contactsMap = fieldMapRaw.Contacts as FieldMap;
+const contactsMap = fieldMap.Contacts as FieldMap;
 
 const handler = async (req: VercelRequest, res: VercelResponse) => {
   if (req.method === 'POST') {
@@ -31,9 +31,7 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
       }
 
       const createdRecords = await base(TABLE_NAME).create([
-        {
-          fields: mappedFields
-        }
+        { fields: mappedFields }
       ]);
 
       return res.status(201).json({
@@ -66,4 +64,4 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
   return res.status(405).end(`Method ${req.method} Not Allowed`);
 };
 
-export default handler;
+module.exports = handler;
