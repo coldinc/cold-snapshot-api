@@ -1,5 +1,5 @@
 /** @type {(req: any, res: any) => Promise<void>} */
-const handler = async (req: any, res: any) => {
+const logsHandler = async (req: any, res: any) => {
   const Airtable = require('airtable');
   const fieldMap = require('../../lib/fieldMap.json');
 
@@ -64,4 +64,4 @@ const handler = async (req: any, res: any) => {
   return res.status(405).end(`Method ${req.method} Not Allowed`);
 };
 
-module.exports = handler;
+module.exports = logsHandler;
