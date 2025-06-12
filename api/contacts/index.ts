@@ -1,15 +1,13 @@
 /** @type {(req: any, res: any) => Promise<void>} */
 const handler = async (req: any, res: any) => {
-  const Airtable = require('airtable');
-  const fieldMap = require('../../lib/fieldMap.json');
+  const Airtable = require("airtable");
+  const fieldMap = require("../../lib/fieldMap.json");
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    process.env.AIRTABLE_BASE_ID
-  );
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
-  const TABLE_NAME = 'Contacts';
+  const TABLE_NAME = "Contacts";
 
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     try {
       const logicalInput: { [key: string]: any } = req.body;
       const contactsMap: { [key: string]: string } = fieldMap.Contacts;
@@ -24,25 +22,23 @@ const handler = async (req: any, res: any) => {
         }
       }
 
-      if (!mappedFields[contactsMap['Name']]) {
-        return res.status(400).json({ error: 'Missing required field: Name' });
+      if (!mappedFields[contactsMap["Name"]]) {
+        return res.status(400).json({ error: "Missing required field: Name" });
       }
 
-      const createdRecords = await base(TABLE_NAME).create([
-        { fields: mappedFields }
-      ]);
+      const createdRecords = await base(TABLE_NAME).create([{ fields: mappedFields }]);
 
       return res.status(201).json({
-        message: 'Contact created successfully',
+        message: "Contact created successfully",
         id: createdRecords[0].id
       });
     } catch (error) {
-      console.error('[Contacts POST Error]', error);
-      return res.status(500).json({ error: 'Failed to create contact' });
+      console.error("[Contacts POST Error]", error);
+      return res.status(500).json({ error: "Failed to create contact" });
     }
   }
 
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     try {
       const records: any[] = await base(TABLE_NAME).select().all();
 
@@ -53,4 +49,13 @@ const handler = async (req: any, res: any) => {
 
       return res.status(200).json(contacts);
     } catch (error) {
-      console.error('[Contacts GET Error]()
+      console.error("[Contacts GET Error]", error);
+      return res.status(500).json({ error: "Failed to fetch contacts" });
+    }
+  }
+
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).end(`Method ${req.method} Not Allowed`);
+};
+
+module.exports = handler;
