@@ -1,3 +1,4 @@
+import fieldMap from '../../../lib/fieldMap.json';
 import axios from 'axios';
 
 export default async function handler(req: any, res: any) {
@@ -6,7 +7,16 @@ export default async function handler(req: any, res: any) {
   const airtableToken = process.env.AIRTABLE_TOKEN || '';
 
   const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(tableName)}`;
-
+  
+  const transformFieldsToFieldIds = (input: Record<string, any>) => {
+  const transformed: Record<string, any> = {};
+  for (const key in input) {
+    const fieldId = (fieldMap.contacts as Record<string, string>)[key] || key;
+    transformed[fieldId] = input[key];
+  }
+  return transformed;
+};
+  
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
@@ -21,13 +31,19 @@ export default async function handler(req: any, res: any) {
     }
 
     if (req.method === 'POST') {
-  const airtableData = {
+  const transformedFields = transformFieldsToFieldIds(req.body);
+
+  const newRecord = {
     records: [
       {
-        fields: req.body // Send the fields as-is
-      }
-    ]
+        fields: transformedFields,
+      },
+    ],
   };
+
+  const response = await axios.post(airtableUrl, newRecord, config);
+  return res.status(201).json(response.data);
+}
 
   const response = await axios.post(
     `https://api.airtable.com/v0/${airtableBaseId}/Contacts`,
