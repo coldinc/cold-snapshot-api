@@ -14,25 +14,25 @@ const searchSnapshotsHandler = async (req: any, res: any) => {
     try {
       const { phaseId, date, limit } = req.query;
 
-      const filterConditions: string[] = [];
+      const formulaParts: string[] = [];
 
       if (phaseId) {
-        filterConditions.push(`{${snapshotsMap["Phase ID"]}} = "${phaseId}"`);
+        formulaParts.push(`{${snapshotsMap["Phase ID"]}} = "${phaseId}"`);
       }
 
       if (date) {
-        filterConditions.push(`{${snapshotsMap["Date"]}} = "${date}"`);
+        formulaParts.push(`{${snapshotsMap["Date"]}} = "${date}"`);
       }
 
-      const filterByFormula = filterConditions.length
-        ? `AND(${filterConditions.join(",")})`
-        : undefined;
+      const filterByFormula = formulaParts.length > 1
+        ? `AND(${formulaParts.join(",")})`
+        : formulaParts[0]; // Use raw string if only one condition
 
       const records = await base(TABLE_NAME)
         .select({
-          filterByFormula,
+          ...(filterByFormula && { filterByFormula }),
           sort: [{ field: snapshotsMap["Date"], direction: "desc" }],
-          maxRecords: limit ? parseInt(limit as string) : 1
+          maxRecords: limit ? parseInt(limit as string, 10) : 1
         })
         .all();
 
