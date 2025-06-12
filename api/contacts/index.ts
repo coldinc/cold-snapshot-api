@@ -9,7 +9,7 @@ const TABLE_NAME = "Contacts";
 type FieldMap = { [key: string]: string };
 const contactsMap = fieldMap.Contacts as FieldMap;
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+const handler = async (req: VercelRequest, res: VercelResponse) => {
   if (req.method === "POST") {
     try {
       const logicalInput = req.body;
@@ -62,4 +62,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   res.setHeader("Allow", ["GET", "POST"]);
   return res.status(405).end(`Method ${req.method} Not Allowed`);
-}
+};
+
+module.exports = handler;
