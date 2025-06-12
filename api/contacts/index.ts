@@ -48,7 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       const records = await base(TABLE_NAME).select().all();
 
-      const contacts = records.map((record: Airtable.Record<any>) => ({
+      const contacts = records.map((record: any) => ({
         id: record.id,
         ...record.fields
       }));
