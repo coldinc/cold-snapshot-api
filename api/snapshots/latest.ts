@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
 const Airtable = require("airtable");
 const { getFieldMap } = require("../../lib/resolveFieldMap");
 
-const latestSnapshotHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+/** @type {(req: any, res: any) => Promise<void>} */
+const latestSnapshotHandler = async (req: any, res: any) => {
   const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     process.env.AIRTABLE_BASE_ID
   );
@@ -35,4 +35,4 @@ const latestSnapshotHandler = async (req: NextApiRequest, res: NextApiResponse) 
   return res.status(405).end(`Method ${req.method} Not Allowed`);
 };
 
-export default latestSnapshotHandler;
+module.exports = latestSnapshotHandler;
