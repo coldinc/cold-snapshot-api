@@ -37,7 +37,7 @@ const handler = async (req: any, res: any) => {
         })
         .all();
 
-      const contacts = contactRecords.map((record) => ({
+      const contacts = contactRecords.map((record: any) => ({
         id: record.id,
         ...record.fields
       }));
@@ -50,7 +50,7 @@ const handler = async (req: any, res: any) => {
         })
         .all();
 
-      const logs = logRecords.map((record) => ({
+      const logs = logRecords.map((record: any) => ({
         id: record.id,
         ...record.fields
       }));
