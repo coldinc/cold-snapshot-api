@@ -1,8 +1,10 @@
-const Airtable = require("airtable");
-const { getFieldMap } = require("../../lib/resolveFieldMap");
-
 /** @type {(req: any, res: any) => Promise<void>} */
 const latestSnapshotHandler = async (req: any, res: any) => {
+  const Airtable = require("airtable");
+  const resolveUtils = require("../../lib/resolveFieldMap");
+
+  const getFieldMap = resolveUtils.getFieldMap;
+
   const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
     process.env.AIRTABLE_BASE_ID
   );
