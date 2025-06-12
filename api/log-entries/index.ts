@@ -1,67 +1,71 @@
-// /api/log-entries/index.ts
+const Airtable = require('airtable');
+const fieldMap = require('../../lib/fieldMap.json');
 
-const axios = require('axios');
+const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+  process.env.AIRTABLE_BASE_ID
+);
 
-const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const tableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
-const airtableToken = process.env.AIRTABLE_TOKEN;
+const TABLE_NAME = 'Logs';
 
-const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId!}/${encodeURIComponent(tableName!)}`;
+/**
+ * @param {any} req
+ * @param {any} res
+ */
+const handler = async (req: any, res: any) => {
+  if (req.method === 'POST') {
+    try {
+      const logicalInput: { [key: string]: any } = req.body;
+      const logsMap: { [key: string]: string } = fieldMap.Logs;
+      const mappedFields: { [key: string]: any } = {};
 
-
-module.exports = async function handler(req: any, res: any) {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${airtableToken}`,
-      'Content-Type': 'application/json',
-    },
-  };
-
-  const airtableFieldMap: Record<string, string> = {
-    "Log___Type": "Log Type",
-    "Content": "Content",
-    "Summary": "Summary",
-    "Date": "Date",
-    "Tags": "Tags",
-    "Follow__Up___Needed": "Follow-up Needed",
-    "Follow__Up___Notes": "Follow-up Notes",
-    "Related___Output": "Related Output",
-    "Contacts___(Linked)": "Contacts (Linked)",
-  };
-
-  try {
-    if (req.method === 'GET') {
-      const response = await axios.get(airtableUrl, config);
-      return res.status(200).json(response.data);
-    }
-
-    if (req.method === 'POST') {
-      const transformedFields: Record<string, any> = {};
-      for (const key in req.body) {
-        const airtableKey = airtableFieldMap[key] || key;
-        transformedFields[airtableKey] = req.body[key];
+      for (const [key, value] of Object.entries(logicalInput)) {
+        const fieldId = logsMap[key];
+        if (fieldId) {
+          mappedFields[fieldId] = value;
+        } else {
+          console.warn(`Unmapped field: ${key}`);
+        }
       }
 
-      const newRecord = {
-        records: [
-          {
-            fields: transformedFields,
-          },
-        ],
-      };
+      // Validate required fields
+      if (!mappedFields[logsMap['Log Type']] || !mappedFields[logsMap['Content']]) {
+        return res.status(400).json({
+          error: 'Missing required fields: Log Type and/or Content'
+        });
+      }
 
-      const response = await axios.post(airtableUrl, newRecord, config);
-      return res.status(201).json(response.data);
+      const createdRecords = await base(TABLE_NAME).create([
+        { fields: mappedFields }
+      ]);
+
+      return res.status(201).json({
+        message: 'Log entry created successfully',
+        id: createdRecords[0].id
+      });
+    } catch (error) {
+      console.error('[Logs POST Error]', error);
+      return res.status(500).json({ error: 'Failed to create log entry' });
     }
-
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  } catch (error: any) {
-    console.error('API error:', {
-      message: error.message,
-      config: error.config,
-      response: error.response?.data,
-    });
-    return res.status(500).json({ error: 'Internal Server Error' });
   }
+
+  if (req.method === 'GET') {
+    try {
+      const records: any[] = await base(TABLE_NAME).select().all();
+
+      const logs = records.map((record: any) => ({
+        id: record.id,
+        ...record.fields
+      }));
+
+      return res.status(200).json(logs);
+    } catch (error) {
+      console.error('[Logs GET Error]', error);
+      return res.status(500).json({ error: 'Failed to fetch log entries' });
+    }
+  }
+
+  res.setHeader('Allow', ['GET', 'POST']);
+  return res.status(405).end(`Method ${req.method} Not Allowed`);
 };
+
+module.exports = handler;
