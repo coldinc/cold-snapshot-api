@@ -1,4 +1,4 @@
-import fieldMap from '/lib/fieldMap.json';
+import fieldMap from '../../lib/fieldMap.json';
 import axios from 'axios';
 
 export default async function handler(req: any, res: any) {
