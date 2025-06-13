@@ -1,59 +1,49 @@
-/** @type {(req: any, res: any) => Promise<void>} */
+const axios = require("axios");
+const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
+const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+
 const contactsHandler = async (req: any, res: any) => {
-  const Airtable = require("airtable");
-  const {
-    getFieldMap,
-    filterMappedFields,
-  } = require("../../lib/resolveFieldMap");
+  const tableName = TABLES.CONTACTS;
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    process.env.AIRTABLE_BASE_ID,
-  );
+  const config = {
+    headers: {
+      Authorization: `Bearer ${airtableToken}`,
+      "Content-Type": "application/json",
+    },
+  };
 
-  const TABLE_NAME = "Contacts";
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
 
-  if (req.method === "POST") {
-    try {
-      const logicalInput: { [key: string]: any } = req.body;
-      const contactsMap: { [key: string]: string } = getFieldMap("Contacts");
-      const mappedFields = filterMappedFields(logicalInput, "Contacts");
-
-      if (!mappedFields[contactsMap["Name"]]) {
-        return res.status(400).json({ error: "Missing required field: Name" });
-      }
-
-      const createdRecords = await base(TABLE_NAME).create([
-        { fields: mappedFields },
-      ]);
-
-      return res.status(201).json({
-        message: "Contact created successfully",
-        id: createdRecords[0].id,
-      });
-    } catch (error: any) {
-      console.error("[Contacts POST Error]", error);
-      return res.status(500).json({ error: "Failed to create contact" });
-    }
-  }
-
-  if (req.method === "GET") {
-    try {
-      const records: any[] = await base(TABLE_NAME).select().all();
-
-      const contacts = records.map((record: any) => ({
+  try {
+    if (req.method === "GET") {
+      const response = await axios.get(url, config);
+      const records = response.data.records.map((record: any) => ({
         id: record.id,
         ...record.fields,
       }));
-
-      return res.status(200).json(contacts);
-    } catch (error: any) {
-      console.error("[Contacts GET Error]", error);
-      return res.status(500).json({ error: "Failed to fetch contacts" });
+      return res.status(200).json({ records });
     }
-  }
 
-  res.setHeader("Allow", ["GET", "POST"]);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
+    if (req.method === "POST") {
+      const fieldMap = getFieldMap(tableName);
+      const payload = {
+        fields: filterMappedFields(fieldMap, req.body),
+      };
+
+      const response = await axios.post(url, payload, config);
+      return res.status(201).json(response.data);
+    }
+
+    res.setHeader("Allow", ["GET", "POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error: any) {
+    console.error("Contacts API error:", {
+      message: error.message,
+      config: error.config,
+      response: error.response?.data,
+    });
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 module.exports = contactsHandler;

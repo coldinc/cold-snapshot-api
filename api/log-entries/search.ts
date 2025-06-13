@@ -1,81 +1,51 @@
-/** @type {(req: any, res: any) => Promise<void>} */
 const axios = require("axios");
-const { getFieldMap } = require("../../lib/resolveFieldMap");
+const { baseId, airtableToken, TABLES } = require("../../lib/airtableBase");
 
-const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const logsTableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
-const airtableToken = process.env.AIRTABLE_TOKEN;
+const normalizeString = (str: string): string =>
+  str.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-const logsSearchHandler = async (req: any, res: any) => {
-  const query: { [key: string]: any } = req.query;
-  const { summary, contactId, tag, logType } = query;
+const isMatch = (recordName: string, query: string): boolean =>
+  normalizeString(recordName).includes(normalizeString(query));
 
-  if (!summary && !contactId && !tag && !logType) {
-    return res.status(400).json({
-      error:
-        "At least one query parameter (summary, contactId, tag, logType) must be provided.",
-    });
+const searchLogsHandler = async (req: any, res: any) => {
+  const searchTable = TABLES.LOGS;
+
+  if (!baseId || !searchTable || !airtableToken) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
   }
 
-  const fieldMap = getFieldMap("Logs");
-  const filters: string[] = [];
-
-  if (summary) {
-    filters.push(
-      `FIND(LOWER("${summary.toLowerCase()}"), LOWER({${fieldMap["Summary"]}}))`,
-    );
+  const { summary } = req.query;
+  if (!summary || typeof summary !== "string") {
+    return res.status(400).json({ error: "Missing or invalid summary parameter" });
   }
 
-  if (contactId) {
-  filters.push(
-  `FIND("${contactId}", {${fieldMap["Linked Contact ID"]}})`
-);
-}
-
-  if (tag) {
-  const tags = Array.isArray(tag) ? tag : [tag];
-  tags.forEach((t) => {
-    filters.push(
-      `FIND(LOWER("${t.toLowerCase()}"), LOWER(ARRAYJOIN({${fieldMap["Tags"]}})))`
-    );
-  });
-}
-
-  if (logType) {
-    filters.push(`{${fieldMap["Log Type"]}} = "${logType}"`);
-  }
-
-  const formula =
-    filters.length === 1 ? filters[0] : `AND(${filters.join(",")})`;
-
-  if (!logsTableName) {
-    return res
-      .status(500)
-      .json({ error: "Missing logs table name in env vars" });
-  }
-
-  const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(
-    logsTableName
-  )}?filterByFormula=${encodeURIComponent(formula)}`;
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(searchTable)}`;
 
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
-      "Content-Type": "application/json",
     },
   };
 
   try {
     const response = await axios.get(url, config);
-    return res.status(200).json(response.data);
-  } catch (error: unknown) {
-    const err = error as any;
-    console.error("[Logs Search Error]", {
-      message: err.message,
-      response: err.response?.data,
+    const matchingRecords = response.data.records.filter((record: any) =>
+      isMatch(record.fields?.Summary || "", summary),
+    );
+
+    if (matchingRecords.length === 0) {
+      return res.status(404).json({ message: "No matching log entry found" });
+    }
+
+    return res.status(200).json(matchingRecords);
+  } catch (error: any) {
+    console.error("Search API error:", {
+      message: error.message,
+      config: error.config,
+      response: error.response?.data,
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = logsSearchHandler;
+module.exports = searchLogsHandler;

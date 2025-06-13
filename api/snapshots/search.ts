@@ -1,56 +1,48 @@
-/** @type {(req: any, res: any) => Promise<void>} */
-const searchSnapshotsHandler = async (req: any, res: any) => {
-  const Airtable = require("airtable");
-  const { getFieldMap } = require("../../lib/resolveFieldMap");
+const axios = require("axios");
+const { TABLES } = require("../../lib/airtableBase");
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    process.env.AIRTABLE_BASE_ID,
-  );
+const normalizeString = (str: string): string =>
+  str.toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  const TABLE_NAME = "Cold Snapshots";
-  const snapshotsMap = getFieldMap("Cold Snapshots");
+const isMatch = (recordValue: string, query: string): boolean =>
+  normalizeString(recordValue).includes(normalizeString(query));
 
-  if (req.method === "GET") {
-    try {
-      const { phaseId, date, limit } = req.query;
+const apiSnapshotsSearchHandler = async (req: any, res: any) => {
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const tableName = TABLES.SNAPSHOTS;
+  const airtableToken = process.env.AIRTABLE_TOKEN;
 
-      const formulaParts: string[] = [];
-
-      if (phaseId) {
-        formulaParts.push(`{${snapshotsMap["Phase ID"]}} = "${phaseId}"`);
-      }
-
-      if (date) {
-        formulaParts.push(`{${snapshotsMap["Date"]}} = "${date}"`);
-      }
-
-      const filterByFormula =
-        formulaParts.length > 1
-          ? `AND(${formulaParts.join(",")})`
-          : formulaParts[0]; // Use raw string if only one condition
-
-      const records = await base(TABLE_NAME)
-        .select({
-          ...(filterByFormula && { filterByFormula }),
-          sort: [{ field: snapshotsMap["Date"], direction: "desc" }],
-          maxRecords: limit ? parseInt(limit as string, 10) : 1,
-        })
-        .all();
-
-      const snapshots = records.map((record: any) => ({
-        id: record.id,
-        ...record.fields,
-      }));
-
-      return res.status(200).json(snapshots);
-    } catch (error: any) {
-      console.error("[Snapshots SEARCH Error]", error);
-      return res.status(500).json({ error: "Failed to search snapshots" });
-    }
+  const { query } = req.query;
+  if (!query || typeof query !== "string") {
+    return res.status(400).json({ error: "Missing or invalid query parameter" });
   }
 
-  res.setHeader("Allow", ["GET"]);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${airtableToken}`,
+    },
+  };
+
+  try {
+    const response = await axios.get(url, config);
+    const matchingRecords = response.data.records.filter((record: any) =>
+      isMatch(record.fields?.["Key Updates"] || "", query)
+    );
+
+    if (matchingRecords.length === 0) {
+      return res.status(404).json({ message: "No matching snapshot found" });
+    }
+
+    return res.status(200).json(matchingRecords);
+  } catch (error: any) {
+    console.error("Search API error:", {
+      message: error.message,
+      config: error.config,
+      response: error.response?.data,
+    });
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
-module.exports = searchSnapshotsHandler;
+module.exports = apiSnapshotsSearchHandler;

@@ -1,42 +1,47 @@
-const Airtable = require("airtable");
-const {
-  getFieldMap,
-  filterMappedFields,
-} = require("../../lib/resolveFieldMap");
+const axios = require("axios");
+const { base, TABLES } = require("../../lib/airtableBase");
+const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+const threadIdHandler = async (req: any, res: any) => {
+  const fieldMap = getFieldMap("Threads");
+  const threadsTable = TABLES.Threads;
+  const airtableToken = process.env.AIRTABLE_TOKEN;
+  const baseId = process.env.AIRTABLE_BASE_ID;
 
-const threadByIdHandler = async (req: any, res: any) => {
   const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "Missing thread ID" });
+  }
+
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(threadsTable)}/${id}`;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${airtableToken}`,
+      "Content-Type": "application/json",
+    },
+  };
 
   try {
     if (req.method === "GET") {
-      const record = await base("Threads").find(id);
-      return res.status(200).json({ id: record.id, ...record.fields });
+      const response = await axios.get(recordUrl, config);
+      return res.status(200).json(response.data);
     }
 
     if (req.method === "PATCH") {
-      const updatePayload = Object.entries(req.body).reduce((acc: any, [key, value]) => {
-        const fieldId = fieldMap["Threads"][key];
-        if (fieldId) acc[fieldId] = value;
-        return acc;
-      }, {});
-
-      const updated = await base("Threads").update(id, { fields: updatePayload });
-      return res.status(200).json({ id: updated.id, ...updated.fields });
+      const response = await axios.patch(recordUrl, { fields: req.body }, config);
+      return res.status(200).json(response.data);
     }
 
-    if (req.method === "DELETE") {
-      await base("Threads").destroy(id);
-      return res.status(204).end();
-    }
-
-    res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.setHeader("Allow", ["GET", "PATCH"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   } catch (error: any) {
-    console.error(error);
-    res.status(500).json({ error: error.message || "Internal Server Error" });
+    console.error("API error:", {
+      message: error.message,
+      config: error.config,
+      response: error.response?.data,
+    });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = threadByIdHandler;
+module.exports = threadIdHandler;

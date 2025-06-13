@@ -1,62 +1,41 @@
-/** @type {(req: any, res: any) => Promise<void>} */
+const { base, TABLES } = require("../../lib/airtableBase");
+const {
+  getFieldMap,
+  filterMappedFields,
+} = require("../../lib/resolveFieldMap");
+
 const snapshotsHandler = async (req: any, res: any) => {
-  const Airtable = require("airtable");
-  const {
-    getFieldMap,
-    filterMappedFields,
-  } = require("../../lib/resolveFieldMap");
+  try {
+    const tableName = TABLES.SNAPSHOTS;
+    const fieldMap = getFieldMap(tableName);
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    process.env.AIRTABLE_BASE_ID,
-  );
-
-  const TABLE_NAME = "Cold Snapshots";
-
-  if (req.method === "POST") {
-    try {
-      const logicalInput: { [key: string]: any } = req.body;
-      const snapshotsMap: { [key: string]: string } =
-        getFieldMap("Cold Snapshots");
-      const mappedFields = filterMappedFields(logicalInput, "Cold Snapshots");
-
-      if (!mappedFields[snapshotsMap["Snapshot Markdown"]]) {
-        return res
-          .status(400)
-          .json({ error: "Missing required field: Snapshot Markdown" });
-      }
-
-      const createdRecords = await base(TABLE_NAME).create([
-        { fields: mappedFields },
-      ]);
-
-      return res.status(201).json({
-        message: "Snapshot created successfully",
-        id: createdRecords[0].id,
-      });
-    } catch (error: any) {
-      console.error("[Snapshots POST Error]", error);
-      return res.status(500).json({ error: "Failed to create snapshot" });
-    }
-  }
-
-  if (req.method === "GET") {
-    try {
-      const records: any[] = await base(TABLE_NAME).select().all();
-
-      const snapshots = records.map((record: any) => ({
+    if (req.method === "GET") {
+      const records = await base(tableName).select({}).all();
+      const results = records.map((record) => ({
         id: record.id,
         ...record.fields,
       }));
-
-      return res.status(200).json(snapshots);
-    } catch (error: any) {
-      console.error("[Snapshots GET Error]", error);
-      return res.status(500).json({ error: "Failed to fetch snapshots" });
+      return res.status(200).json({ records: results });
     }
-  }
 
-  res.setHeader("Allow", ["GET", "POST"]);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
+    if (req.method === "POST") {
+      const data = req.body;
+      const createPayload = Object.entries(data).reduce((acc, [key, value]) => {
+        const fieldId = fieldMap[key];
+        if (fieldId) acc[fieldId] = value;
+        return acc;
+      }, {});
+
+      const created = await base(tableName).create([{ fields: createPayload }]);
+      return res.status(201).json({ id: created[0].id, ...created[0].fields });
+    }
+
+    res.setHeader("Allow", ["GET", "POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ error: error.message || "Internal Server Error" });
+  }
 };
 
 module.exports = snapshotsHandler;

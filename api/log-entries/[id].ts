@@ -1,12 +1,14 @@
-import axios from "axios";
+const axios = require("axios");
+const { base, TABLES } = require("../../lib/airtableBase");
+const {
+  getFieldMap,
+  filterMappedFields,
+} = require("../../lib/resolveFieldMap");
 
-const airtableBaseId = process.env.AIRTABLE_BASE_ID;
-const logsTableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
-const airtableToken = process.env.AIRTABLE_TOKEN;
-
-const logsIdHandler = async (req: any, res: any) => {
-  const { id } = req.query;
-  const airtableUrl = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(logsTableName!)}/${id}`;
+const logIdHandler = async (req: any, res: any) => {
+  const tableName = TABLES.LOGS;
+  const airtableToken = process.env.AIRTABLE_TOKEN;
+  const baseId = process.env.AIRTABLE_BASE_ID;
 
   const config = {
     headers: {
@@ -15,23 +17,28 @@ const logsIdHandler = async (req: any, res: any) => {
     },
   };
 
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "Missing log entry ID" });
+  }
+
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(
+    tableName
+  )}/${id}`;
+
   try {
     if (req.method === "GET") {
-      const response = await axios.get(airtableUrl, config);
+      const response = await axios.get(recordUrl, config);
       return res.status(200).json(response.data);
     }
 
     if (req.method === "PATCH") {
-      const response = await axios.patch(
-        airtableUrl,
-        { fields: req.body },
-        config,
-      );
+      const response = await axios.patch(recordUrl, { fields: req.body }, config);
       return res.status(200).json(response.data);
     }
 
     res.setHeader("Allow", ["GET", "PATCH"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   } catch (error: any) {
     console.error("API error:", {
       message: error.message,
@@ -42,4 +49,4 @@ const logsIdHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = logsIdHandler;
+module.exports = logIdHandler;

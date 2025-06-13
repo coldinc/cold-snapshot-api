@@ -1,40 +1,28 @@
-/** @type {(req: any, res: any) => Promise<void>} */
+const { base, TABLES } = require("../../lib/airtableBase");
+
 const latestSnapshotHandler = async (req: any, res: any) => {
-  const Airtable = require("airtable");
-  const resolveUtils = require("../../lib/resolveFieldMap");
+  const tableName = TABLES.SNAPSHOTS;
 
-  const getFieldMap = resolveUtils.getFieldMap;
+  try {
+    const records = await base(tableName)
+      .select({
+        sort: [{ field: "Date", direction: "desc" }],
+        maxRecords: 1,
+      })
+      .firstPage();
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    process.env.AIRTABLE_BASE_ID,
-  );
-
-  const TABLE_NAME = "Cold Snapshots";
-  const snapshotsMap = getFieldMap("Cold Snapshots");
-
-  if (req.method === "GET") {
-    try {
-      const records = await base(TABLE_NAME)
-        .select({
-          sort: [{ field: snapshotsMap["Date"], direction: "desc" }],
-          maxRecords: 1,
-        })
-        .all();
-
-      const snapshot = records.map((record: any) => ({
-        id: record.id,
-        ...record.fields,
-      }));
-
-      return res.status(200).json(snapshot[0] || null);
-    } catch (error: any) {
-      console.error("[Snapshots LATEST Error]", error);
-      return res.status(500).json({ error: "Failed to fetch latest snapshot" });
+    if (!records.length) {
+      return res.status(404).json({ message: "No snapshots found" });
     }
-  }
 
-  res.setHeader("Allow", ["GET"]);
-  return res.status(405).end(`Method ${req.method} Not Allowed`);
+    const latest = records[0];
+    return res.status(200).json({ id: latest.id, ...latest.fields });
+  } catch (error: any) {
+    console.error("Latest Snapshot Error:", {
+      message: error.message,
+    });
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 module.exports = latestSnapshotHandler;
