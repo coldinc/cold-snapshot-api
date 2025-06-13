@@ -1,42 +1,47 @@
-import axios from 'axios';
+/** @type {(req: any, res: any) => Promise<void>} */
+const axios = require('axios');
+const { getFieldMap } = require('../../lib/resolveFieldMap');
 
 const airtableBaseId = process.env.AIRTABLE_BASE_ID;
 const logsTableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
-export default async function handler(req: any, res: any) {
-  const { summary, contactId, tags, logType, startDate, endDate } = req.query;
+const handler = async (req, res) => {
+  const { summary, contactId, tag, logType } = req.query;
 
-  const filters: string[] = [];
-
-  if (summary && typeof summary === 'string') {
-    const summaryFormula = `OR(FIND(LOWER(\"${summary.toLowerCase()}\"), LOWER({Summary})), FIND(LOWER(\"${summary.toLowerCase()}\"), LOWER({Content})))`;
-    filters.push(summaryFormula);
+  if (!summary && !contactId && !tag && !logType) {
+    return res.status(400).json({
+      error: 'At least one query parameter (summary, contactId, tag, logType) must be provided.'
+    });
   }
 
-  if (contactId && typeof contactId === 'string') {
-    filters.push(`FIND(\"${contactId}\", ARRAYJOIN({Contacts (Linked)}))`);
+  const fieldMap = getFieldMap("Logs");
+  const filters = [];
+
+  if (summary) {
+    filters.push(`FIND(LOWER("${summary.toLowerCase()}"), LOWER({${fieldMap["Summary"]}}))`);
   }
 
-  if (tags && Array.isArray(tags)) {
-    const tagFilters = tags.map(tag => `FIND(\"${tag}\", ARRAYJOIN({Tags}))`);
-    filters.push(...tagFilters);
+  if (contactId) {
+    filters.push(`FIND("${contactId}", ARRAYJOIN({${fieldMap["Contacts (Linked)"]}}))`);
   }
 
-  if (logType && typeof logType === 'string') {
-    filters.push(`{Log Type} = \"${logType}\"`);
+  if (tag) {
+    const tags = Array.isArray(tag) ? tag : [tag];
+    tags.forEach(t => {
+      filters.push(`FIND("${t}", ARRAYJOIN({${fieldMap["Tags"]}}))`);
+    });
   }
 
-  if (startDate && endDate) {
-    filters.push(`AND(IS_AFTER({Date}, \"${startDate}\"), IS_BEFORE({Date}, \"${endDate}\"))`);
-  } else if (startDate) {
-    filters.push(`IS_AFTER({Date}, \"${startDate}\")`);
-  } else if (endDate) {
-    filters.push(`IS_BEFORE({Date}, \"${endDate}\")`);
+  if (logType) {
+    filters.push(`{${fieldMap["Log Type"]}} = "${logType}"`);
   }
 
-  const formula = filters.length > 0 ? `AND(${filters.join(',')})` : '';
-  const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(logsTableName!)}${formula ? `?filterByFormula=${encodeURIComponent(formula)}` : ''}`;
+  const formula = filters.length === 1
+    ? filters[0]
+    : `AND(${filters.join(',')})`;
+
+  const url = `https://api.airtable.com/v0/${airtableBaseId}/${encodeURIComponent(logsTableName)}?filterByFormula=${encodeURIComponent(formula)}`;
 
   const config = {
     headers: {
@@ -48,12 +53,13 @@ export default async function handler(req: any, res: any) {
   try {
     const response = await axios.get(url, config);
     return res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error('API error:', {
+  } catch (error) {
+    console.error('[Logs Search Error]', {
       message: error.message,
-      config: error.config,
       response: error.response?.data,
     });
     return res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
+
+module.exports = handler;
