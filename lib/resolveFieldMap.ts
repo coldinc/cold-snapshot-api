@@ -1,11 +1,11 @@
-const fieldMap = require('./fieldMap.json');
+const fieldMap = require("./fieldMap.json");
 
 /**
  * Gets the field mapping object for a specific table.
  * @param {string} tableName
  * @returns {{ [key: string]: string }}
  */
-function getFieldMap(tableName: string): { [key: string]: string } {
+function _getFieldMap(tableName: string): { [key: string]: string } {
   return fieldMap[tableName] || {};
 }
 
@@ -15,11 +15,8 @@ function getFieldMap(tableName: string): { [key: string]: string } {
  * @param {string} tableName
  * @returns {{ [key: string]: any }}
  */
-function filterMappedFields(
-  input: { [key: string]: any },
-  tableName: string
-): { [key: string]: any } {
-  const map = getFieldMap(tableName);
+function filterMappedFields(input: { [key: string]: any }, tableName: string): { [key: string]: any } {
+  const map = _getFieldMap(tableName);
   const mappedFields: { [key: string]: any } = {};
 
   for (const [key, value] of Object.entries(input)) {
@@ -34,6 +31,6 @@ function filterMappedFields(
 }
 
 module.exports = {
-  getFieldMap,
+  getFieldMap: _getFieldMap,
   filterMappedFields
 };

@@ -8,26 +8,26 @@ const contactsHandler = async (req: any, res: any) => {
   const TABLE_NAME = "Contacts";
 
   if (req.method === "POST") {
-  try {
-    const logicalInput: { [key: string]: any } = req.body;
-    const contactsMap: { [key: string]: string } = getFieldMap("Contacts");
-    const mappedFields = filterMappedFields(logicalInput, "Contacts");
+    try {
+      const logicalInput: { [key: string]: any } = req.body;
+      const contactsMap: { [key: string]: string } = getFieldMap("Contacts");
+      const mappedFields = filterMappedFields(logicalInput, "Contacts");
 
-    if (!mappedFields[contactsMap["Name"]]) {
-      return res.status(400).json({ error: "Missing required field: Name" });
+      if (!mappedFields[contactsMap["Name"]]) {
+        return res.status(400).json({ error: "Missing required field: Name" });
+      }
+
+      const createdRecords = await base(TABLE_NAME).create([{ fields: mappedFields }]);
+
+      return res.status(201).json({
+        message: "Contact created successfully",
+        id: createdRecords[0].id
+      });
+    } catch (error: any) {
+      console.error("[Contacts POST Error]", error);
+      return res.status(500).json({ error: "Failed to create contact" });
     }
-
-    const createdRecords = await base(TABLE_NAME).create([{ fields: mappedFields }]);
-
-    return res.status(201).json({
-      message: "Contact created successfully",
-      id: createdRecords[0].id
-    });
-  } catch (error) {
-    console.error("[Contacts POST Error]", error);
-    return res.status(500).json({ error: "Failed to create contact" });
   }
-}
 
   if (req.method === "GET") {
     try {
@@ -39,7 +39,7 @@ const contactsHandler = async (req: any, res: any) => {
       }));
 
       return res.status(200).json(contacts);
-    } catch (error) {
+    } catch (error: any) {
       console.error("[Contacts GET Error]", error);
       return res.status(500).json({ error: "Failed to fetch contacts" });
     }
