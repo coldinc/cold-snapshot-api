@@ -1,6 +1,7 @@
 {
   "name": "cold-snapshot-api",
   "version": "1.0.0",
+  "type": "commonjs",
   "description": "Cold OS backend API for snapshots, contacts, and logs",
   "repository": {
     "type": "git",
