@@ -1,15 +1,14 @@
 {
   "version": 2,
-  "buildCommand": "tsup",
   "functions": {
     "dist/api/**/*.js": {
-      "runtime": "vercel-nodejs@18.0.0"
+      "runtime": "nodejs18.x"
     }
   },
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/dist/api/$1.js"
-    }
+    { "src": "/api/(.*)", "dest": "/dist/api/$1.js" }
+  ],
+  "builds": [
+    { "src": "tsup.config.ts", "use": "@vercel/node" }
   ]
 }
