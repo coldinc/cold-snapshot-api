@@ -1,7 +1,11 @@
 {
   "version": 2,
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
-    { "src": "/api/latest-snapshot", "dest": "/api/latest-snapshot.js" },
-    { "src": "/api/new-snapshot", "dest": "/api/new-snapshot.js" }
+    { "src": "/api/(.*)", "dest": "/dist/api/$1.js" }
   ]
 }
