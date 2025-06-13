@@ -40,6 +40,33 @@
     "Author": "fldxabZWQbu6MUsji",
     "Created At": "fldCT75HeOvPqHBYE",
     "Last Modified": "fldiUJ0eZYZ40cA4o",
+    "Thread (Linked)": "fld3FuchAxvaGY6ox",
+    "Thread ID": "fldkdgyLri6R2onTh",
     "Contacts": "fldo2SWcyRNGaWUNC"
+  },
+  "Threads": {
+    "Name": "fldVrCOKf7nTzaMk0",
+    "Associated Contacts": "fld0WVXMc0iadZdZe",
+    "Associated Logs": "fldLBTnMp0gDpOioS",
+    "Created Date": "fldrRb8aOsyALQBDi",
+    "Description": "fldiPNGUGzjZWDXu4",
+    "Contact ID": "fldG3KXAe9PnqsVbr",
+    "Last Modified": "fld1eips1YOdAsImf",
+    "Link to Outputs": "fldBOzCj0wzSruMj6",
+    "Log ID": "fldHnPZ5ZO3sp6vnK",
+    "Status": "fld3Y6RYpwoUZRHwo",
+    "Thread ID": "fld4ppTzy24bTxF46",
+    "Type": "fld6fmh1kFkUPUuCK"
+  },
+  "Lookup Fields": {
+  "Logs": {
+    "Linked Contact ID": "fldsJHWWRwyGSkpxr",
+    "Thread ID": "fldkdgyLri6R2onTh"
+  },
+  "Threads": {
+    "Contact ID": "fldG3KXAe9PnqsVbr",
+    "Log ID": "fldHnPZ5ZO3sp6vnK"
   }
+}
+
 }
