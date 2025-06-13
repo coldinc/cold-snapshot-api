@@ -1,18 +1,19 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['api/**/*.ts', 'lib/**/*.ts', 'utils/**/*.ts'],
+  entry: ['api/**/*.ts', 'lib/**/*.ts'],
   outDir: 'dist',
   format: ['cjs'],
   target: 'node18',
-  clean: true,
-  splitting: false,
   dts: false,
+  splitting: false,
   sourcemap: true,
-  external: ['openai'],
+  clean: true,
+  shims: false,
   esbuildOptions(options) {
-    options.alias = {
-      '@': './'
-    };
+    options.external = ['openai'] // Mark external to avoid bundling errors
+  },
+  alias: {
+    '@': '.'
   }
-});
+})

@@ -9,8 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "tsup api/**/*.ts lib/**/*.ts --out-dir dist --format cjs --watch",
-    "build": "tsup api/**/*.ts lib/**/*.ts --out-dir dist --format cjs --clean",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
