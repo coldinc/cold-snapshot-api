@@ -1,19 +1,18 @@
-const axios = require("axios");
-const { base, TABLES } = require("../../lib/airtableBase");
-const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
-
-const threadIdHandler = async (req: any, res: any) => {
-  const fieldMap = getFieldMap("Threads");
-  const threadsTable = TABLES.Threads;
-  const airtableToken = process.env.AIRTABLE_TOKEN;
-  const baseId = process.env.AIRTABLE_BASE_ID;
+const idThreadsHandler = async (req: any, res: any) => {
+  const axios = require("axios");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
 
   const { id } = req.query;
   if (!id) {
     return res.status(400).json({ error: "Missing thread ID" });
   }
 
-  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(threadsTable)}/${id}`;
+  if (!airtableToken || !baseId || !TABLES.THREADS) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
+  }
+
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.THREADS)}/${id}`;
+
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
@@ -44,4 +43,4 @@ const threadIdHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = threadIdHandler;
+module.exports = idThreadsHandler;

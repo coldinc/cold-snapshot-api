@@ -1,14 +1,17 @@
-const axios = require("axios");
-const { base, TABLES } = require("../../lib/airtableBase");
-const {
-  getFieldMap,
-  filterMappedFields,
-} = require("../../lib/resolveFieldMap");
+const idLogEntryHandler = async (req: any, res: any) => {
+  const axios = require("axios");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
 
-const logIdHandler = async (req: any, res: any) => {
-  const tableName = TABLES.LOGS;
-  const airtableToken = process.env.AIRTABLE_TOKEN;
-  const baseId = process.env.AIRTABLE_BASE_ID;
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "Missing log entry ID" });
+  }
+
+  if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
+  }
+
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOG_ENTRIES)}/${id}`;
 
   const config = {
     headers: {
@@ -16,15 +19,6 @@ const logIdHandler = async (req: any, res: any) => {
       "Content-Type": "application/json",
     },
   };
-
-  const { id } = req.query;
-  if (!id) {
-    return res.status(400).json({ error: "Missing log entry ID" });
-  }
-
-  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(
-    tableName
-  )}/${id}`;
 
   try {
     if (req.method === "GET") {
@@ -49,4 +43,4 @@ const logIdHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = logIdHandler;
+module.exports = idLogEntryHandler;

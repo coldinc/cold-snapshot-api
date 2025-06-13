@@ -1,19 +1,19 @@
-const axios = require("axios");
-const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
-const {
-  getFieldMap,
-  filterMappedFields,
-} = require("@/lib/resolveFieldMap");
-
 const idContactsHandler = async (req: any, res: any) => {
-  const tableName = TABLES.CONTACTS;
-  const { id } = req.query;
+  const axios = require("axios");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+  const { getFieldMap, filterMappedFields } = require("@/lib/resolveFieldMap");
 
+  const { id } = req.query;
   if (!id) {
     return res.status(400).json({ error: "Missing contact ID" });
   }
 
-  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${id}`;
+  if (!airtableToken || !baseId || !TABLES.CONTACTS) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
+  }
+
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.CONTACTS)}/${id}`;
+
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
