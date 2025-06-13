@@ -1,49 +1,48 @@
-const axios = require("axios");
-const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
-const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+const apiContactsHandler = async (req: any, res: any) => {
+  const { base, TABLES } = require("@/lib/airtableBase");
+  const { getFieldMap, filterMappedFields } = require("@/lib/resolveFieldMap");
 
-const contactsHandler = async (req: any, res: any) => {
   const tableName = TABLES.CONTACTS;
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${airtableToken}`,
-      "Content-Type": "application/json",
-    },
-  };
-
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
 
   try {
     if (req.method === "GET") {
-      const response = await axios.get(url, config);
-      const records = response.data.records.map((record: any) => ({
-        id: record.id,
-        ...record.fields,
-      }));
-      return res.status(200).json({ records });
+      const records: any[] = [];
+      const fieldMap = getFieldMap(tableName);
+
+      await base(tableName)
+        .select({ view: "Grid view" })
+        .eachPage((recordsPage: any[], fetchNextPage: () => void) => {
+          records.push(...recordsPage);
+          fetchNextPage();
+        });
+
+      const filteredRecords = records.map((record) =>
+        filterMappedFields(record, fieldMap)
+      );
+
+      return res.status(200).json(filteredRecords);
     }
 
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);
-      const payload = {
-        fields: filterMappedFields(fieldMap, req.body),
-      };
+      const fields = req.body;
 
-      const response = await axios.post(url, payload, config);
-      return res.status(201).json(response.data);
+      const createdRecord = await base(tableName).create([
+        { fields: filterMappedFields({ fields }, fieldMap) },
+      ]);
+
+      return res.status(201).json(createdRecord);
     }
 
     res.setHeader("Allow", ["GET", "POST"]);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
   } catch (error: any) {
-    console.error("Contacts API error:", {
+    console.error("API error:", {
       message: error.message,
-      config: error.config,
-      response: error.response?.data,
+      stack: error.stack,
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = contactsHandler;
+module.exports = apiContactsHandler;
