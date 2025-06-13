@@ -11,8 +11,8 @@ const logsIdHandler = async (req: any, res: any) => {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   try {
@@ -22,7 +22,11 @@ const logsIdHandler = async (req: any, res: any) => {
     }
 
     if (req.method === "PATCH") {
-      const response = await axios.patch(airtableUrl, { fields: req.body }, config);
+      const response = await axios.patch(
+        airtableUrl,
+        { fields: req.body },
+        config,
+      );
       return res.status(200).json(response.data);
     }
 
@@ -32,7 +36,7 @@ const logsIdHandler = async (req: any, res: any) => {
     console.error("API error:", {
       message: error.message,
       config: error.config,
-      response: error.response?.data
+      response: error.response?.data,
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }

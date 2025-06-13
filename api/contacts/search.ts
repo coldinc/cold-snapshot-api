@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const normalizeString = (str: string): string => str.toLowerCase().replace(/[^a-z0-9]/g, "");
+const normalizeString = (str: string): string =>
+  str.toLowerCase().replace(/[^a-z0-9]/g, "");
 
 const isMatch = (recordName: string, query: string): boolean =>
   normalizeString(recordName).includes(normalizeString(query));
@@ -23,13 +24,15 @@ const apiContactsHandler = async (req: any, res: any) => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${airtableToken}`
-    }
+      Authorization: `Bearer ${airtableToken}`,
+    },
   };
 
   try {
     const response = await axios.get(url, config);
-    const matchingRecords = response.data.records.filter((record: any) => isMatch(record.fields?.Name || "", name));
+    const matchingRecords = response.data.records.filter((record: any) =>
+      isMatch(record.fields?.Name || "", name),
+    );
 
     if (matchingRecords.length === 0) {
       return res.status(404).json({ message: "No matching contact found" });
@@ -40,7 +43,7 @@ const apiContactsHandler = async (req: any, res: any) => {
     console.error("Search API error:", {
       message: error.message,
       config: error.config,
-      response: error.response?.data
+      response: error.response?.data,
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }

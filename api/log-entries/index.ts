@@ -1,9 +1,14 @@
 /** @type {(req: any, res: any) => Promise<void>} */
 const logsHandler = async (req: any, res: any) => {
   const Airtable = require("airtable");
-  const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+  const {
+    getFieldMap,
+    filterMappedFields,
+  } = require("../../lib/resolveFieldMap");
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID,
+  );
 
   const TABLE_NAME = "Logs";
 
@@ -13,17 +18,22 @@ const logsHandler = async (req: any, res: any) => {
       const logsMap: { [key: string]: string } = getFieldMap("Logs");
       const mappedFields = filterMappedFields(logicalInput, "Logs");
 
-      if (!mappedFields[logsMap["Log Type"]] || !mappedFields[logsMap["Content"]]) {
+      if (
+        !mappedFields[logsMap["Log Type"]] ||
+        !mappedFields[logsMap["Content"]]
+      ) {
         return res.status(400).json({
-          error: "Missing required fields: Log Type and/or Content"
+          error: "Missing required fields: Log Type and/or Content",
         });
       }
 
-      const createdRecords = await base(TABLE_NAME).create([{ fields: mappedFields }]);
+      const createdRecords = await base(TABLE_NAME).create([
+        { fields: mappedFields },
+      ]);
 
       return res.status(201).json({
         message: "Log entry created successfully",
-        id: createdRecords[0].id
+        id: createdRecords[0].id,
       });
     } catch (error: any) {
       console.error("[Logs POST Error]", error);
@@ -37,7 +47,7 @@ const logsHandler = async (req: any, res: any) => {
 
       const logs = records.map((record: any) => ({
         id: record.id,
-        ...record.fields
+        ...record.fields,
       }));
 
       return res.status(200).json(logs);

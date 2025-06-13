@@ -8,8 +8,8 @@ const idContactsHandler = async (req: any, res: any) => {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   const { id } = req.query;
@@ -26,7 +26,11 @@ const idContactsHandler = async (req: any, res: any) => {
     }
 
     if (req.method === "PATCH") {
-      const response = await axios.patch(recordUrl, { fields: req.body }, config);
+      const response = await axios.patch(
+        recordUrl,
+        { fields: req.body },
+        config,
+      );
       return res.status(200).json(response.data);
     }
 
@@ -37,7 +41,7 @@ const idContactsHandler = async (req: any, res: any) => {
     console.error("API error:", {
       message: err.message,
       config: err.config,
-      response: err.response?.data
+      response: err.response?.data,
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }

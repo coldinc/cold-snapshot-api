@@ -15,7 +15,10 @@ function _getFieldMap(tableName: string): { [key: string]: string } {
  * @param {string} tableName
  * @returns {{ [key: string]: any }}
  */
-function filterMappedFields(input: { [key: string]: any }, tableName: string): { [key: string]: any } {
+function filterMappedFields(
+  input: { [key: string]: any },
+  tableName: string,
+): { [key: string]: any } {
   const map = _getFieldMap(tableName);
   const mappedFields: { [key: string]: any } = {};
 
@@ -32,5 +35,5 @@ function filterMappedFields(input: { [key: string]: any }, tableName: string): {
 
 module.exports = {
   getFieldMap: _getFieldMap,
-  filterMappedFields
+  filterMappedFields,
 };

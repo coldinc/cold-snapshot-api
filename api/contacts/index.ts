@@ -1,9 +1,14 @@
 /** @type {(req: any, res: any) => Promise<void>} */
 const contactsHandler = async (req: any, res: any) => {
   const Airtable = require("airtable");
-  const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+  const {
+    getFieldMap,
+    filterMappedFields,
+  } = require("../../lib/resolveFieldMap");
 
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID,
+  );
 
   const TABLE_NAME = "Contacts";
 
@@ -17,11 +22,13 @@ const contactsHandler = async (req: any, res: any) => {
         return res.status(400).json({ error: "Missing required field: Name" });
       }
 
-      const createdRecords = await base(TABLE_NAME).create([{ fields: mappedFields }]);
+      const createdRecords = await base(TABLE_NAME).create([
+        { fields: mappedFields },
+      ]);
 
       return res.status(201).json({
         message: "Contact created successfully",
-        id: createdRecords[0].id
+        id: createdRecords[0].id,
       });
     } catch (error: any) {
       console.error("[Contacts POST Error]", error);
@@ -35,7 +42,7 @@ const contactsHandler = async (req: any, res: any) => {
 
       const contacts = records.map((record: any) => ({
         id: record.id,
-        ...record.fields
+        ...record.fields,
       }));
 
       return res.status(200).json(contacts);
