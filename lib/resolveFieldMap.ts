@@ -55,6 +55,7 @@ function filterMappedFields(fields: any, tableName: string): any {
   return mapped;
 }
 
+// ✅ Single export statement at the end (no duplicate declarations above!)
 module.exports = {
   getFieldMap,
   filterMappedFields,
