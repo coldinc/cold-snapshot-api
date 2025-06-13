@@ -1,20 +1,22 @@
-const fieldMap = require('../fieldMap.json');
+const { getFieldMap } = require("@/lib/resolveFieldMap");
 
-function getLookupValue(tableName, fieldKey, record) {
-  const lookupFieldId = fieldMap['Lookup Fields']?.[tableName]?.[fieldKey];
-
-  if (!lookupFieldId) {
-    console.warn(`Lookup field "${fieldKey}" not found for table "${tableName}".`);
-    return undefined;
-  }
-
-  const value = record.fields?.[lookupFieldId];
-
-  if (!value) {
-    console.warn(`No value found in record for lookup field "${fieldKey}" (ID: ${lookupFieldId}).`);
-  }
-
-  return value;
+/**
+ * Retrieves a field value from a given record using the mapped Airtable field name.
+ * @param tableName - Name of the Airtable table (e.g., "Contacts", "Snapshots")
+ * @param fieldKey - Internal key used in Cold OS (e.g., "name", "tags")
+ * @param record - Airtable record object
+ * @returns The field value, or undefined if not found
+ */
+function getLookupValue(
+  tableName: string,
+  fieldKey: string,
+  record: Record<string, any>
+): any {
+  const map = getFieldMap(tableName);
+  const airtableFieldName = map[fieldKey];
+  return airtableFieldName ? record.fields?.[airtableFieldName] : undefined;
 }
 
-module.exports = { getLookupValue };
+module.exports = {
+  getLookupValue,
+};

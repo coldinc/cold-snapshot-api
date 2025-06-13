@@ -1,16 +1,28 @@
 const Airtable = require("airtable");
 
-const getBase = () => {
-  return new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-    process.env.AIRTABLE_BASE_ID
-  );
+const getAirtableContext = () => {
+  const airtableToken = process.env.AIRTABLE_TOKEN;
+  const baseId = process.env.AIRTABLE_BASE_ID;
+
+  if (!airtableToken || !baseId) {
+    throw new Error("Missing Airtable configuration (token or base ID)");
+  }
+
+  const base = new Airtable({ apiKey: airtableToken }).base(baseId);
+
+  const TABLES = {
+    CONTACTS: process.env.AIRTABLE_CONTACTS_TABLE_NAME,
+    LOG_ENTRIES: process.env.AIRTABLE_LOG_ENTRIES_TABLE_NAME,
+    SNAPSHOTS: process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME,
+    THREADS: process.env.AIRTABLE_THREADS_TABLE_NAME,
+  };
+
+  return {
+    airtableToken,
+    baseId,
+    base,
+    TABLES,
+  };
 };
 
-const TABLES = {
-  Contacts: process.env.AIRTABLE_CONTACTS_TABLE_NAME,
-  Logs: process.env.AIRTABLE_LOGS_TABLE_NAME,
-  Snapshots: process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME,
-  Threads: process.env.AIRTABLE_THREADS_TABLE_NAME,
-};
-
-module.exports = { getBase, TABLES };
+module.exports = getAirtableContext;

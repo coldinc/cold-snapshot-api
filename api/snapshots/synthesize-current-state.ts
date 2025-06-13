@@ -1,43 +1,30 @@
-const { base, TABLES } = require("../../../lib/airtableBase");
-const { getFieldMap } = require("../../../lib/resolveFieldMap");
+const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
+  const { base, TABLES } = require("@/lib/airtableBase");
+  const { getFieldMap, filterMappedFields } = require("@/lib/resolveFieldMap");
 
-const synthesizeCurrentState = async (req: any, res: any) => {
-  if (req.method !== "GET") {
-    res.setHeader("Allow", ["GET"]);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+  const tableName = TABLES.SNAPSHOTS;
 
   try {
-    const tableName = TABLES.SNAPSHOTS;
-    const fieldMap = getFieldMap(tableName);
-
     const records = await base(tableName)
-      .select({
-        sort: [{ field: fieldMap["Date"], direction: "desc" }],
-        maxRecords: 1,
-      })
-      .firstPage();
+      .select({ view: "Grid view", sort: [{ field: "Date", direction: "desc" }] })
+      .all();
 
-    if (!records.length) {
+    if (records.length === 0) {
       return res.status(404).json({ error: "No snapshots found" });
     }
 
-    const latestSnapshot = records[0];
-    const snapshotMarkdown = latestSnapshot.fields[fieldMap["Snapshot Markdown"]];
-    const keyUpdates = latestSnapshot.fields[fieldMap["Key Updates"]];
-    const phaseId = latestSnapshot.fields[fieldMap["Phase ID"]];
+    const latestRecord = records[0];
+    const allFields = getFieldMap(tableName);
+    const filtered = filterMappedFields(latestRecord.fields, allFields);
 
-    const response = {
-      snapshot: snapshotMarkdown,
-      keyUpdates,
-      phaseId,
-    };
-
-    return res.status(200).json(response);
+    return res.status(200).json(filtered);
   } catch (error: any) {
-    console.error("Synthesize error:", error);
+    console.error("Synthesize Snapshot Error:", {
+      message: error.message,
+      stack: error.stack,
+    });
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = synthesizeCurrentState;
+module.exports = apiSnapshotsSynthesizeHandler;
