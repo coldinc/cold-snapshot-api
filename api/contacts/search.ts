@@ -1,13 +1,9 @@
-const axios = require("axios");
-const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
-const { normalizeString, isMatch } = require("@/lib/stringUtils");
-
 const apiContactsSearchHandler = async (req: any, res: any) => {
-  const contactsTable = TABLES.CONTACTS;
+  const axios = require("axios");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+  const { normalizeString, isMatch } = require("@/lib/stringUtils");
 
-  if (!airtableToken || !baseId || !contactsTable) {
-    return res.status(500).json({ error: "Missing Airtable configuration" });
-  }
+  const contactsTable = TABLES.CONTACTS;
 
   const { name } = req.query;
   if (!name || typeof name !== "string") {
@@ -15,6 +11,7 @@ const apiContactsSearchHandler = async (req: any, res: any) => {
   }
 
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(contactsTable)}`;
+
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,

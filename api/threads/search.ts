@@ -1,47 +1,46 @@
-const axios = require("axios");
-const { getBase, TABLES } = require("../../lib/airtableBase");
-const { getFieldMap } = require("../../lib/resolveFieldMap");
+const threadsSearchHandler = async (req: any, res: any) => {
+  const axios = require("axios");
+  const { normalizeString, isMatch } = require("@/lib/stringUtils");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+  const { getFieldMap } = require("@/lib/resolveFieldMap");
 
-const handler = async (req: any, res: any) => {
-  const base = getBase();
+  const fieldMap = getFieldMap("Threads");
 
-  const normalizeString = (str: string): string =>
-    str.toLowerCase().replace(/[^a-z0-9]/g, "");
+  if (!airtableToken || !baseId || !TABLES.Threads) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
+  }
 
-  const isMatch = (recordName: string, query: string): boolean =>
-    normalizeString(recordName).includes(normalizeString(query));
+  const { title } = req.query;
+  if (!title || typeof title !== "string") {
+    return res.status(400).json({ error: "Missing or invalid title parameter" });
+  }
+
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.Threads)}`;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${airtableToken}`,
+    },
+  };
 
   try {
-    const { title } = req.query;
-    if (!title || typeof title !== "string") {
-      return res.status(400).json({ error: "Missing or invalid title parameter" });
-    }
-
-    const fieldMap = getFieldMap("Threads");
-    const nameField = fieldMap?.Name;
-
-    const records = await base(TABLES.Threads).select({}).all();
-    const matchingRecords = records.filter((record: any) =>
-      isMatch(record.fields?.[nameField] || "", title),
+    const response = await axios.get(url, config);
+    const matchingRecords = response.data.records.filter((record: any) =>
+      isMatch(record.fields?.[fieldMap["Title"]] || "", title)
     );
 
     if (matchingRecords.length === 0) {
       return res.status(404).json({ message: "No matching thread found" });
     }
 
-    const results = matchingRecords.map((record: any) => ({
-      id: record.id,
-      ...record.fields,
-    }));
-
-    return res.status(200).json(results);
+    return res.status(200).json(matchingRecords);
   } catch (error: any) {
-    console.error("Thread Search API Error:", {
+    console.error("Search API error:", {
       message: error.message,
-      stack: error.stack,
+      config: error.config,
+      response: error.response?.data,
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = handler;
+module.exports = threadsSearchHandler;

@@ -1,23 +1,21 @@
-const axios = require("axios");
-const { TABLES } = require("../../lib/airtableBase");
-
-const normalizeString = (str: string): string =>
-  str.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-const isMatch = (recordValue: string, query: string): boolean =>
-  normalizeString(recordValue).includes(normalizeString(query));
-
 const apiSnapshotsSearchHandler = async (req: any, res: any) => {
-  const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = TABLES.SNAPSHOTS;
-  const airtableToken = process.env.AIRTABLE_TOKEN;
+  const axios = require("axios");
+  const { normalizeString, isMatch } = require("@/lib/stringUtils");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+  const { getFieldMap } = require("@/lib/resolveFieldMap");
+
+  const fieldMap = getFieldMap("Snapshots");
+
+  if (!airtableToken || !baseId || !TABLES.Snapshots) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
+  }
 
   const { query } = req.query;
   if (!query || typeof query !== "string") {
     return res.status(400).json({ error: "Missing or invalid query parameter" });
   }
 
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.Snapshots)}`;
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
@@ -27,7 +25,7 @@ const apiSnapshotsSearchHandler = async (req: any, res: any) => {
   try {
     const response = await axios.get(url, config);
     const matchingRecords = response.data.records.filter((record: any) =>
-      isMatch(record.fields?.["Key Updates"] || "", query)
+      isMatch(record.fields?.[fieldMap["Key Updates"]] || "", query)
     );
 
     if (matchingRecords.length === 0) {

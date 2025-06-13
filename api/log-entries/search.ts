@@ -1,25 +1,18 @@
-const axios = require("axios");
-const { baseId, airtableToken, TABLES } = require("../../lib/airtableBase");
+const apiLogEntriesSearchHandler = async (req: any, res: any) => {
+  const axios = require("axios");
+  const { normalizeString, isMatch } = require("@/lib/stringUtils");
+  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
 
-const normalizeString = (str: string): string =>
-  str.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-const isMatch = (recordName: string, query: string): boolean =>
-  normalizeString(recordName).includes(normalizeString(query));
-
-const searchLogsHandler = async (req: any, res: any) => {
-  const searchTable = TABLES.LOGS;
-
-  if (!baseId || !searchTable || !airtableToken) {
+  if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }
 
-  const { summary } = req.query;
-  if (!summary || typeof summary !== "string") {
-    return res.status(400).json({ error: "Missing or invalid summary parameter" });
+  const { name } = req.query;
+  if (!name || typeof name !== "string") {
+    return res.status(400).json({ error: "Missing or invalid name parameter" });
   }
 
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(searchTable)}`;
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOG_ENTRIES)}`;
 
   const config = {
     headers: {
@@ -30,7 +23,7 @@ const searchLogsHandler = async (req: any, res: any) => {
   try {
     const response = await axios.get(url, config);
     const matchingRecords = response.data.records.filter((record: any) =>
-      isMatch(record.fields?.Summary || "", summary),
+      isMatch(record.fields?.Name || "", name)
     );
 
     if (matchingRecords.length === 0) {
@@ -48,4 +41,4 @@ const searchLogsHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = searchLogsHandler;
+module.exports = apiLogEntriesSearchHandler;
