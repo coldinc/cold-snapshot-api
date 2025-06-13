@@ -1,22 +1,23 @@
-const { getFieldMap } = require("@/lib/resolveFieldMap");
-
-/**
- * Retrieves a field value from a given record using the mapped Airtable field name.
- * @param tableName - Name of the Airtable table (e.g., "Contacts", "Snapshots")
- * @param fieldKey - Internal key used in Cold OS (e.g., "name", "tags")
- * @param record - Airtable record object
- * @returns The field value, or undefined if not found
- */
-function getLookupValue(
+export function getLookupValue(
   tableName: string,
   fieldKey: string,
   record: Record<string, any>
-): any {
-  const map = getFieldMap(tableName);
-  const airtableFieldName = map[fieldKey];
-  return airtableFieldName ? record.fields?.[airtableFieldName] : undefined;
-}
+): string | null {
+  const { getFieldMap } = require("@/lib/resolveFieldMap");
+  const fieldMap = getFieldMap(tableName);
+  const mappedFieldName = fieldMap[fieldKey];
 
-module.exports = {
-  getLookupValue,
-};
+  if (!mappedFieldName || !record.fields) return null;
+
+  const value = record.fields[mappedFieldName];
+
+  if (Array.isArray(value) && value.length === 1 && typeof value[0] === "string") {
+    return value[0]; // e.g., single linked record
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  return null;
+}
