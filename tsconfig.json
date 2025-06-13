@@ -19,7 +19,12 @@
     "allowSyntheticDefaultImports": true,
     "incremental": true,
     "skipLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -30,10 +35,5 @@
     "node_modules",
     ".next",
     "out"
-  ],
-  "paths": {
-    "@/*": [
-      "./*"
-    ]
-  }
+  ]
 }
