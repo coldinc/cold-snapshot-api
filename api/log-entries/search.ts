@@ -33,11 +33,13 @@ const logsSearchHandler = async (req: any, res: any) => {
   }
 
   if (tag) {
-    const tags = Array.isArray(tag) ? tag : [tag];
-    tags.forEach((t) => {
-      filters.push(`FIND("${t}", ARRAYJOIN({${fieldMap["Tags"]}}))`);
-    });
-  }
+  const tags = Array.isArray(tag) ? tag : [tag];
+  tags.forEach((t) => {
+    filters.push(
+      `FIND(LOWER("${t.toLowerCase()}"), LOWER(ARRAYJOIN({${fieldMap["Tags"]}})))`
+    );
+  });
+}
 
   if (logType) {
     filters.push(`{${fieldMap["Log Type"]}} = "${logType}"`);
