@@ -1,59 +1,58 @@
-const fieldMap: Record<string, Record<string, string>> = {
-  Contacts: {
-    name: "Name",
-    email: "Email",
-    role: "Role",
-    company: "Company",
-    notes: "Notes",
-    relationshipStrength: "Relationship Strength",
-    patternMatches: "Pattern Matches",
-    linkedExperiments: "Linked Experiments",
-    tags: "Tags",
-  },
-  "Log Entries": {
-    date: "Date",
-    summary: "Summary",
-    content: "Content",
-    logType: "Log Type",
-    tags: "Tags",
-    contacts: "Contacts (Linked)",
-  },
-  Snapshots: {
-    date: "Date",
-    summary: "Summary",
-    content: "Content",
-    keyUpdates: "Key Updates",
-    phaseId: "Phase ID",
-  },
-  Threads: {
-    date: "Date",
-    summary: "Summary",
-    content: "Content",
-    threadType: "Thread Type",
-    tags: "Tags",
-    linkedExperiments: "Linked Experiments",
-    contacts: "Contacts (Linked)",
-  },
-};
+// lib/resolveFieldMap.ts
 
-function getFieldMap(tableName: string): Record<string, string> {
-  return fieldMap[tableName] || {};
+function getFieldMap(tableName: string): { [key: string]: string } {
+  switch (tableName) {
+    case "Contacts":
+      return {
+        Name: "name",
+        Role: "role",
+        Organisation: "organisation",
+        Email: "email",
+        Tags: "tags",
+        Notes: "notes",
+      };
+    case "Log Entries":
+      return {
+        Date: "date",
+        Summary: "summary",
+        Content: "content",
+        Tags: "tags",
+        "Log Type": "logType",
+        Contacts: "contacts",
+      };
+    case "Snapshots":
+      return {
+        Title: "title",
+        Date: "date",
+        Content: "content",
+        "Key Updates": "keyUpdates",
+        "Phase ID": "phaseId",
+      };
+    case "Threads":
+      return {
+        Title: "title",
+        Summary: "summary",
+        Content: "content",
+        Tags: "tags",
+        Date: "date",
+        Contacts: "contacts",
+        Experiments: "experiments",
+        Outputs: "outputs",
+      };
+    default:
+      return {};
+  }
 }
 
-function filterMappedFields(
-  tableName: string,
-  inputFields: Record<string, any>
-): Record<string, any> {
-  const map = getFieldMap(tableName);
-  const filtered: Record<string, any> = {};
-
-  for (const key in inputFields) {
-    if (map[key]) {
-      filtered[map[key]] = inputFields[key];
+function filterMappedFields(fields: any, tableName: string): any {
+  const fieldMap = getFieldMap(tableName);
+  const mapped: any = {};
+  for (const key in fields) {
+    if (fieldMap[key]) {
+      mapped[fieldMap[key]] = fields[key];
     }
   }
-
-  return filtered;
+  return mapped;
 }
 
 module.exports = {
