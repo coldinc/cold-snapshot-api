@@ -6,8 +6,16 @@ const airtableBaseId = process.env.AIRTABLE_BASE_ID;
 const logsTableName = process.env.AIRTABLE_LOGS_TABLE_NAME;
 const airtableToken = process.env.AIRTABLE_TOKEN;
 
-const logsSearchHandler = async (req: any, res: any) => {
-  const { summary, contactId, tag, logType } = req.query;
+const normalizeArrayParam = (value: string | string[] | undefined): string[] => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+};
+
+const summary = req.query.summary as string;
+const contactId = req.query.contactId as string;
+const logType = req.query.logType as string;
+const tags = normalizeArrayParam(req.query.tags || req.query.tag || req.query['tags[]']);
+
 
   if (!summary && !contactId && !tag && !logType) {
     return res.status(400).json({
