@@ -1,21 +1,20 @@
 const axios = require("axios");
-const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
-
-const normalizeString = (str: string): string =>
-  str.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-const isMatch = (recordName: string, query: string): boolean =>
-  normalizeString(recordName).includes(normalizeString(query));
+const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+const { normalizeString, isMatch } = require("@/lib/stringUtils");
 
 const apiContactsSearchHandler = async (req: any, res: any) => {
-  const tableName = TABLES.CONTACTS;
-  const { name } = req.query;
+  const contactsTable = TABLES.CONTACTS;
 
+  if (!airtableToken || !baseId || !contactsTable) {
+    return res.status(500).json({ error: "Missing Airtable configuration" });
+  }
+
+  const { name } = req.query;
   if (!name || typeof name !== "string") {
     return res.status(400).json({ error: "Missing or invalid name parameter" });
   }
 
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(contactsTable)}`;
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
@@ -25,7 +24,7 @@ const apiContactsSearchHandler = async (req: any, res: any) => {
   try {
     const response = await axios.get(url, config);
     const matchingRecords = response.data.records.filter((record: any) =>
-      isMatch(record.fields?.Name || "", name),
+      isMatch(record.fields?.Name || "", name)
     );
 
     if (matchingRecords.length === 0) {

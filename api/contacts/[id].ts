@@ -1,9 +1,9 @@
 const axios = require("axios");
-const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
+const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
 const {
   getFieldMap,
   filterMappedFields,
-} = require("../../lib/resolveFieldMap");
+} = require("@/lib/resolveFieldMap");
 
 const idContactsHandler = async (req: any, res: any) => {
   const tableName = TABLES.CONTACTS;
