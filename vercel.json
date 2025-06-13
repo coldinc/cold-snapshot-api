@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "tsup",
   "functions": {
     "dist/api/**/*.js": {
       "runtime": "vercel-nodejs@18.0.0"
