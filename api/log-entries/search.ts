@@ -28,8 +28,8 @@ const logsSearchHandler = async (req: any, res: any) => {
 
   if (contactId) {
   filters.push(
-    `FIND("${contactId}", ARRAYJOIN({${fieldMap["Contacts (Linked)"]}}, ","))`
-  );
+  `FIND("${contactId}", {${fieldMap["Linked Contact ID"]}})`
+);
 }
 
   if (tag) {
