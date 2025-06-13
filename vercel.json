@@ -5,7 +5,17 @@
       "runtime": "nodejs18.x"
     }
   },
+  "builds": [
+    {
+      "src": "dist/api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/dist/api/$1.js" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/dist/api/$1.js"
+    }
   ]
 }
+
