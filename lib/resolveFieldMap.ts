@@ -1,5 +1,3 @@
-// lib/resolveFieldMap.ts
-
 function getFieldMap(tableName: string): { [key: string]: string } {
   switch (tableName) {
     case "Contacts":
@@ -44,9 +42,9 @@ function getFieldMap(tableName: string): { [key: string]: string } {
   }
 }
 
-function filterMappedFields(fields: any, tableName: string): any {
+function filterMappedFields(fields: Record<string, any>, tableName: string): Record<string, any> {
   const fieldMap = getFieldMap(tableName);
-  const mapped: any = {};
+  const mapped: Record<string, any> = {};
   for (const key in fields) {
     if (fieldMap[key]) {
       mapped[fieldMap[key]] = fields[key];
@@ -55,8 +53,4 @@ function filterMappedFields(fields: any, tableName: string): any {
   return mapped;
 }
 
-// ✅ Single export statement at the end (no duplicate declarations above!)
-module.exports = {
-  getFieldMap,
-  filterMappedFields,
-};
+export { getFieldMap, filterMappedFields };
