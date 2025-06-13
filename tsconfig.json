@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "strict": true,
     "noImplicitAny": true,
@@ -14,8 +18,22 @@
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "."
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".next", "out"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out"
+  ],
+  "paths": {
+    "@/*": [
+      "./*"
+    ]
+  }
 }
