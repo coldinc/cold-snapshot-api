@@ -4,9 +4,9 @@ export default async function apiSynthesizeThreadHandler(req: any, res: any) {
   }
 
   const axios = require("axios");
-  const { base, TABLES } = require("@/lib/airtableBase");
-  const { getFieldMap } = require("@/lib/resolveFieldMap");
-  const { buildSynthesisPrompt, runGPTSynthesis } = require("@/lib/synthesisUtils");
+  const { base, TABLES } = require("../../lib/airtableBase");
+  const { getFieldMap } = require("../../lib/resolveFieldMap");
+  const { buildSynthesisPrompt, runGPTSynthesis } = require("../../lib/synthesisUtils");
 
   try {
     const { threadId } = req.body;

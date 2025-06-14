@@ -1,7 +1,7 @@
 const apiLogEntriesSearchHandler = async (req: any, res: any) => {
   const axios = require("axios");
-  const { normalizeString, isMatch } = require("@/lib/stringUtils");
-  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+  const { normalizeString, isMatch } = require("../../lib/stringUtils");
+  const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
 
   if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
     return res.status(500).json({ error: "Missing Airtable configuration" });

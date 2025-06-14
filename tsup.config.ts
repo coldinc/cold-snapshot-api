@@ -16,6 +16,6 @@ export default defineConfig({
     options.external.push('openai') // Safely mark as external
   },
   alias: {
-    '@': join(__dirname)
+    '@': join(__dirname, './')
   }
 })

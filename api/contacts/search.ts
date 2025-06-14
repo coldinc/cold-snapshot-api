@@ -1,7 +1,7 @@
 const apiContactsSearchHandler = async (req: any, res: any) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
-  const { normalizeString, isMatch } = require("@/lib/stringUtils");
+  const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
+  const { normalizeString, isMatch } = require("../../lib/stringUtils");
 
   const contactsTable = TABLES.CONTACTS;
 

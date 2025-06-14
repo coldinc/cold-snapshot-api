@@ -3,7 +3,7 @@ export function getLookupValue(
   fieldKey: string,
   record: Record<string, any>
 ): string | null {
-  const { getFieldMap } = require("@/lib/resolveFieldMap");
+  const { getFieldMap } = require("../lib/resolveFieldMap");
   const fieldMap = getFieldMap(tableName);
   const mappedFieldName = fieldMap[fieldKey];
 

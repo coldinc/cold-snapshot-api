@@ -1,5 +1,5 @@
 const apiSnapshotsLatestHandler = async (req: any, res: any) => {
-  const { base, TABLES } = require("@/lib/airtableBase");
+  const { base, TABLES } = require("../../lib/airtableBase");
 
   const tableName = TABLES.SNAPSHOTS;
 

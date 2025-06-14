@@ -1,6 +1,6 @@
 const idThreadsHandler = async (req: any, res: any) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
+  const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
 
   const { id } = req.query;
   if (!id) {

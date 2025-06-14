@@ -1,6 +1,6 @@
 async function synthesizeThreadNarrative(threadId: string) {
-  const { base, TABLES } = require("@/lib/airtableBase");
-  const { getFieldMap } = require("@/lib/resolveFieldMap");
+  const { base, TABLES } = require("../lib/airtableBase");
+  const { getFieldMap } = require("../lib/resolveFieldMap");
   const OpenAI = require("openai");
 
   const openai = new OpenAI({

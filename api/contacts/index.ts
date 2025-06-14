@@ -1,6 +1,6 @@
 const apiContactsHandler = async (req: any, res: any) => {
-  const { base, TABLES } = require("@/lib/airtableBase");
-  const { getFieldMap, filterMappedFields } = require("@/lib/resolveFieldMap");
+  const { base, TABLES } = require("../../lib/airtableBase");
+  const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
   const tableName = TABLES.CONTACTS;
 

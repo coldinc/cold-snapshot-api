@@ -1,7 +1,7 @@
 const idContactsHandler = async (req: any, res: any) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require("@/lib/airtableBase");
-  const { getFieldMap, filterMappedFields } = require("@/lib/resolveFieldMap");
+  const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
+  const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
   const { id } = req.query;
   if (!id) {
