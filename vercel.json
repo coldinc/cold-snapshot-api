@@ -1,14 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "api/**/*.js": {
+    "dist/api/**/*.js": {
       "runtime": "nodejs18.x"
     }
   },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/$1.js"
+      "dest": "/dist/api/$1.js"
     }
   ]
 }
