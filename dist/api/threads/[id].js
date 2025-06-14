@@ -6724,7 +6724,8 @@ var require_airtableBase = __commonJS({
 // api/threads/[id].ts
 var idThreadsHandler = async (req, res) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { id } = req.query;
   if (!id) {
     return res.status(400).json({ error: "Missing thread ID" });
