@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup'
+import { join } from 'path'
 
 export default defineConfig({
   entry: ['api/**/*.ts', 'lib/**/*.ts', 'utils/**/*.ts'],
@@ -15,6 +16,6 @@ export default defineConfig({
     options.external.push('openai') // Safely mark as external
   },
   alias: {
-    '@': './' // ✅ Add explicit './' for clarity
+    '@': join(__dirname)
   }
 })
