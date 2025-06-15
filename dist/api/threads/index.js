@@ -6729,41 +6729,41 @@ var require_resolveFieldMap = __commonJS({
       switch (tableName) {
         case "Contacts":
           return {
-            Name: "name",
-            Role: "role",
-            Organisation: "organisation",
-            Email: "email",
-            Tags: "tags",
-            Notes: "notes"
+            name: "Name",
+            role: "Role",
+            organisation: "Organisation",
+            email: "Email",
+            tags: "Tags",
+            notes: "Notes"
           };
         case "Logs":
           return {
-            Date: "date",
-            Summary: "summary",
-            Content: "content",
-            Tags: "tags",
-            "Log Type": "logType",
-            Contacts: "contacts",
-            "Thread ID": "threadId"
+            date: "Date",
+            summary: "Summary",
+            content: "Content",
+            tags: "Tags",
+            logType: "Log Type",
+            contacts: "Contacts",
+            threadId: "Thread ID"
           };
         case "Snapshots":
           return {
-            Title: "title",
-            Date: "date",
-            Content: "content",
-            "Key Updates": "keyUpdates",
-            "Phase ID": "phaseId"
+            title: "Title",
+            date: "Date",
+            content: "Content",
+            keyUpdates: "Key Updates",
+            phaseId: "Phase ID"
           };
         case "Threads":
           return {
-            Title: "title",
-            Summary: "summary",
-            Content: "content",
-            Tags: "tags",
-            Date: "date",
-            Contacts: "contacts",
-            Experiments: "experiments",
-            Outputs: "outputs"
+            title: "Title",
+            summary: "Summary",
+            content: "Content",
+            tags: "Tags",
+            date: "Date",
+            contacts: "Contacts",
+            experiments: "Experiments",
+            outputs: "Outputs"
           };
         default:
           return {};
@@ -6772,9 +6772,10 @@ var require_resolveFieldMap = __commonJS({
     function filterMappedFields(fields, tableName) {
       const fieldMap = getFieldMap(tableName);
       const mapped = {};
-      for (const key in fields) {
-        if (fieldMap[key]) {
-          mapped[fieldMap[key]] = fields[key];
+      for (const internalKey in fieldMap) {
+        const airtableField = fieldMap[internalKey];
+        if (fields[airtableField] !== void 0) {
+          mapped[internalKey] = fields[airtableField];
         }
       }
       return mapped;
