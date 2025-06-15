@@ -1,23 +1,21 @@
-export function getLookupValue(
-  tableName: string,
-  fieldKey: string,
-  record: Record<string, any>
-): string | null {
-  const { getFieldMap } = require("../lib/resolveFieldMap");
-  const fieldMap = getFieldMap(tableName);
-  const mappedFieldName = fieldMap[fieldKey];
+export function getLookupValue(tableName: string, fieldKey: string, record: Record<string, any>): string | null {
+    const getAirtableContext = require("../lib/airtableBase");
+    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
-  if (!mappedFieldName || !record.fields) return null;
+    const fieldMap = getFieldMap(tableName);
+    const mappedFieldName = fieldMap[fieldKey];
 
-  const value = record.fields[mappedFieldName];
+    if (!mappedFieldName || !record.fields) return null;
 
-  if (Array.isArray(value) && value.length === 1 && typeof value[0] === "string") {
-    return value[0]; // e.g., single linked record
-  }
+    const value = record.fields[mappedFieldName];
 
-  if (typeof value === "string") {
-    return value;
-  }
+    if (Array.isArray(value) && value.length === 1 && typeof value[0] === "string") {
+        return value[0]; // e.g., single linked record
+    }
 
-  return null;
+    if (typeof value === "string") {
+        return value;
+    }
+
+    return null;
 }

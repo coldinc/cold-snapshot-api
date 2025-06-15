@@ -6788,7 +6788,8 @@ var init_resolveFieldMap = __esm({
 
 // api/log-entries/index.ts
 var apiLogEntriesHandler = async (req, res) => {
-  const { base, TABLES } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap: getFieldMap2, filterMappedFields: filterMappedFields2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
   const tableName = TABLES.LOG_ENTRIES;
   try {
@@ -6799,17 +6800,13 @@ var apiLogEntriesHandler = async (req, res) => {
         records.push(...recordsPage);
         fetchNextPage();
       });
-      const filteredRecords = records.map(
-        (record) => filterMappedFields2(record, fieldMap)
-      );
+      const filteredRecords = records.map((record) => filterMappedFields2(record, fieldMap));
       return res.status(200).json(filteredRecords);
     }
     if (req.method === "POST") {
       const fieldMap = getFieldMap2(tableName);
       const fields = req.body;
-      const createdRecord = await base(tableName).create([
-        { fields: filterMappedFields2({ fields }, fieldMap) }
-      ]);
+      const createdRecord = await base(tableName).create([{ fields: filterMappedFields2({ fields }, fieldMap) }]);
       return res.status(201).json(createdRecord);
     }
     res.setHeader("Allow", ["GET", "POST"]);

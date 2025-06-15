@@ -6788,7 +6788,8 @@ var init_resolveFieldMap = __esm({
 
 // api/snapshots/synthesize-current-state.ts
 var apiSnapshotsSynthesizeHandler = async (req, res) => {
-  const { base, TABLES } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap: getFieldMap2, filterMappedFields: filterMappedFields2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
   const tableName = TABLES.SNAPSHOTS;
   try {

@@ -1,5 +1,7 @@
 const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
-  const { base, TABLES } = require("../../lib/airtableBase");
+  const getAirtableContext = require("../../lib/airtableBase");
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+
   const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
   const tableName = TABLES.SNAPSHOTS;
@@ -21,7 +23,7 @@ const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
   } catch (error: any) {
     console.error("Synthesize Snapshot Error:", {
       message: error.message,
-      stack: error.stack,
+      stack: error.stack
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }

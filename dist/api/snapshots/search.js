@@ -6800,7 +6800,8 @@ var init_resolveFieldMap = __esm({
 var apiSnapshotsSearchHandler = async (req, res) => {
   const axios = require("axios");
   const { normalizeString, isMatch } = require_stringUtils();
-  const { base, TABLES, airtableToken, baseId } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap: getFieldMap2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
   const fieldMap = getFieldMap2("Snapshots");
   if (!airtableToken || !baseId || !TABLES.Snapshots) {

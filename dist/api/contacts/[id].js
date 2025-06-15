@@ -6721,76 +6721,11 @@ var require_airtableBase = __commonJS({
   }
 });
 
-// lib/resolveFieldMap.ts
-var resolveFieldMap_exports = {};
-__export(resolveFieldMap_exports, {
-  filterMappedFields: () => filterMappedFields,
-  getFieldMap: () => getFieldMap
-});
-function getFieldMap(tableName) {
-  switch (tableName) {
-    case "Contacts":
-      return {
-        Name: "name",
-        Role: "role",
-        Organisation: "organisation",
-        Email: "email",
-        Tags: "tags",
-        Notes: "notes"
-      };
-    case "Log Entries":
-      return {
-        Date: "date",
-        Summary: "summary",
-        Content: "content",
-        Tags: "tags",
-        "Log Type": "logType",
-        Contacts: "contacts"
-      };
-    case "Snapshots":
-      return {
-        Title: "title",
-        Date: "date",
-        Content: "content",
-        "Key Updates": "keyUpdates",
-        "Phase ID": "phaseId"
-      };
-    case "Threads":
-      return {
-        Title: "title",
-        Summary: "summary",
-        Content: "content",
-        Tags: "tags",
-        Date: "date",
-        Contacts: "contacts",
-        Experiments: "experiments",
-        Outputs: "outputs"
-      };
-    default:
-      return {};
-  }
-}
-function filterMappedFields(fields, tableName) {
-  const fieldMap = getFieldMap(tableName);
-  const mapped = {};
-  for (const key in fields) {
-    if (fieldMap[key]) {
-      mapped[fieldMap[key]] = fields[key];
-    }
-  }
-  return mapped;
-}
-var init_resolveFieldMap = __esm({
-  "lib/resolveFieldMap.ts"() {
-    "use strict";
-  }
-});
-
 // api/contacts/[id].ts
 var idContactsHandler = async (req, res) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require_airtableBase();
-  const { getFieldMap: getFieldMap2, filterMappedFields: filterMappedFields2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { id } = req.query;
   if (!id) {
     return res.status(400).json({ error: "Missing contact ID" });

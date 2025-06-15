@@ -6791,7 +6791,8 @@ var require_synthesisUtils = __commonJS({
   "lib/synthesisUtils.ts"(exports2, module2) {
     "use strict";
     async function synthesizeThreadNarrative(threadId) {
-      const { base, TABLES } = require_airtableBase();
+      const getAirtableContext = require_airtableBase();
+      const { base, TABLES, airtableToken, baseId } = getAirtableContext();
       const { getFieldMap: getFieldMap2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
       const OpenAI = require("openai");
       const openai = new OpenAI({
@@ -6853,7 +6854,8 @@ async function apiSynthesizeThreadHandler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
   const axios = require("axios");
-  const { base, TABLES } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap: getFieldMap2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
   const { buildSynthesisPrompt, runGPTSynthesis } = require_synthesisUtils();
   try {
@@ -6861,38 +6863,27 @@ async function apiSynthesizeThreadHandler(req, res) {
     if (!threadId) {
       return res.status(400).json({ error: "Missing threadId" });
     }
-    const threadRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/threads/${threadId}`
-    );
+    const threadRes = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/threads/${threadId}`);
     const thread = threadRes.data;
-    const logsRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries/search`,
-      {
-        params: { threadId }
-      }
-    );
+    const logsRes = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries/search`, {
+      params: { threadId }
+    });
     const logs = logsRes.data;
-    const contactsRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/contacts/search`,
-      {
-        params: { threadId }
-      }
-    );
+    const contactsRes = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/contacts/search`, {
+      params: { threadId }
+    });
     const contacts = contactsRes.data;
     const prompt = buildSynthesisPrompt({ thread, logs, contacts });
     const synthesis = await runGPTSynthesis(prompt);
-    const createRes = await axios.post(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries`,
-      {
-        fields: {
-          Summary: `Synthesis for Thread: ${thread.fields?.Title || threadId}`,
-          Content: synthesis,
-          "Log Type": "Synthesis",
-          Threads: [threadId],
-          Contacts: contacts.map((c) => c.id)
-        }
+    const createRes = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries`, {
+      fields: {
+        Summary: `Synthesis for Thread: ${thread.fields?.Title || threadId}`,
+        Content: synthesis,
+        "Log Type": "Synthesis",
+        Threads: [threadId],
+        Contacts: contacts.map((c) => c.id)
       }
-    );
+    });
     return res.status(200).json({
       synthesis,
       synthesisLog: createRes.data

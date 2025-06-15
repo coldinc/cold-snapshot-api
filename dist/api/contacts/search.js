@@ -6734,7 +6734,8 @@ var require_stringUtils = __commonJS({
 // api/contacts/search.ts
 var apiContactsSearchHandler = async (req, res) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { normalizeString, isMatch } = require_stringUtils();
   const contactsTable = TABLES.CONTACTS;
   const { name } = req.query;
@@ -6749,9 +6750,7 @@ var apiContactsSearchHandler = async (req, res) => {
   };
   try {
     const response = await axios.get(url, config);
-    const matchingRecords = response.data.records.filter(
-      (record) => isMatch(record.fields?.Name || "", name)
-    );
+    const matchingRecords = response.data.records.filter((record) => isMatch(record.fields?.Name || "", name));
     if (matchingRecords.length === 0) {
       return res.status(404).json({ message: "No matching contact found" });
     }

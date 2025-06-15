@@ -6735,7 +6735,8 @@ var require_airtableBase = __commonJS({
 var apiLogEntriesSearchHandler = async (req, res) => {
   const axios = require("axios");
   const { normalizeString, isMatch } = require_stringUtils();
-  const { base, TABLES, airtableToken, baseId } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }
@@ -6751,9 +6752,7 @@ var apiLogEntriesSearchHandler = async (req, res) => {
   };
   try {
     const response = await axios.get(url, config);
-    const matchingRecords = response.data.records.filter(
-      (record) => isMatch(record.fields?.Name || "", name)
-    );
+    const matchingRecords = response.data.records.filter((record) => isMatch(record.fields?.Name || "", name));
     if (matchingRecords.length === 0) {
       return res.status(404).json({ message: "No matching log entry found" });
     }

@@ -6723,7 +6723,8 @@ var require_airtableBase = __commonJS({
 
 // api/snapshots/latest.ts
 var apiSnapshotsLatestHandler = async (req, res) => {
-  const { base, TABLES } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const tableName = TABLES.SNAPSHOTS;
   try {
     const records = await base(tableName).select({

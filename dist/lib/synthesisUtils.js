@@ -6788,7 +6788,8 @@ var init_resolveFieldMap = __esm({
 
 // lib/synthesisUtils.ts
 async function synthesizeThreadNarrative(threadId) {
-  const { base, TABLES } = require_airtableBase();
+  const getAirtableContext = require_airtableBase();
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap: getFieldMap2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
   const OpenAI = require("openai");
   const openai = new OpenAI({

@@ -1,6 +1,7 @@
 const idLogEntryHandler = async (req: any, res: any) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
+  const getAirtableContext = require("../../lib/airtableBase");
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
   const { id } = req.query;
   if (!id) {
@@ -16,8 +17,8 @@ const idLogEntryHandler = async (req: any, res: any) => {
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
-      "Content-Type": "application/json",
-    },
+      "Content-Type": "application/json"
+    }
   };
 
   try {
@@ -37,7 +38,7 @@ const idLogEntryHandler = async (req: any, res: any) => {
     console.error("API error:", {
       message: error.message,
       config: error.config,
-      response: error.response?.data,
+      response: error.response?.data
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }

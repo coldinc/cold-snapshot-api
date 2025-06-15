@@ -1,5 +1,7 @@
 const apiContactsHandler = async (req: any, res: any) => {
-  const { base, TABLES } = require("../../lib/airtableBase");
+  const getAirtableContext = require("../../lib/airtableBase");
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+
   const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
   const tableName = TABLES.CONTACTS;
@@ -16,9 +18,7 @@ const apiContactsHandler = async (req: any, res: any) => {
           fetchNextPage();
         });
 
-      const filteredRecords = records.map((record) =>
-        filterMappedFields(record, fieldMap)
-      );
+      const filteredRecords = records.map((record) => filterMappedFields(record, fieldMap));
 
       return res.status(200).json(filteredRecords);
     }
@@ -27,9 +27,7 @@ const apiContactsHandler = async (req: any, res: any) => {
       const fieldMap = getFieldMap(tableName);
       const fields = req.body;
 
-      const createdRecord = await base(tableName).create([
-        { fields: filterMappedFields({ fields }, fieldMap) },
-      ]);
+      const createdRecord = await base(tableName).create([{ fields: filterMappedFields({ fields }, fieldMap) }]);
 
       return res.status(201).json(createdRecord);
     }
@@ -39,7 +37,7 @@ const apiContactsHandler = async (req: any, res: any) => {
   } catch (error: any) {
     console.error("API error:", {
       message: error.message,
-      stack: error.stack,
+      stack: error.stack
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }

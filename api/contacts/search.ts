@@ -1,6 +1,8 @@
 const apiContactsSearchHandler = async (req: any, res: any) => {
   const axios = require("axios");
-  const { base, TABLES, airtableToken, baseId } = require("../../lib/airtableBase");
+  const getAirtableContext = require("../../lib/airtableBase");
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+
   const { normalizeString, isMatch } = require("../../lib/stringUtils");
 
   const contactsTable = TABLES.CONTACTS;
@@ -14,15 +16,13 @@ const apiContactsSearchHandler = async (req: any, res: any) => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${airtableToken}`,
-    },
+      Authorization: `Bearer ${airtableToken}`
+    }
   };
 
   try {
     const response = await axios.get(url, config);
-    const matchingRecords = response.data.records.filter((record: any) =>
-      isMatch(record.fields?.Name || "", name)
-    );
+    const matchingRecords = response.data.records.filter((record: any) => isMatch(record.fields?.Name || "", name));
 
     if (matchingRecords.length === 0) {
       return res.status(404).json({ message: "No matching contact found" });
@@ -33,7 +33,7 @@ const apiContactsSearchHandler = async (req: any, res: any) => {
     console.error("Search API error:", {
       message: error.message,
       config: error.config,
-      response: error.response?.data,
+      response: error.response?.data
     });
     return res.status(500).json({ error: "Internal Server Error" });
   }
