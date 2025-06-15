@@ -6820,13 +6820,14 @@ var apiLogEntriesSearchHandler = async (req, res) => {
   try {
     const response = await axios.get(url, config);
     const records = response.data.records;
+    console.log("Sample record fields:", records[0]?.fields);
     const matchingRecords = records.filter((record) => {
       try {
         if (name) return isMatch(record.fields?.[logFieldMap.name] || "", name);
         if (threadId) return record.fields?.[logFieldMap.threadId] === threadId;
         return false;
       } catch (e) {
-        console.warn("Failed to filter record:", record.id, e);
+        console.warn("Error in filter loop:", e, record);
         return false;
       }
     });
