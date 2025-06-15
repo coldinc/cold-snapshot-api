@@ -6806,10 +6806,12 @@ var apiLogEntriesSearchHandler = async (req, res) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const logFieldMap = getFieldMap("Logs");
   if (!airtableToken || !baseId || !TABLES.LOGS) {
+    console.error("Missing Airtable configuration", { airtableToken, baseId, LOGS: TABLES.LOGS });
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }
   const { name, threadId } = req.query;
   if (!name && !threadId) {
+    console.warn("No valid query provided. Either name or threadId is required.");
     return res.status(400).json({ error: "Missing search parameter (name or threadId)" });
   }
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOGS)}`;
@@ -6821,20 +6823,25 @@ var apiLogEntriesSearchHandler = async (req, res) => {
   try {
     const response = await axios.get(url, config);
     const records = response.data.records;
-    console.log("Sample record fields:", records[0]?.fields);
-    const matchingRecords = records.filter((record) => {
-      try {
+    console.log("Total records fetched:", records.length);
+    console.log("Using Airtable field map key:", logFieldMap);
+    console.log("Searching for threadId:", threadId);
+    console.log("Searching for name:", name);
+    records.forEach((record, i) => {
+      console.log(`Record ${i + 1} Thread ID field (${logFieldMap.threadId}):`, record.fields?.[logFieldMap.threadId]);
+    });
+    let matchingRecords = [];
+    try {
+      matchingRecords = records.filter((record) => {
         if (name) return isMatch(record.fields?.[logFieldMap.name] || "", name);
         if (threadId) return record.fields?.[logFieldMap.threadId] === threadId;
         return false;
-      } catch (e) {
-        console.warn("Error in filter loop:", e, record);
-        return false;
-      }
-    });
-    if (matchingRecords.length === 0) {
-      return res.status(404).json({ message: "No matching log entries found" });
+      });
+    } catch (filterErr) {
+      console.error("Error in filter loop:", filterErr);
+      return res.status(500).json({ error: "Error during filtering" });
     }
+    console.log("Matching records found:", matchingRecords.length);
     return res.status(200).json(matchingRecords);
   } catch (error) {
     console.error("Search API error:", {

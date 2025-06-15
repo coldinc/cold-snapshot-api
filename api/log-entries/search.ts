@@ -8,12 +8,14 @@ const apiLogEntriesSearchHandler = async (req: any, res: any) => {
     const logFieldMap = getFieldMap("Logs");
 
     if (!airtableToken || !baseId || !TABLES.LOGS) {
+        console.error("Missing Airtable configuration", { airtableToken, baseId, LOGS: TABLES.LOGS });
         return res.status(500).json({ error: "Missing Airtable configuration" });
     }
 
     const { name, threadId } = req.query;
 
     if (!name && !threadId) {
+        console.warn("No valid query provided. Either name or threadId is required.");
         return res.status(400).json({ error: "Missing search parameter (name or threadId)" });
     }
 
@@ -28,22 +30,29 @@ const apiLogEntriesSearchHandler = async (req: any, res: any) => {
         const response = await axios.get(url, config);
         const records = response.data.records;
 
-        console.log("Sample record fields:", records[0]?.fields);
+        console.log("Total records fetched:", records.length);
+        console.log("Using Airtable field map key:", logFieldMap);
+        console.log("Searching for threadId:", threadId);
+        console.log("Searching for name:", name);
 
-        const matchingRecords = records.filter((record: any) => {
-            try {
+        // Log all Thread ID values from the records
+        records.forEach((record: any, i: number) => {
+            console.log(`Record ${i + 1} Thread ID field (${logFieldMap.threadId}):`, record.fields?.[logFieldMap.threadId]);
+        });
+
+        let matchingRecords = [];
+        try {
+            matchingRecords = records.filter((record: any) => {
                 if (name) return isMatch(record.fields?.[logFieldMap.name] || "", name);
                 if (threadId) return record.fields?.[logFieldMap.threadId] === threadId;
                 return false;
-            } catch (e) {
-                console.warn("Error in filter loop:", e, record);
-                return false;
-            }
-        });
-
-        if (matchingRecords.length === 0) {
-            return res.status(404).json({ message: "No matching log entries found" });
+            });
+        } catch (filterErr) {
+            console.error("Error in filter loop:", filterErr);
+            return res.status(500).json({ error: "Error during filtering" });
         }
+
+        console.log("Matching records found:", matchingRecords.length);
 
         return res.status(200).json(matchingRecords);
     } catch (error: any) {
