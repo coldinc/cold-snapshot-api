@@ -22,6 +22,8 @@ const apiSynthesizeThreadHandler = async (req: any, res: any) => {
     const thread = threadRes.data;
 
     // 2. Fetch logs linked to this thread
+    console.log("Fetching logs from:", `${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries/search`);
+
     const logsRes = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries/search`, {
       params: { threadId }
     });
