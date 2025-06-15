@@ -6732,67 +6732,66 @@ var require_airtableBase = __commonJS({
 });
 
 // lib/resolveFieldMap.ts
-var resolveFieldMap_exports = {};
-__export(resolveFieldMap_exports, {
-  filterMappedFields: () => filterMappedFields,
-  getFieldMap: () => getFieldMap
-});
-function getFieldMap(tableName) {
-  switch (tableName) {
-    case "Contacts":
-      return {
-        Name: "name",
-        Role: "role",
-        Organisation: "organisation",
-        Email: "email",
-        Tags: "tags",
-        Notes: "notes"
-      };
-    case "Log Entries":
-      return {
-        Date: "date",
-        Summary: "summary",
-        Content: "content",
-        Tags: "tags",
-        "Log Type": "logType",
-        Contacts: "contacts"
-      };
-    case "Snapshots":
-      return {
-        Title: "title",
-        Date: "date",
-        Content: "content",
-        "Key Updates": "keyUpdates",
-        "Phase ID": "phaseId"
-      };
-    case "Threads":
-      return {
-        Title: "title",
-        Summary: "summary",
-        Content: "content",
-        Tags: "tags",
-        Date: "date",
-        Contacts: "contacts",
-        Experiments: "experiments",
-        Outputs: "outputs"
-      };
-    default:
-      return {};
-  }
-}
-function filterMappedFields(fields, tableName) {
-  const fieldMap = getFieldMap(tableName);
-  const mapped = {};
-  for (const key in fields) {
-    if (fieldMap[key]) {
-      mapped[fieldMap[key]] = fields[key];
-    }
-  }
-  return mapped;
-}
-var init_resolveFieldMap = __esm({
-  "lib/resolveFieldMap.ts"() {
+var require_resolveFieldMap = __commonJS({
+  "lib/resolveFieldMap.ts"(exports2, module2) {
     "use strict";
+    function getFieldMap(tableName) {
+      switch (tableName) {
+        case "Contacts":
+          return {
+            Name: "name",
+            Role: "role",
+            Organisation: "organisation",
+            Email: "email",
+            Tags: "tags",
+            Notes: "notes"
+          };
+        case "Log Entries":
+          return {
+            Date: "date",
+            Summary: "summary",
+            Content: "content",
+            Tags: "tags",
+            "Log Type": "logType",
+            Contacts: "contacts"
+          };
+        case "Snapshots":
+          return {
+            Title: "title",
+            Date: "date",
+            Content: "content",
+            "Key Updates": "keyUpdates",
+            "Phase ID": "phaseId"
+          };
+        case "Threads":
+          return {
+            Title: "title",
+            Summary: "summary",
+            Content: "content",
+            Tags: "tags",
+            Date: "date",
+            Contacts: "contacts",
+            Experiments: "experiments",
+            Outputs: "outputs"
+          };
+        default:
+          return {};
+      }
+    }
+    function filterMappedFields(fields, tableName) {
+      const fieldMap = getFieldMap(tableName);
+      const mapped = {};
+      for (const key in fields) {
+        if (fieldMap[key]) {
+          mapped[fieldMap[key]] = fields[key];
+        }
+      }
+      return mapped;
+    }
+    module2.exports = {
+      getFieldMap,
+      filterMappedFields
+    };
   }
 });
 
@@ -6802,8 +6801,8 @@ var apiSnapshotsSearchHandler = async (req, res) => {
   const { normalizeString, isMatch } = require_stringUtils();
   const getAirtableContext = require_airtableBase();
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
-  const { getFieldMap: getFieldMap2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
-  const fieldMap = getFieldMap2("Snapshots");
+  const { getFieldMap } = require_resolveFieldMap();
+  const fieldMap = getFieldMap("Snapshots");
   if (!airtableToken || !baseId || !TABLES.Snapshots) {
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }

@@ -6722,67 +6722,66 @@ var require_airtableBase = __commonJS({
 });
 
 // lib/resolveFieldMap.ts
-var resolveFieldMap_exports = {};
-__export(resolveFieldMap_exports, {
-  filterMappedFields: () => filterMappedFields,
-  getFieldMap: () => getFieldMap
-});
-function getFieldMap(tableName) {
-  switch (tableName) {
-    case "Contacts":
-      return {
-        Name: "name",
-        Role: "role",
-        Organisation: "organisation",
-        Email: "email",
-        Tags: "tags",
-        Notes: "notes"
-      };
-    case "Log Entries":
-      return {
-        Date: "date",
-        Summary: "summary",
-        Content: "content",
-        Tags: "tags",
-        "Log Type": "logType",
-        Contacts: "contacts"
-      };
-    case "Snapshots":
-      return {
-        Title: "title",
-        Date: "date",
-        Content: "content",
-        "Key Updates": "keyUpdates",
-        "Phase ID": "phaseId"
-      };
-    case "Threads":
-      return {
-        Title: "title",
-        Summary: "summary",
-        Content: "content",
-        Tags: "tags",
-        Date: "date",
-        Contacts: "contacts",
-        Experiments: "experiments",
-        Outputs: "outputs"
-      };
-    default:
-      return {};
-  }
-}
-function filterMappedFields(fields, tableName) {
-  const fieldMap = getFieldMap(tableName);
-  const mapped = {};
-  for (const key in fields) {
-    if (fieldMap[key]) {
-      mapped[fieldMap[key]] = fields[key];
-    }
-  }
-  return mapped;
-}
-var init_resolveFieldMap = __esm({
-  "lib/resolveFieldMap.ts"() {
+var require_resolveFieldMap = __commonJS({
+  "lib/resolveFieldMap.ts"(exports2, module2) {
     "use strict";
+    function getFieldMap(tableName) {
+      switch (tableName) {
+        case "Contacts":
+          return {
+            Name: "name",
+            Role: "role",
+            Organisation: "organisation",
+            Email: "email",
+            Tags: "tags",
+            Notes: "notes"
+          };
+        case "Log Entries":
+          return {
+            Date: "date",
+            Summary: "summary",
+            Content: "content",
+            Tags: "tags",
+            "Log Type": "logType",
+            Contacts: "contacts"
+          };
+        case "Snapshots":
+          return {
+            Title: "title",
+            Date: "date",
+            Content: "content",
+            "Key Updates": "keyUpdates",
+            "Phase ID": "phaseId"
+          };
+        case "Threads":
+          return {
+            Title: "title",
+            Summary: "summary",
+            Content: "content",
+            Tags: "tags",
+            Date: "date",
+            Contacts: "contacts",
+            Experiments: "experiments",
+            Outputs: "outputs"
+          };
+        default:
+          return {};
+      }
+    }
+    function filterMappedFields(fields, tableName) {
+      const fieldMap = getFieldMap(tableName);
+      const mapped = {};
+      for (const key in fields) {
+        if (fieldMap[key]) {
+          mapped[fieldMap[key]] = fields[key];
+        }
+      }
+      return mapped;
+    }
+    module2.exports = {
+      getFieldMap,
+      filterMappedFields
+    };
   }
 });
 
@@ -6790,23 +6789,23 @@ var init_resolveFieldMap = __esm({
 var apiContactsHandler = async (req, res) => {
   const getAirtableContext = require_airtableBase();
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
-  const { getFieldMap: getFieldMap2, filterMappedFields: filterMappedFields2 } = (init_resolveFieldMap(), __toCommonJS(resolveFieldMap_exports));
+  const { getFieldMap, filterMappedFields } = require_resolveFieldMap();
   const tableName = TABLES.CONTACTS;
   try {
     if (req.method === "GET") {
       const records = [];
-      const fieldMap = getFieldMap2(tableName);
+      const fieldMap = getFieldMap(tableName);
       await base(tableName).select({ view: "Grid view" }).eachPage((recordsPage, fetchNextPage) => {
         records.push(...recordsPage);
         fetchNextPage();
       });
-      const filteredRecords = records.map((record) => filterMappedFields2(record, fieldMap));
+      const filteredRecords = records.map((record) => filterMappedFields(record, fieldMap));
       return res.status(200).json(filteredRecords);
     }
     if (req.method === "POST") {
-      const fieldMap = getFieldMap2(tableName);
+      const fieldMap = getFieldMap(tableName);
       const fields = req.body;
-      const createdRecord = await base(tableName).create([{ fields: filterMappedFields2({ fields }, fieldMap) }]);
+      const createdRecord = await base(tableName).create([{ fields: filterMappedFields({ fields }, fieldMap) }]);
       return res.status(201).json(createdRecord);
     }
     res.setHeader("Allow", ["GET", "POST"]);

@@ -53,4 +53,8 @@ function filterMappedFields(fields: Record<string, any>, tableName: string): Rec
   return mapped;
 }
 
-export { getFieldMap, filterMappedFields };
+module.exports = {
+  getFieldMap,
+  filterMappedFields
+};
+
