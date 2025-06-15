@@ -4,17 +4,17 @@ const apiLogEntriesSearchHandler = async (req: any, res: any) => {
     const getAirtableContext = require("../../lib/airtableBase");
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
-    if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
+    if (!airtableToken || !baseId || !TABLES.LOGS) {
         return res.status(500).json({ error: "Missing Airtable configuration" });
     }
 
-    const { name } = req.query;
-    if (!name || typeof name !== "string") {
-        return res.status(400).json({ error: "Missing or invalid name parameter" });
+    const { name, threadId } = req.query;
+
+    if (!name && !threadId) {
+        return res.status(400).json({ error: "Missing search parameter (name or threadId)" });
     }
 
-    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOG_ENTRIES)}`;
-
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOGS)}`;
     const config = {
         headers: {
             Authorization: `Bearer ${airtableToken}`
@@ -23,10 +23,15 @@ const apiLogEntriesSearchHandler = async (req: any, res: any) => {
 
     try {
         const response = await axios.get(url, config);
-        const matchingRecords = response.data.records.filter((record: any) => isMatch(record.fields?.Name || "", name));
+
+        const matchingRecords = response.data.records.filter((record: any) => {
+            if (name) return isMatch(record.fields?.Name || "", name);
+            if (threadId) return record.fields?.threadId === threadId;
+            return false;
+        });
 
         if (matchingRecords.length === 0) {
-            return res.status(404).json({ message: "No matching log entry found" });
+            return res.status(404).json({ message: "No matching log entries found" });
         }
 
         return res.status(200).json(matchingRecords);

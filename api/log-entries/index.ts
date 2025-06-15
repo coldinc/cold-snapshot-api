@@ -3,7 +3,7 @@ const apiLogEntriesHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
 
-  const tableName = TABLES.LOG_ENTRIES;
+  const tableName = TABLES.LOGS;
 
   try {
     if (req.method === "GET") {

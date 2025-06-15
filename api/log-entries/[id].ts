@@ -8,11 +8,11 @@ const idLogEntryHandler = async (req: any, res: any) => {
     return res.status(400).json({ error: "Missing log entry ID" });
   }
 
-  if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
+  if (!airtableToken || !baseId || !TABLES.LOGS) {
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }
 
-  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOG_ENTRIES)}/${id}`;
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOGS)}/${id}`;
 
   const config = {
     headers: {

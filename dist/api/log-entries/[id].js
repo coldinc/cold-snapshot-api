@@ -6706,7 +6706,7 @@ var require_airtableBase = __commonJS({
       const base = new Airtable({ apiKey: airtableToken }).base(baseId);
       const TABLES = {
         CONTACTS: process.env.AIRTABLE_CONTACTS_TABLE_NAME,
-        LOG_ENTRIES: process.env.AIRTABLE_LOGS_TABLE_NAME,
+        LOGS: process.env.AIRTABLE_LOGS_TABLE_NAME,
         SNAPSHOTS: process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME,
         THREADS: process.env.AIRTABLE_THREADS_TABLE_NAME
       };
@@ -6730,10 +6730,10 @@ var idLogEntryHandler = async (req, res) => {
   if (!id) {
     return res.status(400).json({ error: "Missing log entry ID" });
   }
-  if (!airtableToken || !baseId || !TABLES.LOG_ENTRIES) {
+  if (!airtableToken || !baseId || !TABLES.LOGS) {
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }
-  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOG_ENTRIES)}/${id}`;
+  const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.LOGS)}/${id}`;
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`,
