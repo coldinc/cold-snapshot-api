@@ -12,7 +12,7 @@ function getFieldMap(tableName) {
         Tags: "tags",
         Notes: "notes"
       };
-    case "Log Entries":
+    case "Logs":
       return {
         Date: "date",
         Summary: "summary",

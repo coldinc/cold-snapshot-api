@@ -6716,7 +6716,7 @@ var require_airtableBase = __commonJS({
       const base = new Airtable({ apiKey: airtableToken }).base(baseId);
       const TABLES = {
         CONTACTS: process.env.AIRTABLE_CONTACTS_TABLE_NAME,
-        LOG_ENTRIES: process.env.AIRTABLE_LOG_ENTRIES_TABLE_NAME,
+        LOG_ENTRIES: process.env.AIRTABLE_LOGS_TABLE_NAME,
         SNAPSHOTS: process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME,
         THREADS: process.env.AIRTABLE_THREADS_TABLE_NAME
       };
@@ -6746,7 +6746,7 @@ var require_resolveFieldMap = __commonJS({
             Tags: "tags",
             Notes: "notes"
           };
-        case "Log Entries":
+        case "Logs":
           return {
             Date: "date",
             Summary: "summary",

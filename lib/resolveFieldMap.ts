@@ -9,7 +9,7 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         Tags: "tags",
         Notes: "notes",
       };
-    case "Log Entries":
+    case "Logs":
       return {
         Date: "date",
         Summary: "summary",
