@@ -1,8 +1,11 @@
 const apiLogEntriesSearchHandler = async (req: any, res: any) => {
     const axios = require("axios");
-    const { normalizeString, isMatch } = require("../../lib/stringUtils");
+    const { isMatch } = require("../../lib/stringUtils");
     const getAirtableContext = require("../../lib/airtableBase");
+    const { getFieldMap } = require("../../lib/resolveFieldMap");
+
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+    const logFieldMap = getFieldMap("Logs");
 
     if (!airtableToken || !baseId || !TABLES.LOGS) {
         return res.status(500).json({ error: "Missing Airtable configuration" });
@@ -23,11 +26,17 @@ const apiLogEntriesSearchHandler = async (req: any, res: any) => {
 
     try {
         const response = await axios.get(url, config);
+        const records = response.data.records;
 
-        const matchingRecords = response.data.records.filter((record: any) => {
-            if (name) return isMatch(record.fields?.Name || "", name);
-            if (threadId) return record.fields?.threadId === threadId;
-            return false;
+        const matchingRecords = records.filter((record: any) => {
+            try {
+                if (name) return isMatch(record.fields?.[logFieldMap.name] || "", name);
+                if (threadId) return record.fields?.[logFieldMap.threadId] === threadId;
+                return false;
+            } catch (e) {
+                console.warn("Failed to filter record:", record.id, e);
+                return false;
+            }
         });
 
         if (matchingRecords.length === 0) {

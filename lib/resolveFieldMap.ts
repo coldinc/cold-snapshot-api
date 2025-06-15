@@ -17,6 +17,7 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         Tags: "tags",
         "Log Type": "logType",
         Contacts: "contacts",
+        "Thread ID": "threadId",
       };
     case "Snapshots":
       return {
