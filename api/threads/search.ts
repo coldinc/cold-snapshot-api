@@ -8,7 +8,7 @@ const threadsSearchHandler = async (req: any, res: any) => {
 
     const fieldMap = getFieldMap("Threads");
 
-    if (!airtableToken || !baseId || !TABLES.Threads) {
+    if (!airtableToken || !baseId || !TABLES.THREADS) {
         return res.status(500).json({ error: "Missing Airtable configuration" });
     }
 
@@ -17,7 +17,7 @@ const threadsSearchHandler = async (req: any, res: any) => {
         return res.status(400).json({ error: "Missing or invalid title parameter" });
     }
 
-    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.Threads)}`;
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.THREADS)}`;
     const config = {
         headers: {
             Authorization: `Bearer ${airtableToken}`
