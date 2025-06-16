@@ -6753,7 +6753,7 @@ var require_resolveFieldMap = __commonJS({
             content: "Content",
             tags: "Tags",
             logType: "Log Type",
-            contacts: "Contacts",
+            contacts: "Contacts (Linked)",
             threadId: "Thread ID"
           };
         case "Snapshots":
@@ -6805,14 +6805,14 @@ var apiSnapshotsSearchHandler = async (req, res) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
   const { getFieldMap } = require_resolveFieldMap();
   const fieldMap = getFieldMap("Snapshots");
-  if (!airtableToken || !baseId || !TABLES.Snapshots) {
+  if (!airtableToken || !baseId || !TABLES.SNAPSHOTS) {
     return res.status(500).json({ error: "Missing Airtable configuration" });
   }
   const { query } = req.query;
   if (!query || typeof query !== "string") {
     return res.status(400).json({ error: "Missing or invalid query parameter" });
   }
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.Snapshots)}`;
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.SNAPSHOTS)}`;
   const config = {
     headers: {
       Authorization: `Bearer ${airtableToken}`

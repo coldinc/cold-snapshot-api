@@ -6743,7 +6743,7 @@ var require_resolveFieldMap = __commonJS({
             content: "Content",
             tags: "Tags",
             logType: "Log Type",
-            contacts: "Contacts",
+            contacts: "Contacts (Linked)",
             threadId: "Thread ID"
           };
         case "Snapshots":
@@ -6787,11 +6787,39 @@ var require_resolveFieldMap = __commonJS({
   }
 });
 
+// lib/mapRecordFields.ts
+var require_mapRecordFields = __commonJS({
+  "lib/mapRecordFields.ts"(exports2, module2) {
+    "use strict";
+    function mapInternalToAirtable(input, fieldMap) {
+      const mapped = {};
+      for (const key in input) {
+        const airtableField = fieldMap[key];
+        if (airtableField) {
+          mapped[airtableField] = input[key];
+        }
+      }
+      return mapped;
+    }
+    function mapAirtableToInternal(record, fieldMap) {
+      const result = { id: record.id };
+      for (const internalKey in fieldMap) {
+        const airtableField = fieldMap[internalKey];
+        const value = record.fields && record.fields[airtableField];
+        result[internalKey] = value !== void 0 ? value : null;
+      }
+      return result;
+    }
+    module2.exports = { mapInternalToAirtable, mapAirtableToInternal };
+  }
+});
+
 // api/snapshots/index.ts
 var apiSnapshotsHandler = async (req, res) => {
   const getAirtableContext = require_airtableBase();
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
-  const { getFieldMap, filterMappedFields } = require_resolveFieldMap();
+  const { getFieldMap } = require_resolveFieldMap();
+  const { mapInternalToAirtable } = require_mapRecordFields();
   const tableName = TABLES.SNAPSHOTS;
   try {
     if (req.method === "GET") {
@@ -6801,14 +6829,21 @@ var apiSnapshotsHandler = async (req, res) => {
         records.push(...recordsPage);
         fetchNextPage();
       });
-      const filteredRecords = records.map((record) => filterMappedFields(record, fieldMap));
-      return res.status(200).json(filteredRecords);
+      const mappedRecords = records.map((record) => {
+        const mapped = { id: record.id };
+        for (const [internalKey, airtableField] of Object.entries(fieldMap)) {
+          mapped[internalKey] = record.fields[airtableField] !== void 0 ? record.fields[airtableField] : null;
+        }
+        return mapped;
+      });
+      return res.status(200).json(mappedRecords);
     }
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);
-      const fields = req.body;
-      const createdRecord = await base(tableName).create([{ fields: filterMappedFields({ fields }, fieldMap) }]);
-      return res.status(201).json(createdRecord);
+      const airtableFields = mapInternalToAirtable(req.body, fieldMap);
+      const createdRecord = await base(tableName).create([{ fields: airtableFields }]);
+      const record = Array.isArray(createdRecord) ? createdRecord[0] : createdRecord;
+      return res.status(201).json({ id: record.id, ...req.body });
     }
     res.setHeader("Allow", ["GET", "POST"]);
     return res.status(405).end(`Method ${req.method} Not Allowed`);

@@ -6743,7 +6743,7 @@ var require_resolveFieldMap = __commonJS({
             content: "Content",
             tags: "Tags",
             logType: "Log Type",
-            contacts: "Contacts",
+            contacts: "Contacts (Linked)",
             threadId: "Thread ID"
           };
         case "Snapshots":
@@ -6801,8 +6801,14 @@ var apiThreadsHandler = async (req, res) => {
         records.push(...recordsPage);
         fetchNextPage();
       });
-      const filteredRecords = records.map((record) => filterMappedFields(record, fieldMap));
-      return res.status(200).json(filteredRecords);
+      const mappedRecords = records.map((record) => {
+        const mapped = { id: record.id };
+        for (const [internalKey, airtableField] of Object.entries(fieldMap)) {
+          mapped[internalKey] = record.fields[airtableField] !== void 0 ? record.fields[airtableField] : null;
+        }
+        return mapped;
+      });
+      return res.status(200).json(mappedRecords);
     }
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);

@@ -19,7 +19,7 @@ function getFieldMap(tableName) {
         content: "Content",
         tags: "Tags",
         logType: "Log Type",
-        contacts: "Contacts",
+        contacts: "Contacts (Linked)",
         threadId: "Thread ID"
       };
     case "Snapshots":

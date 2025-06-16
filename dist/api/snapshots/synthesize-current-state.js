@@ -6743,7 +6743,7 @@ var require_resolveFieldMap = __commonJS({
             content: "Content",
             tags: "Tags",
             logType: "Log Type",
-            contacts: "Contacts",
+            contacts: "Contacts (Linked)",
             threadId: "Thread ID"
           };
         case "Snapshots":
