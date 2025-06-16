@@ -15,6 +15,16 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         id: "ID",
         lastModified: "Last Modified",
         created: "Created",
+        logs: "Logs",
+        email: "Email",
+        source: "Source",
+        status: "Status",
+        followupNeeded: "Followup Needed",
+        linkedin: "LinkedIn",
+        relationshipStrength: "Relationship Strength",
+        importedTable: "Imported table",
+        nextFollowupDate: "Next Followup Date",
+        followupSummary: "Followup Summary",
       };
     case "Logs":
       return {
@@ -24,6 +34,17 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         createdAt: "Created At",
         lastModified: "Last Modified",
         logId: "Log ID",
+        followupNeeded: "Followup Needed",
+        followupNotes: "Followup Notes",
+        tags: "Tags",
+        relatedOutput: "Related Output",
+        contactsLinked: "Contacts (Linked)",
+        linkedContactId: "Linked Contact ID",
+        date: "Date",
+        author: "Author",
+        threadLinked: "Thread (Linked)",
+        threadId: "Thread ID",
+        contacts: "Contacts",
       };
     case "Cold Snapshots":
       return {
