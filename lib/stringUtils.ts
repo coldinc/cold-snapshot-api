@@ -5,3 +5,4 @@ const isMatch = (recordName: string, query: string): boolean =>
   normalizeString(recordName).includes(normalizeString(query));
 
 module.exports = { normalizeString, isMatch };
+
