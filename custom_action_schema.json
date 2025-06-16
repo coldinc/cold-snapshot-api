@@ -1,9 +1,10 @@
 {
+  "$schema": "https://raw.githubusercontent.com/openai/openai-openapi/master/openapi.json",
   "openapi": "3.1.0",
   "info": {
-    "title": "Cold OS API 2.0",
+    "title": "Cold Snapshot API",
     "version": "2.0.0",
-    "description": "Snapshot, Partner, and Log management for Cold OS"
+    "description": "Endpoints for managing snapshots, partner contacts, and log entries within Cold OS."
   },
   "servers": [
     {
@@ -11,7 +12,7 @@
     }
   ],
   "paths": {
-    "/api/snapshots/latest:" {
+    "/api/snapshots/latest:": {
       "get": {
         "operationId": "getLatestSnapshot",
         "summary": "Get the latest Cold OS snapshot",
@@ -53,28 +54,33 @@
     },
     "/api/snapshots/latest": {
       "post": {
-        "operationId": "postNewSnapshot",
-        "summary": "Create a new Cold OS snapshot",
+        "operationId": "createSnapshot",
+        "summary": "Create a new snapshot",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "description": "Snapshot content and metadata",
                 "properties": {
                   "content": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Markdown content of the snapshot"
                   },
                   "keyUpdates": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Optional key updates summary"
                   },
                   "phaseId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Associated phase identifier"
                   }
                 },
                 "required": [
                   "content"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -107,6 +113,7 @@
     "/api/contacts": {
       "get": {
         "operationId": "getAllContacts",
+        "summary": "List all contacts",
         "description": "Fetch all partner contacts from Airtable.",
         "responses": {
           "200": {
@@ -116,6 +123,7 @@
       },
       "post": {
         "operationId": "createContact",
+        "summary": "Create a contact",
         "description": "Create a new partner contact in Airtable.",
         "requestBody": {
           "required": true,
@@ -123,21 +131,29 @@
             "application/json": {
               "schema": {
                 "type": "object",
+                "description": "Contact details to store in Airtable",
                 "properties": {
                   "Name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Full name of the contact"
                   },
                   "Company": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Company or organization"
                   },
                   "Email": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "email",
+                    "description": "Primary email address"
                   },
                   "LinkedIn": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri",
+                    "description": "LinkedIn profile URL"
                   },
                   "Overview": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Short description of the contact"
                   },
                   "Pattern Match: Archetype": {
                     "type": "array",
@@ -230,7 +246,8 @@
                     ]
                   },
                   "Website": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri"
                   },
                   "Followup Needed": {
                     "type": "boolean"
@@ -245,7 +262,8 @@
                 },
                 "required": [
                   "Name"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -260,6 +278,7 @@
     "/api/contacts/search": {
       "get": {
         "operationId": "searchContactsByName",
+        "summary": "Search contacts",
         "description": "Search contacts by partial name match.",
         "parameters": [
           {
@@ -281,6 +300,7 @@
     "/api/contacts/{id}": {
       "get": {
         "operationId": "getContactById",
+        "summary": "Get contact by ID",
         "description": "Fetch a specific partner contact by Airtable record ID.",
         "parameters": [
           {
@@ -302,6 +322,7 @@
     "/api/log-entries": {
       "get": {
         "operationId": "getAllLogs",
+        "summary": "List log entries",
         "description": "Fetch all log entries from the Logs database.",
         "responses": {
           "200": {
@@ -309,16 +330,18 @@
           }
         }
       },
-      "post": {
-        "operationId": "createLogEntry",
-        "description": "Create a new log entry linked to one or more contacts.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
+        "post": {
+          "operationId": "createLogEntry",
+          "summary": "Create a log entry",
+          "description": "Create a new log entry linked to one or more contacts.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "Fields for the log record",
+                  "properties": {
                   "Log Type": {
                     "type": "string",
                     "enum": [
@@ -361,7 +384,8 @@
                 "required": [
                   "Log Type",
                   "Content"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
