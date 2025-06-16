@@ -8,7 +8,7 @@ const apiSnapshotsSearchHandler = async (req: any, res: any) => {
 
     const fieldMap = getFieldMap("Snapshots");
 
-    if (!airtableToken || !baseId || !TABLES.Snapshots) {
+    if (!airtableToken || !baseId || !TABLES.SNAPSHOTS) {
         return res.status(500).json({ error: "Missing Airtable configuration" });
     }
 
@@ -17,7 +17,7 @@ const apiSnapshotsSearchHandler = async (req: any, res: any) => {
         return res.status(400).json({ error: "Missing or invalid query parameter" });
     }
 
-    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.Snapshots)}`;
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.SNAPSHOTS)}`;
     const config = {
         headers: {
             Authorization: `Bearer ${airtableToken}`
