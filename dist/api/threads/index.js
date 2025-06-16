@@ -6731,58 +6731,53 @@ var require_resolveFieldMap = __commonJS({
           return {
             name: "Name",
             role: "Role",
-            organisation: "Organisation",
-            email: "Email",
-            tags: "Tags",
-            notes: "Notes"
+            company: "Company",
+            website: "Website",
+            overview: "Overview",
+            relationshipType: "Relationship Type",
+            patternMatchCollaboration: "Pattern Match: Collaboration",
+            patternMatchArchetype: "Pattern Match: Archetype",
+            id: "ID",
+            lastModified: "Last Modified",
+            created: "Created"
           };
         case "Logs":
           return {
-            date: "Date",
-            summary: "Summary",
-            content: "Content",
-            tags: "Tags",
             logType: "Log Type",
-            contacts: "Contacts (Linked)",
-            threadId: "Thread ID"
+            content: "Content",
+            summary: "Summary",
+            createdAt: "Created At",
+            lastModified: "Last Modified",
+            logId: "Log ID"
           };
-        case "Snapshots":
+        case "Cold Snapshots":
           return {
+            snapshotMarkdown: "Snapshot Markdown",
             date: "Date",
-            content: "Snapshot Markdown",
             keyUpdates: "Key Updates",
-            phaseId: "Phase ID"
+            phaseId: "Phase ID",
+            id: "ID",
+            created: "Created"
           };
         case "Threads":
           return {
-            title: "Title",
-            summary: "Summary",
-            content: "Content",
-            tags: "Tags",
-            date: "Date",
-            contacts: "Contacts",
-            experiments: "Experiments",
-            outputs: "Outputs"
+            name: "Name",
+            type: "Type",
+            status: "Status",
+            description: "Description",
+            associatedContacts: "Associated Contacts",
+            contactId: "Contact ID",
+            associatedLogs: "Associated Logs",
+            logId: "Log ID",
+            createdDate: "Created Date",
+            lastModified: "Last Modified",
+            threadId: "Thread ID"
           };
         default:
           return {};
       }
     }
-    function filterMappedFields(fields, tableName) {
-      const fieldMap = getFieldMap(tableName);
-      const mapped = {};
-      for (const internalKey in fieldMap) {
-        const airtableField = fieldMap[internalKey];
-        if (fields[airtableField] !== void 0) {
-          mapped[internalKey] = fields[airtableField];
-        }
-      }
-      return mapped;
-    }
-    module2.exports = {
-      getFieldMap,
-      filterMappedFields
-    };
+    module2.exports = { getFieldMap };
   }
 });
 
