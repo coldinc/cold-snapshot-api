@@ -20,7 +20,7 @@ function toCamelCase(str: string): string {
 }
 
 async function fetchFieldMap(table: string, token: string, baseId: string): Promise<Record<string, string> | null> {
-  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}?maxRecords=1`;
+  const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}?maxRecords=10`;
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -30,13 +30,23 @@ async function fetchFieldMap(table: string, token: string, baseId: string): Prom
     throw new Error(`Failed to fetch table ${table}: ${res.status} ${res.statusText}`);
   }
   const data = (await res.json()) as any;
-  const record = data.records && data.records[0];
-  if (!record) {
+  const records = Array.isArray(data.records) ? data.records : [];
+  if (records.length === 0) {
     console.warn(`Warning: No records found for table ${table}`);
     return null;
   }
+
+  const fieldNames = new Set<string>();
+  for (const rec of records) {
+    if (rec && rec.fields) {
+      for (const name of Object.keys(rec.fields)) {
+        fieldNames.add(name);
+      }
+    }
+  }
+
   const mapping: Record<string, string> = {};
-  for (const fieldName of Object.keys(record.fields)) {
+  for (const fieldName of fieldNames) {
     const key = toCamelCase(fieldName);
     mapping[key] = fieldName;
   }
