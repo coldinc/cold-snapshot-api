@@ -15,7 +15,6 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         id: "ID",
         lastModified: "Last Modified",
         created: "Created",
-        logs: "Logs",
         email: "Email",
         source: "Source",
         status: "Status",
