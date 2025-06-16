@@ -2,7 +2,8 @@ const apiSnapshotsHandler = async (req: any, res: any) => {
     const getAirtableContext = require("../../lib/airtableBase");
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
-    const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+    const { getFieldMap } = require("../../lib/resolveFieldMap");
+    const { mapInternalToAirtable } = require("../../lib/mapRecordFields");
 
     const tableName = TABLES.SNAPSHOTS;
 
@@ -32,11 +33,12 @@ const apiSnapshotsHandler = async (req: any, res: any) => {
 
         if (req.method === "POST") {
             const fieldMap = getFieldMap(tableName);
-            const fields = req.body;
+            const airtableFields = mapInternalToAirtable(req.body, fieldMap);
 
-            const createdRecord = await base(tableName).create([{ fields: filterMappedFields({ fields }, fieldMap) }]);
+            const createdRecord = await base(tableName).create([{ fields: airtableFields }]);
+            const record = Array.isArray(createdRecord) ? createdRecord[0] : createdRecord;
 
-            return res.status(201).json(createdRecord);
+            return res.status(201).json({ id: record.id, ...req.body });
         }
 
         res.setHeader("Allow", ["GET", "POST"]);
