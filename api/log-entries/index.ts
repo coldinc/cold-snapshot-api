@@ -17,9 +17,16 @@ const apiLogEntriesHandler = async (req: any, res: any) => {
           fetchNextPage();
         });
 
-      const filteredRecords = records.map((record) => filterMappedFields(record, fieldMap));
+      const mappedRecords = records.map((record) => {
+        const mapped: Record<string, any> = { id: record.id };
+        for (const [internalKey, airtableField] of Object.entries(fieldMap)) {
+          mapped[internalKey] =
+            record.fields[airtableField] !== undefined ? record.fields[airtableField] : null;
+        }
+        return mapped;
+      });
 
-      return res.status(200).json(filteredRecords);
+      return res.status(200).json(mappedRecords);
     }
 
     if (req.method === "POST") {
