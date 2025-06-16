@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cold Snapshots",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phaseId": {
+      "type": "string"
+    },
+    "snapshotMarkdown": {
+      "type": "string"
+    },
+    "keyUpdates": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

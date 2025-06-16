@@ -1,3 +1,5 @@
+console.log("🚀 Running generateFieldMap...");
+
 require('dotenv').config();
 
 import fs from 'fs';
@@ -78,6 +80,8 @@ async function main() {
     throw new Error(`Failed to fetch metadata: ${res.status} ${res.statusText}`);
   }
   const data = (await res.json()) as any;
+  console.log("Fetched tables:", data.tables?.map((t: any) => t.name));
+
 
   const schemaDir = path.join(__dirname, '../schemas');
   fs.mkdirSync(schemaDir, { recursive: true });

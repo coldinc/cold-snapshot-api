@@ -3,57 +3,60 @@
 
 function getFieldMap(tableName: string): { [key: string]: string } {
   switch (tableName) {
+    case "Cold Snapshots":
+      return {
+        date: "Date",
+        phaseId: "Phase ID",
+        snapshotMarkdown: "Snapshot Markdown",
+        keyUpdates: "Key Updates",
+        id: "ID",
+        created: "Created",
+      };
     case "Contacts":
       return {
         name: "Name",
         role: "Role",
         company: "Company",
         website: "Website",
+        linkedin: "LinkedIn",
         overview: "Overview",
-        relationshipType: "Relationship Type",
-        patternMatchCollaboration: "Pattern Match: Collaboration",
-        patternMatchArchetype: "Pattern Match: Archetype",
-        id: "ID",
-        lastModified: "Last Modified",
-        created: "Created",
         email: "Email",
         source: "Source",
-        status: "Status",
-        followupNeeded: "Followup Needed",
-        linkedin: "LinkedIn",
+        relationshipType: "Relationship Type",
         relationshipStrength: "Relationship Strength",
+        status: "Status",
+        patternMatchCollaboration: "Pattern Match: Collaboration",
+        patternMatchArchetype: "Pattern Match: Archetype",
         importedTable: "Imported table",
+        followupNeeded: "Followup Needed",
         nextFollowupDate: "Next Followup Date",
         followupSummary: "Followup Summary",
+        latestRelatedLog: "Latest Related Log",
+        id: "ID",
+        lastModified: "Last Modified",
+        logs: "Logs",
+        threads: "Threads",
+        created: "Created",
       };
     case "Logs":
       return {
-        logType: "Log Type",
-        content: "Content",
         summary: "Summary",
-        createdAt: "Created At",
-        lastModified: "Last Modified",
-        logId: "Log ID",
+        contactsLinked: "Contacts (Linked)",
+        linkedContactId: "Linked Contact ID",
+        logType: "Log Type",
+        date: "Date",
+        content: "Content",
         followupNeeded: "Followup Needed",
         followupNotes: "Followup Notes",
         tags: "Tags",
         relatedOutput: "Related Output",
-        contactsLinked: "Contacts (Linked)",
-        linkedContactId: "Linked Contact ID",
-        date: "Date",
+        logId: "Log ID",
         author: "Author",
+        createdAt: "Created At",
+        lastModified: "Last Modified",
+        contacts: "Contacts",
         threadLinked: "Thread (Linked)",
         threadId: "Thread ID",
-        contacts: "Contacts",
-      };
-    case "Cold Snapshots":
-      return {
-        snapshotMarkdown: "Snapshot Markdown",
-        date: "Date",
-        keyUpdates: "Key Updates",
-        phaseId: "Phase ID",
-        id: "ID",
-        created: "Created",
       };
     case "Threads":
       return {
@@ -65,6 +68,7 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         contactId: "Contact ID",
         associatedLogs: "Associated Logs",
         logId: "Log ID",
+        linkToOutputs: "Link to Outputs",
         createdDate: "Created Date",
         lastModified: "Last Modified",
         threadId: "Thread ID",

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Threads",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Experiment",
+          "Internal",
+          "Output",
+          "Collaboration",
+          ""
+        ]
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Idea",
+        "In Progress",
+        "Paused",
+        "Complete",
+        ""
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "associatedContacts": {
+      "type": "array"
+    },
+    "contactId": {
+      "type": "string"
+    },
+    "associatedLogs": {
+      "type": "array"
+    },
+    "logId": {
+      "type": "string"
+    },
+    "linkToOutputs": {
+      "type": "string"
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastModified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "threadId": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Contacts",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string"
+    },
+    "company": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "linkedin": {
+      "type": "string"
+    },
+    "overview": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "Referral",
+        "Outreach",
+        "Event",
+        "Colleague",
+        "Inbound",
+        "Lunchclub"
+      ]
+    },
+    "relationshipType": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Partner",
+          "Customer",
+          "Mentee",
+          "Subscriber",
+          "Lead",
+          "Network",
+          "Frenemy"
+        ]
+      }
+    },
+    "relationshipStrength": {
+      "type": "string",
+      "enum": [
+        "Cold",
+        "Weak",
+        "Warm",
+        "Strong"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Maintenance",
+        "Active Conversation",
+        "Needs Follow Up",
+        "No Response",
+        "No Fit",
+        "Dormant"
+      ]
+    },
+    "patternMatchCollaboration": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Collaborated – Referrer",
+          "Potential – Referrer",
+          "Potential – Client",
+          "Collaborated – Client",
+          "Potential – Sponsor",
+          "Collaborated – Sponsor",
+          "Potential – Drop Partner",
+          "Collaborated – Drop Partner",
+          "Potential – Event Partner",
+          "Collaborated – Event Partner",
+          "Potential – Content Partner",
+          "Collaborated – Content Partner",
+          "Potential – Podcast Guest",
+          "Collaborated – Podcast Guest",
+          "Collaborated – Mentoring",
+          "Potential – Mentoring"
+        ]
+      }
+    },
+    "patternMatchArchetype": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Solo",
+          "Builder",
+          "Artist",
+          "Driver",
+          "Connector",
+          "Influencer",
+          "Agency",
+          "Educator",
+          "Investor"
+        ]
+      }
+    },
+    "importedTable": {
+      "type": "array"
+    },
+    "followupNeeded": {
+      "type": "boolean"
+    },
+    "nextFollowupDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "followupSummary": {
+      "type": "string"
+    },
+    "latestRelatedLog": {
+      "type": "array"
+    },
+    "id": {
+      "type": "string"
+    },
+    "lastModified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "logs": {
+      "type": "string"
+    },
+    "threads": {
+      "type": "array"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

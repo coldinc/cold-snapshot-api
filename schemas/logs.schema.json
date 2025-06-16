@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Logs",
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "contactsLinked": {
+      "type": "array"
+    },
+    "linkedContactId": {
+      "type": "string"
+    },
+    "logType": {
+      "type": "string",
+      "enum": [
+        "Call",
+        "Meeting",
+        "Note",
+        "Email"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content": {
+      "type": "string"
+    },
+    "followupNeeded": {
+      "type": "boolean"
+    },
+    "followupNotes": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    },
+    "relatedOutput": {
+      "type": "string"
+    },
+    "logId": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lastModified": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contacts": {
+      "type": "array"
+    },
+    "threadLinked": {
+      "type": "array"
+    },
+    "threadId": {
+      "type": "string"
+    }
+  }
+}
