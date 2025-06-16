@@ -15,6 +15,7 @@
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "generate:fieldmap": "ts-node scripts/generateFieldMap.ts",
     "test": "jest"
   },
   "dependencies": {
