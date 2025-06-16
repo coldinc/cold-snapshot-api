@@ -1,3 +1,5 @@
+// This file is auto-generated. Run yarn generate:fieldmap to refresh.
+
 function getFieldMap(tableName: string): { [key: string]: string } {
   switch (tableName) {
     case "Contacts":
@@ -19,7 +21,7 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         contacts: "Contacts (Linked)",
         threadId: "Thread ID"
       };
-    case "Snapshots":
+    case "Cold Snapshots":
       return {
         date: "Date",
         content: "Snapshot Markdown",
@@ -42,19 +44,4 @@ function getFieldMap(tableName: string): { [key: string]: string } {
   }
 }
 
-function filterMappedFields(fields: Record<string, any>, tableName: string): Record<string, any> {
-  const fieldMap = getFieldMap(tableName);
-  const mapped: Record<string, any> = {};
-  for (const internalKey in fieldMap) {
-    const airtableField = fieldMap[internalKey];
-    if (fields[airtableField] !== undefined) {
-      mapped[internalKey] = fields[airtableField];
-    }
-  }
-  return mapped;
-}
-
-module.exports = {
-  getFieldMap,
-  filterMappedFields
-};
+module.exports = { getFieldMap };
