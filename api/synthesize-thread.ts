@@ -56,7 +56,7 @@ const apiSynthesizeThreadHandler = async (req: any, res: any) => {
     });
   } catch (error) {
     console.error("Synthesis failed:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
