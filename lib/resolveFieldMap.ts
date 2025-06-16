@@ -21,9 +21,8 @@ function getFieldMap(tableName: string): { [key: string]: string } {
       };
     case "Snapshots":
       return {
-        title: "Title",
         date: "Date",
-        content: "Content",
+        content: "Snapshot Markdown",
         keyUpdates: "Key Updates",
         phaseId: "Phase ID"
       };

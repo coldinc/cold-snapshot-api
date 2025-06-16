@@ -6758,9 +6758,8 @@ var require_resolveFieldMap = __commonJS({
           };
         case "Snapshots":
           return {
-            title: "Title",
             date: "Date",
-            content: "Content",
+            content: "Snapshot Markdown",
             keyUpdates: "Key Updates",
             phaseId: "Phase ID"
           };
