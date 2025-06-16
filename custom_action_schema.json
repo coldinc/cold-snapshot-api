@@ -1,0 +1,377 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Cold OS API 2.0",
+    "version": "2.0.0",
+    "description": "Snapshot, Partner, and Log management for Cold OS"
+  },
+  "servers": [
+    {
+      "url": "https://cold-snapshot-api.vercel.app"
+    }
+  ],
+  "paths": {
+    "/api/snapshots/latest:" {
+      "get": {
+        "operationId": "getLatestSnapshot",
+        "summary": "Get the latest Cold OS snapshot",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "snapshot": {
+                      "type": "object",
+                      "properties": {
+                        "Date": {
+                          "type": "string"
+                        },
+                        "Snapshot Markdown": {
+                          "type": "string"
+                        },
+                        "Key Updates": {
+                          "type": "string"
+                        },
+                        "Phase ID": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Snapshot Markdown"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/snapshots/latest": {
+      "post": {
+        "operationId": "postNewSnapshot",
+        "summary": "Create a new Cold OS snapshot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  },
+                  "keyUpdates": {
+                    "type": "string"
+                  },
+                  "phaseId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Snapshot saved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contacts": {
+      "get": {
+        "operationId": "getAllContacts",
+        "description": "Fetch all partner contacts from Airtable.",
+        "responses": {
+          "200": {
+            "description": "A list of contacts"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createContact",
+        "description": "Create a new partner contact in Airtable.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Company": {
+                    "type": "string"
+                  },
+                  "Email": {
+                    "type": "string"
+                  },
+                  "LinkedIn": {
+                    "type": "string"
+                  },
+                  "Overview": {
+                    "type": "string"
+                  },
+                  "Pattern Match: Archetype": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Agency",
+                        "Artist",
+                        "Builder",
+                        "Connector",
+                        "Driver",
+                        "Educator",
+                        "Influencer",
+                        "Investor",
+                        "Solo"
+                      ]
+                    }
+                  },
+                  "Pattern Match: Collaboration": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Collaborated – Client",
+                        "Collaborated – Drop Partner",
+                        "Collaborated – Referrer",
+                        "Collaborated – Sponsor",
+                        "Collaborated – Event Partner",
+                        "Collaborated – Content Partner",
+                        "Collaborated – Podcast Guest",
+                        "Collaborated – Mentoring",
+                        "Potential – Client",
+                        "Potential – Drop Partner",
+                        "Potential – Referrer",
+                        "Potential – Sponsor",
+                        "Potential – Event Partner",
+                        "Potential – Content Partner",
+                        "Potential – Podcast Guest",
+                        "Potential – Mentoring"
+                      ]
+                    }
+                  },
+                  "Relationship Strength": {
+                    "type": "string",
+                    "enum": [
+                      "Cold",
+                      "Weak",
+                      "Warm",
+                      "Strong"
+                    ]
+                  },
+                  "Relationship Type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Partner",
+                        "Customer",
+                        "Mentee",
+                        "Subscriber",
+                        "Lead",
+                        "Network",
+                        "Frenemy"
+                      ]
+                    }
+                  },
+                  "Role": {
+                    "type": "string"
+                  },
+                  "Source": {
+                    "type": "string",
+                    "enum": [
+                      "Referral",
+                      "Outreach",
+                      "Event",
+                      "Colleague",
+                      "Inbound",
+                      "Lunchclub"
+                    ]
+                  },
+                  "Status": {
+                    "type": "string",
+                    "enum": [
+                      "Maintenance",
+                      "Active Conversation",
+                      "Needs Follow Up",
+                      "No Response",
+                      "No Fit",
+                      "Dormant"
+                    ]
+                  },
+                  "Website": {
+                    "type": "string"
+                  },
+                  "Followup Needed": {
+                    "type": "boolean"
+                  },
+                  "Next Followup Date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "Followup Summary": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "Name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created contact"
+          }
+        }
+      }
+    },
+    "/api/contacts/search": {
+      "get": {
+        "operationId": "searchContactsByName",
+        "description": "Search contacts by partial name match.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results"
+          }
+        }
+      }
+    },
+    "/api/contacts/{id}": {
+      "get": {
+        "operationId": "getContactById",
+        "description": "Fetch a specific partner contact by Airtable record ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The contact record"
+          }
+        }
+      }
+    },
+    "/api/log-entries": {
+      "get": {
+        "operationId": "getAllLogs",
+        "description": "Fetch all log entries from the Logs database.",
+        "responses": {
+          "200": {
+            "description": "A list of log entries"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createLogEntry",
+        "description": "Create a new log entry linked to one or more contacts.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Log Type": {
+                    "type": "string",
+                    "enum": [
+                      "Call",
+                      "Meeting",
+                      "Note",
+                      "Email"
+                    ]
+                  },
+                  "Content": {
+                    "type": "string"
+                  },
+                  "Summary": {
+                    "type": "string"
+                  },
+                  "Date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "Tags": {
+                    "type": "string",
+                    "description": "Comma-separated tags describing the log, e.g., 'Strategy, Planning, Alignment'"
+                  },
+                  "Followup Needed": {
+                    "type": "boolean"
+                  },
+                  "Followup Notes": {
+                    "type": "string"
+                  },
+                  "Related Output": {
+                    "type": "string"
+                  },
+                  "Contacts (Linked)": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "Log Type",
+                  "Content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created log entry"
+          }
+        }
+      }
+    }
+  }
+}
