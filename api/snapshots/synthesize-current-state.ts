@@ -1,8 +1,8 @@
-const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
-  const getAirtableContext = require("../../lib/airtableBase");
-  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+import getAirtableContext from "../../lib/airtableBase.js";
+import { getFieldMap, filterMappedFields } from "../../lib/resolveFieldMap.js";
 
-  const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
   const tableName = TABLES.SNAPSHOTS;
 
@@ -29,4 +29,4 @@ const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = apiSnapshotsSynthesizeHandler;
+export default apiSnapshotsSynthesizeHandler;

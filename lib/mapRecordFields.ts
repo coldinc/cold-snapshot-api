@@ -1,4 +1,3 @@
-export {};
 function mapInternalToAirtable(input: Record<string, any>, fieldMap: Record<string, string>): Record<string, any> {
   const mapped: Record<string, any> = {};
   for (const key in input) {
@@ -20,4 +19,4 @@ function mapAirtableToInternal(record: { id?: string; fields?: Record<string, an
   return result;
 }
 
-module.exports = { mapInternalToAirtable, mapAirtableToInternal };
+export { mapInternalToAirtable, mapAirtableToInternal };

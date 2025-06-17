@@ -1,5 +1,6 @@
+import getAirtableContext from "../../lib/airtableBase.js";
+
 const apiSnapshotsLatestHandler = async (req: any, res: any) => {
-    const getAirtableContext = require("../../lib/airtableBase");
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
     const tableName = TABLES.SNAPSHOTS;
@@ -27,4 +28,4 @@ const apiSnapshotsLatestHandler = async (req: any, res: any) => {
     }
 };
 
-module.exports = apiSnapshotsLatestHandler;
+export default apiSnapshotsLatestHandler;

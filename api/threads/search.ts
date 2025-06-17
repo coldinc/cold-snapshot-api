@@ -1,8 +1,8 @@
 // Moved to prevent route collision with [id].ts in Next.js
-export {};
+import getAirtableContext from "../../lib/airtableBase.js";
+import { createSearchHandler } from "../../lib/airtableSearch.js";
+
 const apiThreadsSearchHandler = async (req: any, res: any) => {
-  const getAirtableContext = require("../../lib/airtableBase");
-  const { createSearchHandler } = require("../../lib/airtableSearch");
 
   const { TABLES } = getAirtableContext();
 
@@ -15,4 +15,4 @@ const apiThreadsSearchHandler = async (req: any, res: any) => {
   return handler(req, res);
 };
 
-module.exports = apiThreadsSearchHandler;
+export default apiThreadsSearchHandler;

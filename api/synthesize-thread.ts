@@ -1,14 +1,14 @@
+import axios from "axios";
+import getAirtableContext from "../lib/airtableBase.js";
+import { getFieldMap } from "../lib/resolveFieldMap.js";
+import { buildSynthesisPrompt, runGPTSynthesis } from "../lib/synthesisUtils.js";
+
 const apiSynthesizeThreadHandler = async (req: any, res: any) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const axios = require("axios");
-  const getAirtableContext = require("../lib/airtableBase");
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
-
-  const { getFieldMap } = require("../lib/resolveFieldMap");
-  const { buildSynthesisPrompt, runGPTSynthesis } = require("../lib/synthesisUtils");
 
   try {
     const { threadId } = req.body;
@@ -60,4 +60,4 @@ const apiSynthesizeThreadHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = apiSynthesizeThreadHandler;
+export default apiSynthesizeThreadHandler;

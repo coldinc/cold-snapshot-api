@@ -91,4 +91,4 @@ function filterMappedFields(data: Record<string, any>, fieldMap: Record<string, 
   return result;
 }
 
-module.exports = { getFieldMap, filterMappedFields };
+export { getFieldMap, filterMappedFields };

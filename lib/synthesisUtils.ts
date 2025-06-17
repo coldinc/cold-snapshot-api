@@ -1,9 +1,9 @@
-async function synthesizeThreadNarrative(threadId: string) {
-    const getAirtableContext = require("../lib/airtableBase");
-    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+import getAirtableContext from "../lib/airtableBase.js";
+import { getFieldMap } from "../lib/resolveFieldMap.js";
+import OpenAI from "openai";
 
-    const { getFieldMap } = require("../lib/resolveFieldMap");
-    const OpenAI = require("openai");
+export async function synthesizeThreadNarrative(threadId: string) {
+    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY
@@ -58,6 +58,4 @@ async function synthesizeThreadNarrative(threadId: string) {
     };
 }
 
-module.exports = {
-    synthesizeThreadNarrative
-};
+export { synthesizeThreadNarrative };
