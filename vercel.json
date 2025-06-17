@@ -1,18 +1,17 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/api/contacts/search", "dest": "/dist/api/contacts/search.js" },
-    { "src": "/api/contacts/(?:[^/]+)", "dest": "/dist/api/contacts/[id].js" },
-    { "src": "/api/log-entries/search", "dest": "/dist/api/log-entries/search.js" },
-    { "src": "/api/log-entries/(?:[^/]+)", "dest": "/dist/api/log-entries/[id].js" },
-    { "src": "/api/snapshots/search", "dest": "/dist/api/snapshots/search.js" },
-    { "src": "/api/snapshots/(?:[^/]+)", "dest": "/dist/api/snapshots/[id].js" },
-    { "src": "/api/threads/search", "dest": "/dist/api/threads/search.js" },
-    { "src": "/api/threads/(?:[^/]+)", "dest": "/dist/api/threads/[id].js" },
-    { "src": "/api/snapshots/latest", "dest": "/dist/api/snapshots/latest.js" },
-    { "src": "/api/snapshots/synthesize-current-state", "dest": "/dist/api/snapshots/synthesize-current-state.js" },
-    { "src": "/api/synthesize-thread", "dest": "/dist/api/synthesize-thread.js" },
+    { "src": "/api/contacts/search/?", "dest": "/dist/api/contacts/search.js" },
+    { "src": "/api/contacts/(?:[^/]+)/?", "dest": "/dist/api/contacts/[id].js" },
+    { "src": "/api/log-entries/search/?", "dest": "/dist/api/log-entries/search.js" },
+    { "src": "/api/log-entries/(?:[^/]+)/?", "dest": "/dist/api/log-entries/[id].js" },
+    { "src": "/api/snapshots/search/?", "dest": "/dist/api/snapshots/search.js" },
+    { "src": "/api/snapshots/(?:[^/]+)/?", "dest": "/dist/api/snapshots/[id].js" },
+    { "src": "/api/threads/search/?", "dest": "/dist/api/threads/search.js" },
+    { "src": "/api/threads/(?:[^/]+)/?", "dest": "/dist/api/threads/[id].js" },
+    { "src": "/api/snapshots/latest/?", "dest": "/dist/api/snapshots/latest.js" },
+    { "src": "/api/snapshots/synthesize-current-state/?", "dest": "/dist/api/snapshots/synthesize-current-state.js" },
+    { "src": "/api/synthesize-thread/?", "dest": "/dist/api/synthesize-thread.js" },
     { "src": "/api/(.*)", "dest": "/dist/api/$1.js" }
   ]
 }
-
