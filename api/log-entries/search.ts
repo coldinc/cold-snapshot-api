@@ -2,10 +2,10 @@ const { airtableSearch } = require("../../lib/airtableSearch");
 const getAirtableContext = require("../../lib/airtableBase");
 const { getFieldMap } = require("../../lib/resolveFieldMap");
 
-const { TABLES } = getAirtableContext();
 const fieldMap = getFieldMap("Logs");
 
 const apiLogEntriesSearchHandler = async (req: any, res: any) => {
+  const { TABLES } = getAirtableContext();
   const { name, threadId } = req.query;
 
   if (!name && !threadId) {
