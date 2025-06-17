@@ -1,3 +1,4 @@
+export {};
 const apiThreadsHandler = async (req: any, res: any) => {
     const getAirtableContext = require("../../lib/airtableBase");
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
