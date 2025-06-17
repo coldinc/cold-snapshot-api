@@ -1,3 +1,5 @@
+console.log("[contacts/[id]] TABLES.CONTACTS =", TABLES.CONTACTS, "| id =", id);
+
 const idContactsHandler = async (req: any, res: any) => {
   const axios = require("axios");
   const getAirtableContext = require("../../lib/airtableBase");
