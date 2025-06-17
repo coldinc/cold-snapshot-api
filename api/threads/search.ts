@@ -1,10 +1,16 @@
 const getAirtableContext = require("../../lib/airtableBase");
 const { createSearchHandler } = require("../../lib/airtableSearch");
 
-const { TABLES } = getAirtableContext();
+const apiThreadsSearchHandler = async (req: any, res: any) => {
+  const { TABLES } = getAirtableContext();
 
-module.exports = createSearchHandler({
-  tableName: TABLES.THREADS,
-  fieldName: "Name",
-  queryParam: "title",
-});
+  const handler = createSearchHandler({
+    tableName: TABLES.THREADS,
+    fieldName: "Name",
+    queryParam: "title",
+  });
+
+  return handler(req, res);
+};
+
+module.exports = apiThreadsSearchHandler;
