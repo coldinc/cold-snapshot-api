@@ -1,3 +1,4 @@
+export {};
 const Airtable = require("airtable");
 
 const getAirtableContext = () => {

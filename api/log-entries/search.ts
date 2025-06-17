@@ -1,4 +1,5 @@
 // Moved to prevent route collision with [id].ts in Next.js
+export {};
 const { airtableSearch } = require("../../lib/airtableSearch");
 const getAirtableContext = require("../../lib/airtableBase");
 const { getFieldMap } = require("../../lib/resolveFieldMap");
