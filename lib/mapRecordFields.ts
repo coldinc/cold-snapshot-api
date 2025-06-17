@@ -1,3 +1,4 @@
+export {};
 function mapInternalToAirtable(input: Record<string, any>, fieldMap: Record<string, string>): Record<string, any> {
   const mapped: Record<string, any> = {};
   for (const key in input) {

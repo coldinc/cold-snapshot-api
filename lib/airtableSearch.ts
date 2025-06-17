@@ -1,3 +1,4 @@
+export {};
 const axios = require("axios");
 const getAirtableContext = require("./airtableBase");
 
