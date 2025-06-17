@@ -4,8 +4,11 @@ const { createSearchHandler } = require("../../lib/airtableSearch");
 const apiContactsSearchHandler = async (req: any, res: any) => {
   const { TABLES } = getAirtableContext();
 
+  const tableName = TABLES.CONTACTS;
+  console.log("[api/contacts/search] resolved tableName:", tableName);
+
   const handler = createSearchHandler({
-    tableName: TABLES.CONTACTS,
+    tableName,
     fieldName: "Name",
     queryParam: "name",
   });

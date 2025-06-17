@@ -19,6 +19,9 @@ async function airtableSearch(tableName: string, filterFormula: string) {
 }
 
 function createSearchHandler({ tableName, fieldName, queryParam }: { tableName: string; fieldName: string; queryParam: string }) {
+  if (tableName.includes('/')) {
+    throw new Error(`Invalid tableName "${tableName}" - must not contain '/'`);
+  }
   return async function (req: any, res: any) {
     const value = req.query[queryParam];
     if (!value || typeof value !== "string") {
