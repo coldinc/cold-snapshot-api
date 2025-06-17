@@ -1,6 +1,6 @@
 // Moved to prevent route collision with [id].ts in Next.js
-const getAirtableContext = require("../../../lib/airtableBase");
-const { createSearchHandler } = require("../../../lib/airtableSearch");
+const getAirtableContext = require("../../lib/airtableBase");
+const { createSearchHandler } = require("../../lib/airtableSearch");
 
 const apiContactsSearchHandler = async (req: any, res: any) => {
   const { TABLES } = getAirtableContext();
