@@ -112,7 +112,8 @@
       }
     },
     "importedTable": {
-      "type": "array"
+      "type": "array",
+      "items": { "type": "string" }
     },
     "followupNeeded": {
       "type": "boolean"
@@ -125,7 +126,8 @@
       "type": "string"
     },
     "latestRelatedLog": {
-      "type": "array"
+      "type": "array",
+      "items": { "type": "string" }
     },
     "id": {
       "type": "string"
@@ -138,7 +140,8 @@
       "type": "string"
     },
     "threads": {
-      "type": "array"
+      "type": "array",
+      "items": { "type": "string" }
     },
     "created": {
       "type": "string",

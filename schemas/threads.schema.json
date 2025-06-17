@@ -33,13 +33,15 @@
       "type": "string"
     },
     "associatedContacts": {
-      "type": "array"
+      "type": "array",
+      "items": { "type": "string" }
     },
     "contactId": {
       "type": "string"
     },
     "associatedLogs": {
-      "type": "array"
+      "type": "array",
+      "items": { "type": "string" }
     },
     "logId": {
       "type": "string"
