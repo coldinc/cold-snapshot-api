@@ -1,11 +1,10 @@
-console.log("[contacts/[id]] TABLES.CONTACTS =", TABLES.CONTACTS, "| id =", id);
-
 const idContactsHandler = async (req: any, res: any) => {
   const axios = require("axios");
   const getAirtableContext = require("../../lib/airtableBase");
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
   const { id } = req.query;
+  console.log("[contacts/[id]] TABLES.CONTACTS =", TABLES.CONTACTS, "| id =", id);
   if (!id) {
     return res.status(400).json({ error: "Missing contact ID" });
   }
