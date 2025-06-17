@@ -20,9 +20,10 @@ const apiThreadsHandler = async (req: any, res: any) => {
 
             const mappedRecords = records.map((record) => {
                 const mapped: Record<string, any> = { id: record.id };
+                const fields = record.fields as Record<string, any>;
                 for (const [internalKey, airtableField] of Object.entries(fieldMap)) {
-                    mapped[internalKey] =
-                        record.fields[airtableField] !== undefined ? record.fields[airtableField] : null;
+                    const key = airtableField as keyof typeof fields;
+                    mapped[internalKey] = fields[key] !== undefined ? fields[key] : null;
                 }
                 return mapped;
             });
