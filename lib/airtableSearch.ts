@@ -8,7 +8,16 @@ async function airtableSearch(tableName: string, filterFormula: string) {
     throw new Error("Missing Airtable configuration");
   }
 
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[airtableSearch] baseId:", baseId, "tableName:", tableName);
+    console.log("[airtableSearch] filterFormula:", filterFormula);
+  }
+
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[airtableSearch] url:", url);
+  }
   const config = {
     headers: { Authorization: `Bearer ${airtableToken}` },
     params: { filterByFormula: filterFormula, maxRecords: 10 }
