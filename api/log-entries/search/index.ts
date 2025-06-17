@@ -1,6 +1,7 @@
-const { airtableSearch } = require("../../lib/airtableSearch");
-const getAirtableContext = require("../../lib/airtableBase");
-const { getFieldMap } = require("../../lib/resolveFieldMap");
+// Moved to prevent route collision with [id].ts in Next.js
+const { airtableSearch } = require("../../../lib/airtableSearch");
+const getAirtableContext = require("../../../lib/airtableBase");
+const { getFieldMap } = require("../../../lib/resolveFieldMap");
 
 const fieldMap = getFieldMap("Logs");
 
