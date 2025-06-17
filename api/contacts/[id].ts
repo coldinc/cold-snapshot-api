@@ -1,6 +1,7 @@
+import axios from "axios";
+import getAirtableContext from "../../lib/airtableBase.js";
+
 const idContactsHandler = async (req: any, res: any) => {
-  const axios = require("axios");
-  const getAirtableContext = require("../../lib/airtableBase");
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
   const { id } = req.query;
@@ -45,4 +46,4 @@ const idContactsHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = idContactsHandler;
+export default idContactsHandler;

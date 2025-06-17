@@ -1,9 +1,9 @@
-const apiSnapshotsHandler = async (req: any, res: any) => {
-    const getAirtableContext = require("../../lib/airtableBase");
-    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+import getAirtableContext from "../../lib/airtableBase.js";
+import { getFieldMap } from "../../lib/resolveFieldMap.js";
+import { mapInternalToAirtable } from "../../lib/mapRecordFields.js";
 
-    const { getFieldMap } = require("../../lib/resolveFieldMap");
-    const { mapInternalToAirtable } = require("../../lib/mapRecordFields");
+const apiSnapshotsHandler = async (req: any, res: any) => {
+    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
     const tableName = TABLES.SNAPSHOTS;
 
@@ -53,4 +53,4 @@ const apiSnapshotsHandler = async (req: any, res: any) => {
     }
 };
 
-module.exports = apiSnapshotsHandler;
+export default apiSnapshotsHandler;

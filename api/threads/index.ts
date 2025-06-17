@@ -1,9 +1,8 @@
-export {};
-const apiThreadsHandler = async (req: any, res: any) => {
-    const getAirtableContext = require("../../lib/airtableBase");
-    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+import getAirtableContext from "../../lib/airtableBase.js";
+import { getFieldMap, filterMappedFields } from "../../lib/resolveFieldMap.js";
 
-    const { getFieldMap, filterMappedFields } = require("../../lib/resolveFieldMap");
+const apiThreadsHandler = async (req: any, res: any) => {
+    const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
     const tableName = TABLES.THREADS;
 
@@ -52,4 +51,4 @@ const apiThreadsHandler = async (req: any, res: any) => {
     }
 };
 
-module.exports = apiThreadsHandler;
+export default apiThreadsHandler;

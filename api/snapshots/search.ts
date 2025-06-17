@@ -1,9 +1,9 @@
 // Moved to prevent route collision with [id].ts in Next.js
-export {};
+import getAirtableContext from "../../lib/airtableBase.js";
+import { createSearchHandler } from "../../lib/airtableSearch.js";
+import { getFieldMap } from "../../lib/resolveFieldMap.js";
+
 const apiSnapshotsSearchHandler = async (req: any, res: any) => {
-  const getAirtableContext = require("../../lib/airtableBase");
-  const { createSearchHandler } = require("../../lib/airtableSearch");
-  const { getFieldMap } = require("../../lib/resolveFieldMap");
 
   const { TABLES } = getAirtableContext();
   const fieldMap = getFieldMap(TABLES.SNAPSHOTS);
@@ -17,4 +17,4 @@ const apiSnapshotsSearchHandler = async (req: any, res: any) => {
   return handler(req, res);
 };
 
-module.exports = apiSnapshotsSearchHandler;
+export default apiSnapshotsSearchHandler;

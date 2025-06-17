@@ -1,10 +1,9 @@
-export {};
-const apiContactsHandler = async (req: any, res: any) => {
-  const getAirtableContext = require("../../lib/airtableBase");
-  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
+import getAirtableContext from "../../lib/airtableBase.js";
+import { getFieldMap } from "../../lib/resolveFieldMap.js";
+import { mapInternalToAirtable } from "../../lib/mapRecordFields.js";
 
-  const { getFieldMap } = require("../../lib/resolveFieldMap");
-  const { mapInternalToAirtable } = require("../../lib/mapRecordFields");
+const apiContactsHandler = async (req: any, res: any) => {
+  const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
   const tableName = TABLES.CONTACTS;
 
@@ -53,4 +52,4 @@ const apiContactsHandler = async (req: any, res: any) => {
   }
 };
 
-module.exports = apiContactsHandler;
+export default apiContactsHandler;

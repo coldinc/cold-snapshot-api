@@ -1,5 +1,4 @@
-export {};
-const Airtable = require("airtable");
+import Airtable from "airtable";
 
 const getAirtableContext = () => {
   const airtableToken = process.env.AIRTABLE_TOKEN;
@@ -26,4 +25,4 @@ const getAirtableContext = () => {
   };
 };
 
-module.exports = getAirtableContext;
+export default getAirtableContext;

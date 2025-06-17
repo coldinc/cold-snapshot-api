@@ -1,6 +1,5 @@
-export {};
-const axios = require("axios");
-const getAirtableContext = require("./airtableBase");
+import axios from "axios";
+import getAirtableContext from "./airtableBase.js";
 
 async function airtableSearch(tableName: string, filterFormula: string) {
   const { airtableToken, baseId } = getAirtableContext();
@@ -58,4 +57,4 @@ function createSearchHandler({ tableName, fieldName, queryParam }: { tableName: 
   };
 }
 
-module.exports = { airtableSearch, createSearchHandler };
+export { airtableSearch, createSearchHandler };
