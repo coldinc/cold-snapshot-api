@@ -63,6 +63,9 @@ function fieldToSchema(field: any): Record<string, any> {
     default:
       schema.type = 'string';
   }
+  if (schema.type === 'array' && !schema.items) {
+    schema.items = { type: 'string' };
+  }
   return schema;
 }
 
