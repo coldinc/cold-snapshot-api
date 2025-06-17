@@ -61,26 +61,31 @@
           "content": {
             "application/json": {
               "schema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Cold Snapshots",
                 "type": "object",
-                "description": "Snapshot content and metadata",
                 "properties": {
-                  "content": {
+                  "date": {
                     "type": "string",
-                    "description": "Markdown content of the snapshot"
-                  },
-                  "keyUpdates": {
-                    "type": "string",
-                    "description": "Optional key updates summary"
+                    "format": "date-time"
                   },
                   "phaseId": {
+                    "type": "string"
+                  },
+                  "snapshotMarkdown": {
+                    "type": "string"
+                  },
+                  "keyUpdates": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "created": {
                     "type": "string",
-                    "description": "Associated phase identifier"
+                    "format": "date-time"
                   }
-                },
-                "required": [
-                  "content"
-                ],
-                "additionalProperties": false
+                }
               }
             }
           }
@@ -130,82 +135,43 @@
           "content": {
             "application/json": {
               "schema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Contacts",
                 "type": "object",
-                "description": "Contact details to store in Airtable",
                 "properties": {
-                  "Name": {
-                    "type": "string",
-                    "description": "Full name of the contact"
+                  "name": {
+                    "type": "string"
                   },
-                  "Company": {
-                    "type": "string",
-                    "description": "Company or organization"
+                  "role": {
+                    "type": "string"
                   },
-                  "Email": {
-                    "type": "string",
-                    "format": "email",
-                    "description": "Primary email address"
+                  "company": {
+                    "type": "string"
                   },
-                  "LinkedIn": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "LinkedIn profile URL"
+                  "website": {
+                    "type": "string"
                   },
-                  "Overview": {
-                    "type": "string",
-                    "description": "Short description of the contact"
+                  "linkedin": {
+                    "type": "string"
                   },
-                  "Pattern Match: Archetype": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "Agency",
-                        "Artist",
-                        "Builder",
-                        "Connector",
-                        "Driver",
-                        "Educator",
-                        "Influencer",
-                        "Investor",
-                        "Solo"
-                      ]
-                    }
+                  "overview": {
+                    "type": "string"
                   },
-                  "Pattern Match: Collaboration": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "Collaborated – Client",
-                        "Collaborated – Drop Partner",
-                        "Collaborated – Referrer",
-                        "Collaborated – Sponsor",
-                        "Collaborated – Event Partner",
-                        "Collaborated – Content Partner",
-                        "Collaborated – Podcast Guest",
-                        "Collaborated – Mentoring",
-                        "Potential – Client",
-                        "Potential – Drop Partner",
-                        "Potential – Referrer",
-                        "Potential – Sponsor",
-                        "Potential – Event Partner",
-                        "Potential – Content Partner",
-                        "Potential – Podcast Guest",
-                        "Potential – Mentoring"
-                      ]
-                    }
+                  "email": {
+                    "type": "string"
                   },
-                  "Relationship Strength": {
+                  "source": {
                     "type": "string",
                     "enum": [
-                      "Cold",
-                      "Weak",
-                      "Warm",
-                      "Strong"
+                      "Referral",
+                      "Outreach",
+                      "Event",
+                      "Colleague",
+                      "Inbound",
+                      "Lunchclub"
                     ]
                   },
-                  "Relationship Type": {
+                  "relationshipType": {
                     "type": "array",
                     "items": {
                       "type": "string",
@@ -220,21 +186,16 @@
                       ]
                     }
                   },
-                  "Role": {
-                    "type": "string"
-                  },
-                  "Source": {
+                  "relationshipStrength": {
                     "type": "string",
                     "enum": [
-                      "Referral",
-                      "Outreach",
-                      "Event",
-                      "Colleague",
-                      "Inbound",
-                      "Lunchclub"
+                      "Cold",
+                      "Weak",
+                      "Warm",
+                      "Strong"
                     ]
                   },
-                  "Status": {
+                  "status": {
                     "type": "string",
                     "enum": [
                       "Maintenance",
@@ -245,25 +206,90 @@
                       "Dormant"
                     ]
                   },
-                  "Website": {
-                    "type": "string",
-                    "format": "uri"
+                  "patternMatchCollaboration": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Collaborated – Referrer",
+                        "Potential – Referrer",
+                        "Potential – Client",
+                        "Collaborated – Client",
+                        "Potential – Sponsor",
+                        "Collaborated – Sponsor",
+                        "Potential – Drop Partner",
+                        "Collaborated – Drop Partner",
+                        "Potential – Event Partner",
+                        "Collaborated – Event Partner",
+                        "Potential – Content Partner",
+                        "Collaborated – Content Partner",
+                        "Potential – Podcast Guest",
+                        "Collaborated – Podcast Guest",
+                        "Collaborated – Mentoring",
+                        "Potential – Mentoring"
+                      ]
+                    }
                   },
-                  "Followup Needed": {
+                  "patternMatchArchetype": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Solo",
+                        "Builder",
+                        "Artist",
+                        "Driver",
+                        "Connector",
+                        "Influencer",
+                        "Agency",
+                        "Educator",
+                        "Investor"
+                      ]
+                    }
+                  },
+                  "importedTable": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "followupNeeded": {
                     "type": "boolean"
                   },
-                  "Next Followup Date": {
+                  "nextFollowupDate": {
                     "type": "string",
                     "format": "date-time"
                   },
-                  "Followup Summary": {
+                  "followupSummary": {
                     "type": "string"
+                  },
+                  "latestRelatedLog": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "lastModified": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "logs": {
+                    "type": "string"
+                  },
+                  "threads": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "created": {
+                    "type": "string",
+                    "format": "date-time"
                   }
-                },
-                "required": [
-                  "Name"
-                ],
-                "additionalProperties": false
+                }
               }
             }
           }
@@ -330,19 +356,32 @@
           }
         }
       },
-        "post": {
-          "operationId": "createLogEntry",
-          "summary": "Create a log entry",
-          "description": "Create a new log entry linked to one or more contacts.",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "description": "Fields for the log record",
-                  "properties": {
-                  "Log Type": {
+      "post": {
+        "operationId": "createLogEntry",
+        "summary": "Create a log entry",
+        "description": "Create a new log entry linked to one or more contacts.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Logs",
+                "type": "object",
+                "properties": {
+                  "summary": {
+                    "type": "string"
+                  },
+                  "contactsLinked": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedContactId": {
+                    "type": "string"
+                  },
+                  "logType": {
                     "type": "string",
                     "enum": [
                       "Call",
@@ -351,41 +390,55 @@
                       "Email"
                     ]
                   },
-                  "Content": {
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "content": {
                     "type": "string"
                   },
-                  "Summary": {
-                    "type": "string"
-                  },
-                  "Date": {
-                    "type": "string",
-                    "format": "date"
-                  },
-                  "Tags": {
-                    "type": "string",
-                    "description": "Comma-separated tags describing the log, e.g., 'Strategy, Planning, Alignment'"
-                  },
-                  "Followup Needed": {
+                  "followupNeeded": {
                     "type": "boolean"
                   },
-                  "Followup Notes": {
+                  "followupNotes": {
                     "type": "string"
                   },
-                  "Related Output": {
+                  "tags": {
                     "type": "string"
                   },
-                  "Contacts (Linked)": {
+                  "relatedOutput": {
+                    "type": "string"
+                  },
+                  "logId": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "lastModified": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "contacts": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "threadLinked": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "threadId": {
+                    "type": "string"
                   }
-                },
-                "required": [
-                  "Log Type",
-                  "Content"
-                ],
-                "additionalProperties": false
+                }
               }
             }
           }

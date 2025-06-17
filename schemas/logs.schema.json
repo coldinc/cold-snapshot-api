@@ -8,7 +8,9 @@
     },
     "contactsLinked": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "linkedContactId": {
       "type": "string"
@@ -57,11 +59,15 @@
     },
     "contacts": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "threadLinked": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "threadId": {
       "type": "string"

@@ -34,14 +34,18 @@
     },
     "associatedContacts": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "contactId": {
       "type": "string"
     },
     "associatedLogs": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "logId": {
       "type": "string"
