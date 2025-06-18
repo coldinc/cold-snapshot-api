@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "prebuild": "rm -f api/**/*.js api/**/*.js.map",
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",

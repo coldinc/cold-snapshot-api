@@ -3,15 +3,15 @@ import { join } from 'path'
 
 export default defineConfig({
   entry: ['api/**/*.ts', 'lib/**/*.ts', 'utils/**/*.ts'],
-  outDir: 'dist',
+  outDir: 'api',
   format: ['esm'],
   target: 'node18',
   dts: false,
   splitting: false,
   sourcemap: true,
-  clean: true,
+  clean: false,
   minify: false,
-  shims: false,
+  shims: true,
   esbuildOptions(options) {
     options.external = options.external || []
     options.external.push('openai') // Safely mark as external
