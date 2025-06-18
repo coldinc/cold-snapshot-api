@@ -1,6 +1,8 @@
 import axios from "axios";
 import getAirtableContext from "../lib/airtableBase.js";
 import { getFieldMap } from "../lib/resolveFieldMap.js";
+import { synthesizeThreadNarrative } from "../lib/synthesisUtils.js";
+
 
 const apiSynthesizeThreadHandler = async (req: any, res: any) => {
   if (req.method !== "POST") {

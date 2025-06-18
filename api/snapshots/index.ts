@@ -1,6 +1,8 @@
 import getAirtableContext from "../../lib/airtableBase.js";
 import { getFieldMap } from "../../lib/resolveFieldMap.js";
 import { mapInternalToAirtable } from "../../lib/mapRecordFields.js";
+import { FieldSet, Record as AirtableRecord } from "airtable";
+
 
 const apiSnapshotsHandler = async (req: any, res: any) => {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -14,7 +16,7 @@ const apiSnapshotsHandler = async (req: any, res: any) => {
 
             await base(tableName)
                 .select({ view: "Grid view" })
-                .eachPage((recordsPage: any[], fetchNextPage: () => void) => {
+                .eachPage((recordsPage: Records<FieldSet>, fetchNextPage: () => void) => {
                     records.push(...recordsPage);
                     fetchNextPage();
                 });

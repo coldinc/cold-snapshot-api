@@ -1,5 +1,6 @@
 import getAirtableContext from "../lib/airtableBase.js";
 import { getFieldMap } from "../lib/resolveFieldMap.js";
+import { FieldSet, Record as AirtableRecord } from "airtable";
 import OpenAI from "openai";
 
 export async function synthesizeThreadNarrative(threadId: string) {
@@ -57,4 +58,3 @@ export async function synthesizeThreadNarrative(threadId: string) {
         recommendations: [] // Expand if needed later
     };
 }
-
