@@ -1,0 +1,2 @@
+# Hide TypeScript source files inside /api so they don't clash with compiled JS
+api/**/*.ts
