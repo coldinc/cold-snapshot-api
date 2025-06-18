@@ -139,3 +139,11 @@ dist
 # build artefacts
 api/**/*.js
 api/**/*.js.map
+
+# compiled JS
+api/**/*.js
+api/**/*.js.map
+
+# compiled JS
+api/**/*.js
+api/**/*.js.map
