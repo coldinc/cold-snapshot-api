@@ -1,11 +1,6 @@
 {
   "version": 2,
   "framework": null,
-  "functions": {
-    "dist/api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "routes": [
     { "src": "/api/contacts/search/?", "dest": "/dist/api/contacts/search.js" },
     { "src": "/api/contacts/(?:[^/]+)/?", "dest": "/dist/api/contacts/[id].js" },
