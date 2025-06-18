@@ -11,15 +11,20 @@ const apiSnapshotsHandler = async (req: any, res: any) => {
 
     try {
         if (req.method === "GET") {
-            const records: any[] = [];
+            const records: AirtableRecord<FieldSet>[] = [];
             const fieldMap = getFieldMap(tableName);
 
             await base(tableName)
                 .select({ view: "Grid view" })
-                .eachPage((recordsPage: Records<FieldSet>, fetchNextPage: () => void) => {
-                    records.push(...recordsPage);
-                    fetchNextPage();
-                });
+                .eachPage(
+                    (
+                        recordsPage: readonly AirtableRecord<FieldSet>[],
+                        fetchNextPage: () => void
+                    ) => {
+                        records.push(...recordsPage);
+                        fetchNextPage();
+                    }
+                );
 
             const mappedRecords = records.map((record) => {
                 const mapped: Record<string, any> = { id: record.id };
