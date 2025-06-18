@@ -1,6 +1,11 @@
 {
   "version": 2,
   "framework": null,
+  "functions": {
+    "dist/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "routes": [
     { "src": "/api/contacts/search/?", "dest": "/dist/api/contacts/search.js" },
     { "src": "/api/contacts/(?:[^/]+)/?", "dest": "/dist/api/contacts/[id].js" },
@@ -11,7 +16,10 @@
     { "src": "/api/threads/search/?", "dest": "/dist/api/threads/search.js" },
     { "src": "/api/threads/(?:[^/]+)/?", "dest": "/dist/api/threads/[id].js" },
     { "src": "/api/snapshots/latest/?", "dest": "/dist/api/snapshots/latest.js" },
-    { "src": "/api/snapshots/synthesize-current-state/?", "dest": "/dist/api/snapshots/synthesize-current-state.js" },
+    {
+      "src": "/api/snapshots/synthesize-current-state/?",
+      "dest": "/dist/api/snapshots/synthesize-current-state.js"
+    },
     { "src": "/api/synthesize-thread/?", "dest": "/dist/api/synthesize-thread.js" },
     { "src": "/api/(.*)", "dest": "/dist/api/$1.js" }
   ]
