@@ -1,11 +1,9 @@
-// api/health.ts
-function health() {
-  return new Response(JSON.stringify({ status: "ok" }), {
-    status: 200,
-    headers: { "Content-Type": "application/json" }
+// api/health.ts  (Node-style)
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+export default function health(_req: VercelRequest, res: VercelResponse) {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString()
   });
 }
-export {
-  health as default
-};
-//# sourceMappingURL=health.js.map
