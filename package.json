@@ -10,14 +10,15 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rm -f api/**/*.js api/**/*.js.map",
-    "build": "tsup",
+    "build": "npm run clean && tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:fieldmap": "ts-node scripts/generateFieldMap.ts",
-    "test": "jest"
+    "test": "jest",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "axios": "^1.6.0",
