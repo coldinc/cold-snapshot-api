@@ -5,7 +5,7 @@ export default defineConfig({
   entry: ['api/**/*.ts', 'lib/**/*.ts', 'utils/**/*.ts'],
   outDir: 'api',
   format: ['esm'],
-  target: 'node18',
+  target: 'node20',
   dts: false,
   splitting: false,
   sourcemap: true,
