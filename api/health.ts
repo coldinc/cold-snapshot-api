@@ -1,6 +1,11 @@
-export default function health() {
-  return new Response(JSON.stringify({ status: 'ok' }), {
+// api/health.ts
+function health() {
+  return new Response(JSON.stringify({ status: "ok" }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { "Content-Type": "application/json" }
   });
 }
+export {
+  health as default
+};
+//# sourceMappingURL=health.js.map
