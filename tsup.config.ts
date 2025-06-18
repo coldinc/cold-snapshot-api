@@ -12,6 +12,7 @@ export default defineConfig({
     clean: false,
     minify: false,
     shims: true,
+    noExternal: ['uri-js', 'tr46', 'punycode'],
     esbuildOptions(options) {
         options.external = options.external || [];
         options.external.push("openai"); // Safely mark as external

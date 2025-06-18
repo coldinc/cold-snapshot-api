@@ -9613,7 +9613,6 @@ var require_public_api2 = __commonJS2({
 });
 var lib_exports2 = {};
 __export2(lib_exports2, {
-  AbortError: () => AbortError2,
   FetchError: () => FetchError2,
   Headers: () => Headers2,
   Request: () => Request22,
@@ -9968,6 +9967,9 @@ function getNodeRequestOptions2(request) {
   if (typeof agent === "function") {
     agent = agent(parsedURL);
   }
+  if (!headers.has("Connection") && !agent) {
+    headers.set("Connection", "close");
+  }
   return Object.assign({}, parsedURL, {
     method: request.method,
     headers: exportNodeCompatibleHeaders2(headers),
@@ -10192,7 +10194,7 @@ function fixResponseChunkedTransferBadEnding2(request, errorCallback) {
     const headers = response.headers;
     if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
       response.once("close", function(hadError) {
-        const hasDataListener = socket && socket.listenerCount("data") > 0;
+        const hasDataListener = socket.listenerCount("data") > 0;
         if (hasDataListener && !hadError) {
           const err = new Error("Premature close");
           err.code = "ERR_STREAM_PREMATURE_CLOSE";
