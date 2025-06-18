@@ -9,8 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "prebuild": "rm -f api/**/*.js api/**/*.js.map",
-    "build": "tsup",
+    "prebuild": "find api -name '*.js' -delete -o -name '*.js.map' -delete",
+  "build": "npm run prebuild && tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
