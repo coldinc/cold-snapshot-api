@@ -4,12 +4,13 @@ import { join } from 'path'
 export default defineConfig({
   entry: ['api/**/*.ts', 'lib/**/*.ts', 'utils/**/*.ts'],
   outDir: 'dist',
-  format: ['cjs'],
+  format: ['esm'],
   target: 'node18',
   dts: false,
   splitting: false,
   sourcemap: true,
   clean: true,
+  minify: false,
   shims: false,
   esbuildOptions(options) {
     options.external = options.external || []
