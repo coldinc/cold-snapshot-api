@@ -3,7 +3,7 @@ import { join } from 'path'
 
 export default defineConfig({
   entry: ['api/**/*.ts', 'lib/**/*.ts', 'utils/**/*.ts'],
-  outDir: 'api',
+  outDir: '.',
   format: ['esm'],
   target: 'node18',
   dts: false,
