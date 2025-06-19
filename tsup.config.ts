@@ -4,7 +4,7 @@ export default defineConfig({
   entry: ['src/api/**/*.ts'],
   outDir: '.vercel/output/functions',
   clean: true,
-  format: ['esm'],
+  format: ['cjs'],
   target: 'node20',
   outbase: 'src',
   shims: false,
