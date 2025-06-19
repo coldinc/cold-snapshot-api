@@ -6,6 +6,7 @@ export default defineConfig({
   clean: true,
   format: ['cjs'],
   target: 'node20',
-  outbase: 'src',
   shims: false,
+   outExtension() {  
+    return '.js';  
   });
