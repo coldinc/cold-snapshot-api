@@ -16,6 +16,7 @@ export default defineConfig({
     esbuildOptions(options) {
         options.external = options.external || [];
         options.external.push("openai"); // Safely mark as external
+        options.outbase = 'src/api';
     },
     alias: {
         "@": join(__dirname, "./")
