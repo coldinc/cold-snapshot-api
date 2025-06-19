@@ -38,20 +38,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/tsup/assets/esm_shims.js
-import path from "path";
-import { fileURLToPath } from "url";
-var init_esm_shims = __esm({
-  "node_modules/tsup/assets/esm_shims.js"() {
-    "use strict";
-  }
-});
-
 // node_modules/lodash/isArray.js
 var require_isArray = __commonJS({
   "node_modules/lodash/isArray.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isArray = Array.isArray;
     module.exports = isArray;
   }
@@ -61,7 +51,6 @@ var require_isArray = __commonJS({
 var require_freeGlobal = __commonJS({
   "node_modules/lodash/_freeGlobal.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
     module.exports = freeGlobal;
   }
@@ -71,7 +60,6 @@ var require_freeGlobal = __commonJS({
 var require_root = __commonJS({
   "node_modules/lodash/_root.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var freeGlobal = require_freeGlobal();
     var freeSelf = typeof self == "object" && self && self.Object === Object && self;
     var root = freeGlobal || freeSelf || Function("return this")();
@@ -83,7 +71,6 @@ var require_root = __commonJS({
 var require_Symbol = __commonJS({
   "node_modules/lodash/_Symbol.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var root = require_root();
     var Symbol2 = root.Symbol;
     module.exports = Symbol2;
@@ -94,7 +81,6 @@ var require_Symbol = __commonJS({
 var require_getRawTag = __commonJS({
   "node_modules/lodash/_getRawTag.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var Symbol2 = require_Symbol();
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
@@ -125,7 +111,6 @@ var require_getRawTag = __commonJS({
 var require_objectToString = __commonJS({
   "node_modules/lodash/_objectToString.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var objectProto = Object.prototype;
     var nativeObjectToString = objectProto.toString;
     function objectToString(value) {
@@ -139,7 +124,6 @@ var require_objectToString = __commonJS({
 var require_baseGetTag = __commonJS({
   "node_modules/lodash/_baseGetTag.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var Symbol2 = require_Symbol();
     var getRawTag = require_getRawTag();
     var objectToString = require_objectToString();
@@ -160,7 +144,6 @@ var require_baseGetTag = __commonJS({
 var require_isObjectLike = __commonJS({
   "node_modules/lodash/isObjectLike.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function isObjectLike(value) {
       return value != null && typeof value == "object";
     }
@@ -172,7 +155,6 @@ var require_isObjectLike = __commonJS({
 var require_isSymbol = __commonJS({
   "node_modules/lodash/isSymbol.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isObjectLike = require_isObjectLike();
     var symbolTag = "[object Symbol]";
@@ -187,7 +169,6 @@ var require_isSymbol = __commonJS({
 var require_isKey = __commonJS({
   "node_modules/lodash/_isKey.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isArray = require_isArray();
     var isSymbol = require_isSymbol();
     var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
@@ -210,7 +191,6 @@ var require_isKey = __commonJS({
 var require_isObject = __commonJS({
   "node_modules/lodash/isObject.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function isObject(value) {
       var type = typeof value;
       return value != null && (type == "object" || type == "function");
@@ -223,7 +203,6 @@ var require_isObject = __commonJS({
 var require_isFunction = __commonJS({
   "node_modules/lodash/isFunction.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isObject = require_isObject();
     var asyncTag = "[object AsyncFunction]";
@@ -245,7 +224,6 @@ var require_isFunction = __commonJS({
 var require_coreJsData = __commonJS({
   "node_modules/lodash/_coreJsData.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var root = require_root();
     var coreJsData = root["__core-js_shared__"];
     module.exports = coreJsData;
@@ -256,7 +234,6 @@ var require_coreJsData = __commonJS({
 var require_isMasked = __commonJS({
   "node_modules/lodash/_isMasked.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var coreJsData = require_coreJsData();
     var maskSrcKey = function() {
       var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
@@ -273,7 +250,6 @@ var require_isMasked = __commonJS({
 var require_toSource = __commonJS({
   "node_modules/lodash/_toSource.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var funcProto = Function.prototype;
     var funcToString = funcProto.toString;
     function toSource(func) {
@@ -297,7 +273,6 @@ var require_toSource = __commonJS({
 var require_baseIsNative = __commonJS({
   "node_modules/lodash/_baseIsNative.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isFunction = require_isFunction();
     var isMasked = require_isMasked();
     var isObject = require_isObject();
@@ -326,7 +301,6 @@ var require_baseIsNative = __commonJS({
 var require_getValue = __commonJS({
   "node_modules/lodash/_getValue.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function getValue(object, key) {
       return object == null ? void 0 : object[key];
     }
@@ -338,7 +312,6 @@ var require_getValue = __commonJS({
 var require_getNative = __commonJS({
   "node_modules/lodash/_getNative.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseIsNative = require_baseIsNative();
     var getValue = require_getValue();
     function getNative(object, key) {
@@ -353,7 +326,6 @@ var require_getNative = __commonJS({
 var require_nativeCreate = __commonJS({
   "node_modules/lodash/_nativeCreate.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var getNative = require_getNative();
     var nativeCreate = getNative(Object, "create");
     module.exports = nativeCreate;
@@ -364,7 +336,6 @@ var require_nativeCreate = __commonJS({
 var require_hashClear = __commonJS({
   "node_modules/lodash/_hashClear.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var nativeCreate = require_nativeCreate();
     function hashClear() {
       this.__data__ = nativeCreate ? nativeCreate(null) : {};
@@ -378,7 +349,6 @@ var require_hashClear = __commonJS({
 var require_hashDelete = __commonJS({
   "node_modules/lodash/_hashDelete.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function hashDelete(key) {
       var result = this.has(key) && delete this.__data__[key];
       this.size -= result ? 1 : 0;
@@ -392,7 +362,6 @@ var require_hashDelete = __commonJS({
 var require_hashGet = __commonJS({
   "node_modules/lodash/_hashGet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var nativeCreate = require_nativeCreate();
     var HASH_UNDEFINED = "__lodash_hash_undefined__";
     var objectProto = Object.prototype;
@@ -413,7 +382,6 @@ var require_hashGet = __commonJS({
 var require_hashHas = __commonJS({
   "node_modules/lodash/_hashHas.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var nativeCreate = require_nativeCreate();
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
@@ -429,7 +397,6 @@ var require_hashHas = __commonJS({
 var require_hashSet = __commonJS({
   "node_modules/lodash/_hashSet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var nativeCreate = require_nativeCreate();
     var HASH_UNDEFINED = "__lodash_hash_undefined__";
     function hashSet(key, value) {
@@ -446,7 +413,6 @@ var require_hashSet = __commonJS({
 var require_Hash = __commonJS({
   "node_modules/lodash/_Hash.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var hashClear = require_hashClear();
     var hashDelete = require_hashDelete();
     var hashGet = require_hashGet();
@@ -473,7 +439,6 @@ var require_Hash = __commonJS({
 var require_listCacheClear = __commonJS({
   "node_modules/lodash/_listCacheClear.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function listCacheClear() {
       this.__data__ = [];
       this.size = 0;
@@ -486,7 +451,6 @@ var require_listCacheClear = __commonJS({
 var require_eq = __commonJS({
   "node_modules/lodash/eq.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function eq(value, other) {
       return value === other || value !== value && other !== other;
     }
@@ -498,7 +462,6 @@ var require_eq = __commonJS({
 var require_assocIndexOf = __commonJS({
   "node_modules/lodash/_assocIndexOf.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var eq = require_eq();
     function assocIndexOf(array, key) {
       var length = array.length;
@@ -517,7 +480,6 @@ var require_assocIndexOf = __commonJS({
 var require_listCacheDelete = __commonJS({
   "node_modules/lodash/_listCacheDelete.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var assocIndexOf = require_assocIndexOf();
     var arrayProto = Array.prototype;
     var splice = arrayProto.splice;
@@ -543,7 +505,6 @@ var require_listCacheDelete = __commonJS({
 var require_listCacheGet = __commonJS({
   "node_modules/lodash/_listCacheGet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var assocIndexOf = require_assocIndexOf();
     function listCacheGet(key) {
       var data = this.__data__, index = assocIndexOf(data, key);
@@ -557,7 +518,6 @@ var require_listCacheGet = __commonJS({
 var require_listCacheHas = __commonJS({
   "node_modules/lodash/_listCacheHas.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var assocIndexOf = require_assocIndexOf();
     function listCacheHas(key) {
       return assocIndexOf(this.__data__, key) > -1;
@@ -570,7 +530,6 @@ var require_listCacheHas = __commonJS({
 var require_listCacheSet = __commonJS({
   "node_modules/lodash/_listCacheSet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var assocIndexOf = require_assocIndexOf();
     function listCacheSet(key, value) {
       var data = this.__data__, index = assocIndexOf(data, key);
@@ -590,7 +549,6 @@ var require_listCacheSet = __commonJS({
 var require_ListCache = __commonJS({
   "node_modules/lodash/_ListCache.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var listCacheClear = require_listCacheClear();
     var listCacheDelete = require_listCacheDelete();
     var listCacheGet = require_listCacheGet();
@@ -617,7 +575,6 @@ var require_ListCache = __commonJS({
 var require_Map = __commonJS({
   "node_modules/lodash/_Map.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var getNative = require_getNative();
     var root = require_root();
     var Map2 = getNative(root, "Map");
@@ -629,7 +586,6 @@ var require_Map = __commonJS({
 var require_mapCacheClear = __commonJS({
   "node_modules/lodash/_mapCacheClear.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var Hash = require_Hash();
     var ListCache = require_ListCache();
     var Map2 = require_Map();
@@ -649,7 +605,6 @@ var require_mapCacheClear = __commonJS({
 var require_isKeyable = __commonJS({
   "node_modules/lodash/_isKeyable.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function isKeyable(value) {
       var type = typeof value;
       return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
@@ -662,7 +617,6 @@ var require_isKeyable = __commonJS({
 var require_getMapData = __commonJS({
   "node_modules/lodash/_getMapData.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isKeyable = require_isKeyable();
     function getMapData(map, key) {
       var data = map.__data__;
@@ -676,7 +630,6 @@ var require_getMapData = __commonJS({
 var require_mapCacheDelete = __commonJS({
   "node_modules/lodash/_mapCacheDelete.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var getMapData = require_getMapData();
     function mapCacheDelete(key) {
       var result = getMapData(this, key)["delete"](key);
@@ -691,7 +644,6 @@ var require_mapCacheDelete = __commonJS({
 var require_mapCacheGet = __commonJS({
   "node_modules/lodash/_mapCacheGet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var getMapData = require_getMapData();
     function mapCacheGet(key) {
       return getMapData(this, key).get(key);
@@ -704,7 +656,6 @@ var require_mapCacheGet = __commonJS({
 var require_mapCacheHas = __commonJS({
   "node_modules/lodash/_mapCacheHas.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var getMapData = require_getMapData();
     function mapCacheHas(key) {
       return getMapData(this, key).has(key);
@@ -717,7 +668,6 @@ var require_mapCacheHas = __commonJS({
 var require_mapCacheSet = __commonJS({
   "node_modules/lodash/_mapCacheSet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var getMapData = require_getMapData();
     function mapCacheSet(key, value) {
       var data = getMapData(this, key), size = data.size;
@@ -733,7 +683,6 @@ var require_mapCacheSet = __commonJS({
 var require_MapCache = __commonJS({
   "node_modules/lodash/_MapCache.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var mapCacheClear = require_mapCacheClear();
     var mapCacheDelete = require_mapCacheDelete();
     var mapCacheGet = require_mapCacheGet();
@@ -760,7 +709,6 @@ var require_MapCache = __commonJS({
 var require_memoize = __commonJS({
   "node_modules/lodash/memoize.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var MapCache = require_MapCache();
     var FUNC_ERROR_TEXT = "Expected a function";
     function memoize(func, resolver) {
@@ -788,7 +736,6 @@ var require_memoize = __commonJS({
 var require_memoizeCapped = __commonJS({
   "node_modules/lodash/_memoizeCapped.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var memoize = require_memoize();
     var MAX_MEMOIZE_SIZE = 500;
     function memoizeCapped(func) {
@@ -809,7 +756,6 @@ var require_memoizeCapped = __commonJS({
 var require_stringToPath = __commonJS({
   "node_modules/lodash/_stringToPath.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var memoizeCapped = require_memoizeCapped();
     var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
     var reEscapeChar = /\\(\\)?/g;
@@ -831,7 +777,6 @@ var require_stringToPath = __commonJS({
 var require_arrayMap = __commonJS({
   "node_modules/lodash/_arrayMap.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function arrayMap(array, iteratee) {
       var index = -1, length = array == null ? 0 : array.length, result = Array(length);
       while (++index < length) {
@@ -847,7 +792,6 @@ var require_arrayMap = __commonJS({
 var require_baseToString = __commonJS({
   "node_modules/lodash/_baseToString.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var Symbol2 = require_Symbol();
     var arrayMap = require_arrayMap();
     var isArray = require_isArray();
@@ -876,7 +820,6 @@ var require_baseToString = __commonJS({
 var require_toString = __commonJS({
   "node_modules/lodash/toString.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseToString = require_baseToString();
     function toString(value) {
       return value == null ? "" : baseToString(value);
@@ -889,7 +832,6 @@ var require_toString = __commonJS({
 var require_castPath = __commonJS({
   "node_modules/lodash/_castPath.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isArray = require_isArray();
     var isKey = require_isKey();
     var stringToPath = require_stringToPath();
@@ -908,7 +850,6 @@ var require_castPath = __commonJS({
 var require_toKey = __commonJS({
   "node_modules/lodash/_toKey.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isSymbol = require_isSymbol();
     var INFINITY = 1 / 0;
     function toKey(value) {
@@ -926,14 +867,13 @@ var require_toKey = __commonJS({
 var require_baseGet = __commonJS({
   "node_modules/lodash/_baseGet.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var castPath = require_castPath();
     var toKey = require_toKey();
-    function baseGet(object, path2) {
-      path2 = castPath(path2, object);
-      var index = 0, length = path2.length;
+    function baseGet(object, path) {
+      path = castPath(path, object);
+      var index = 0, length = path.length;
       while (object != null && index < length) {
-        object = object[toKey(path2[index++])];
+        object = object[toKey(path[index++])];
       }
       return index && index == length ? object : void 0;
     }
@@ -945,10 +885,9 @@ var require_baseGet = __commonJS({
 var require_get = __commonJS({
   "node_modules/lodash/get.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGet = require_baseGet();
-    function get(object, path2, defaultValue) {
-      var result = object == null ? void 0 : baseGet(object, path2);
+    function get(object, path, defaultValue) {
+      var result = object == null ? void 0 : baseGet(object, path);
       return result === void 0 ? defaultValue : result;
     }
     module.exports = get;
@@ -959,7 +898,6 @@ var require_get = __commonJS({
 var require_overArg = __commonJS({
   "node_modules/lodash/_overArg.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function overArg(func, transform) {
       return function(arg) {
         return func(transform(arg));
@@ -973,7 +911,6 @@ var require_overArg = __commonJS({
 var require_getPrototype = __commonJS({
   "node_modules/lodash/_getPrototype.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var overArg = require_overArg();
     var getPrototype = overArg(Object.getPrototypeOf, Object);
     module.exports = getPrototype;
@@ -984,7 +921,6 @@ var require_getPrototype = __commonJS({
 var require_isPlainObject = __commonJS({
   "node_modules/lodash/isPlainObject.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var getPrototype = require_getPrototype();
     var isObjectLike = require_isObjectLike();
@@ -1013,7 +949,6 @@ var require_isPlainObject = __commonJS({
 var require_baseTimes = __commonJS({
   "node_modules/lodash/_baseTimes.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function baseTimes(n, iteratee) {
       var index = -1, result = Array(n);
       while (++index < n) {
@@ -1029,7 +964,6 @@ var require_baseTimes = __commonJS({
 var require_baseIsArguments = __commonJS({
   "node_modules/lodash/_baseIsArguments.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isObjectLike = require_isObjectLike();
     var argsTag = "[object Arguments]";
@@ -1044,7 +978,6 @@ var require_baseIsArguments = __commonJS({
 var require_isArguments = __commonJS({
   "node_modules/lodash/isArguments.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseIsArguments = require_baseIsArguments();
     var isObjectLike = require_isObjectLike();
     var objectProto = Object.prototype;
@@ -1063,7 +996,6 @@ var require_isArguments = __commonJS({
 var require_stubFalse = __commonJS({
   "node_modules/lodash/stubFalse.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function stubFalse() {
       return false;
     }
@@ -1075,7 +1007,6 @@ var require_stubFalse = __commonJS({
 var require_isBuffer = __commonJS({
   "node_modules/lodash/isBuffer.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var root = require_root();
     var stubFalse = require_stubFalse();
     var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
@@ -1092,7 +1023,6 @@ var require_isBuffer = __commonJS({
 var require_isIndex = __commonJS({
   "node_modules/lodash/_isIndex.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var MAX_SAFE_INTEGER = 9007199254740991;
     var reIsUint = /^(?:0|[1-9]\d*)$/;
     function isIndex(value, length) {
@@ -1108,7 +1038,6 @@ var require_isIndex = __commonJS({
 var require_isLength = __commonJS({
   "node_modules/lodash/isLength.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var MAX_SAFE_INTEGER = 9007199254740991;
     function isLength(value) {
       return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
@@ -1121,7 +1050,6 @@ var require_isLength = __commonJS({
 var require_baseIsTypedArray = __commonJS({
   "node_modules/lodash/_baseIsTypedArray.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isLength = require_isLength();
     var isObjectLike = require_isObjectLike();
@@ -1163,7 +1091,6 @@ var require_baseIsTypedArray = __commonJS({
 var require_baseUnary = __commonJS({
   "node_modules/lodash/_baseUnary.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function baseUnary(func) {
       return function(value) {
         return func(value);
@@ -1177,7 +1104,6 @@ var require_baseUnary = __commonJS({
 var require_nodeUtil = __commonJS({
   "node_modules/lodash/_nodeUtil.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var freeGlobal = require_freeGlobal();
     var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
     var freeModule = freeExports && typeof module == "object" && module && !module.nodeType && module;
@@ -1201,7 +1127,6 @@ var require_nodeUtil = __commonJS({
 var require_isTypedArray = __commonJS({
   "node_modules/lodash/isTypedArray.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseIsTypedArray = require_baseIsTypedArray();
     var baseUnary = require_baseUnary();
     var nodeUtil = require_nodeUtil();
@@ -1215,7 +1140,6 @@ var require_isTypedArray = __commonJS({
 var require_arrayLikeKeys = __commonJS({
   "node_modules/lodash/_arrayLikeKeys.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseTimes = require_baseTimes();
     var isArguments = require_isArguments();
     var isArray = require_isArray();
@@ -1245,7 +1169,6 @@ var require_arrayLikeKeys = __commonJS({
 var require_isPrototype = __commonJS({
   "node_modules/lodash/_isPrototype.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var objectProto = Object.prototype;
     function isPrototype(value) {
       var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
@@ -1259,7 +1182,6 @@ var require_isPrototype = __commonJS({
 var require_nativeKeys = __commonJS({
   "node_modules/lodash/_nativeKeys.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var overArg = require_overArg();
     var nativeKeys = overArg(Object.keys, Object);
     module.exports = nativeKeys;
@@ -1270,7 +1192,6 @@ var require_nativeKeys = __commonJS({
 var require_baseKeys = __commonJS({
   "node_modules/lodash/_baseKeys.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isPrototype = require_isPrototype();
     var nativeKeys = require_nativeKeys();
     var objectProto = Object.prototype;
@@ -1295,7 +1216,6 @@ var require_baseKeys = __commonJS({
 var require_isArrayLike = __commonJS({
   "node_modules/lodash/isArrayLike.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var isFunction = require_isFunction();
     var isLength = require_isLength();
     function isArrayLike(value) {
@@ -1309,7 +1229,6 @@ var require_isArrayLike = __commonJS({
 var require_keys = __commonJS({
   "node_modules/lodash/keys.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var arrayLikeKeys = require_arrayLikeKeys();
     var baseKeys = require_baseKeys();
     var isArrayLike = require_isArrayLike();
@@ -1324,7 +1243,6 @@ var require_keys = __commonJS({
 var require_lib = __commonJS({
   "node_modules/webidl-conversions/lib/index.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var conversions = {};
     module.exports = conversions;
     function sign(x) {
@@ -1478,7 +1396,6 @@ var require_lib = __commonJS({
 var require_utils = __commonJS({
   "node_modules/whatwg-url/lib/utils.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     module.exports.mixin = function mixin(target, source) {
       const keys = Object.getOwnPropertyNames(source);
       for (let i = 0; i < keys.length; ++i) {
@@ -1507,7 +1424,6 @@ var require_mappingTable = __commonJS({
 var require_tr46 = __commonJS({
   "node_modules/tr46/index.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var punycode = __require("punycode");
     var mappingTable = require_mappingTable();
     var PROCESSING_OPTIONS = {
@@ -1669,7 +1585,6 @@ var require_tr46 = __commonJS({
 var require_url_state_machine = __commonJS({
   "node_modules/whatwg-url/lib/url-state-machine.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var punycode = __require("punycode");
     var tr46 = require_tr46();
     var specialSchemes = {
@@ -2056,14 +1971,14 @@ var require_url_state_machine = __commonJS({
       return url.replace(/\u0009|\u000A|\u000D/g, "");
     }
     function shortenPath(url) {
-      const path2 = url.path;
-      if (path2.length === 0) {
+      const path = url.path;
+      if (path.length === 0) {
         return;
       }
-      if (url.scheme === "file" && path2.length === 1 && isNormalizedWindowsDriveLetter(path2[0])) {
+      if (url.scheme === "file" && path.length === 1 && isNormalizedWindowsDriveLetter(path[0])) {
         return;
       }
-      path2.pop();
+      path.pop();
     }
     function includesCredentials(url) {
       return url.username !== "" || url.password !== "";
@@ -2742,7 +2657,6 @@ var require_url_state_machine = __commonJS({
 var require_URL_impl = __commonJS({
   "node_modules/whatwg-url/lib/URL-impl.js"(exports) {
     "use strict";
-    init_esm_shims();
     var usm = require_url_state_machine();
     exports.implementation = class URLImpl {
       constructor(constructorArgs) {
@@ -2900,7 +2814,6 @@ var require_URL_impl = __commonJS({
 var require_URL = __commonJS({
   "node_modules/whatwg-url/lib/URL.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var conversions = require_lib();
     var utils = require_utils();
     var Impl = require_URL_impl();
@@ -3083,7 +2996,6 @@ var require_URL = __commonJS({
 var require_public_api = __commonJS({
   "node_modules/whatwg-url/lib/public-api.js"(exports) {
     "use strict";
-    init_esm_shims();
     exports.URL = require_URL().interface;
     exports.serializeURL = require_url_state_machine().serializeURL;
     exports.serializeURLOrigin = require_url_state_machine().serializeURLOrigin;
@@ -3707,7 +3619,6 @@ var import_whatwg_url, Readable, BUFFER, TYPE, Blob, convert, INTERNALS, PassThr
 var init_lib = __esm({
   "node_modules/node-fetch/lib/index.mjs"() {
     "use strict";
-    init_esm_shims();
     import_whatwg_url = __toESM(require_public_api(), 1);
     Readable = Stream.Readable;
     BUFFER = Symbol("buffer");
@@ -4340,7 +4251,6 @@ var init_lib = __esm({
 var require_fetch = __commonJS({
   "node_modules/airtable/lib/fetch.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -4354,7 +4264,6 @@ var require_fetch = __commonJS({
 var require_event_target_shim = __commonJS({
   "node_modules/event-target-shim/dist/event-target-shim.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     Object.defineProperty(exports, "__esModule", { value: true });
     var privateData = /* @__PURE__ */ new WeakMap();
     var wrappers = /* @__PURE__ */ new WeakMap();
@@ -4927,7 +4836,6 @@ var require_event_target_shim = __commonJS({
 var require_abort_controller = __commonJS({
   "node_modules/abort-controller/dist/abort-controller.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     Object.defineProperty(exports, "__esModule", { value: true });
     var eventTargetShim = require_event_target_shim();
     var AbortSignal = class extends eventTargetShim.EventTarget {
@@ -5024,7 +4932,6 @@ var require_abort_controller = __commonJS({
 var require_cjs_ponyfill = __commonJS({
   "node_modules/abortcontroller-polyfill/dist/cjs-ponyfill.js"(exports) {
     "use strict";
-    init_esm_shims();
     Object.defineProperty(exports, "__esModule", { value: true });
     function _arrayLikeToArray(r, a) {
       (null == a || a > r.length) && (a = r.length);
@@ -5519,7 +5426,6 @@ var require_cjs_ponyfill = __commonJS({
 var require_abort_controller2 = __commonJS({
   "node_modules/airtable/lib/abort-controller.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var AbortController;
     var browserGlobal = typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : null;
     if (!browserGlobal) {
@@ -5539,7 +5445,6 @@ var require_abort_controller2 = __commonJS({
 var require_isNil = __commonJS({
   "node_modules/lodash/isNil.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function isNil(value) {
       return value == null;
     }
@@ -5551,7 +5456,6 @@ var require_isNil = __commonJS({
 var require_object_to_query_param_string = __commonJS({
   "node_modules/airtable/lib/object_to_query_param_string.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -5599,7 +5503,6 @@ var require_object_to_query_param_string = __commonJS({
 var require_airtable_error = __commonJS({
   "node_modules/airtable/lib/airtable_error.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var AirtableError = (
       /** @class */
       function() {
@@ -5628,7 +5531,6 @@ var require_airtable_error = __commonJS({
 var require_deprecate = __commonJS({
   "node_modules/airtable/lib/deprecate.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var didWarnForDeprecation = {};
     function deprecate(fn, key, message) {
       return function() {
@@ -5651,7 +5553,6 @@ var require_deprecate = __commonJS({
 var require_callback_to_promise = __commonJS({
   "node_modules/airtable/lib/callback_to_promise.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function callbackToPromise(fn, context, callbackArgIndex) {
       if (callbackArgIndex === void 0) {
         callbackArgIndex = void 0;
@@ -5698,7 +5599,6 @@ var require_callback_to_promise = __commonJS({
 var require_record = __commonJS({
   "node_modules/airtable/lib/record.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __assign = exports && exports.__assign || function() {
       __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -5812,7 +5712,6 @@ var require_record = __commonJS({
 var require_has = __commonJS({
   "node_modules/airtable/lib/has.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function has(object, property) {
       return Object.prototype.hasOwnProperty.call(object, property);
     }
@@ -5824,7 +5723,6 @@ var require_has = __commonJS({
 var require_typecheck = __commonJS({
   "node_modules/airtable/lib/typecheck.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     function check(fn, error) {
       return function(value) {
         if (fn(value)) {
@@ -5850,7 +5748,6 @@ var require_typecheck = __commonJS({
 var require_isString = __commonJS({
   "node_modules/lodash/isString.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isArray = require_isArray();
     var isObjectLike = require_isObjectLike();
@@ -5866,7 +5763,6 @@ var require_isString = __commonJS({
 var require_isNumber = __commonJS({
   "node_modules/lodash/isNumber.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isObjectLike = require_isObjectLike();
     var numberTag = "[object Number]";
@@ -5881,7 +5777,6 @@ var require_isNumber = __commonJS({
 var require_isBoolean = __commonJS({
   "node_modules/lodash/isBoolean.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var baseGetTag = require_baseGetTag();
     var isObjectLike = require_isObjectLike();
     var boolTag = "[object Boolean]";
@@ -5896,7 +5791,6 @@ var require_isBoolean = __commonJS({
 var require_query_params = __commonJS({
   "node_modules/airtable/lib/query_params.js"(exports) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -5939,7 +5833,6 @@ var require_query_params = __commonJS({
 var require_query = __commonJS({
   "node_modules/airtable/lib/query.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __assign = exports && exports.__assign || function() {
       __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -6023,11 +5916,11 @@ var require_query = __commonJS({
       var queryParams = {};
       var requestData = null;
       var method;
-      var path2;
+      var path;
       if (params.method === "post" || pathAndParamsAsString.length > query_params_1.URL_CHARACTER_LENGTH_LIMIT) {
         requestData = params;
         method = "post";
-        path2 = "/" + this._table._urlEncodedNameOrId() + "/listRecords";
+        path = "/" + this._table._urlEncodedNameOrId() + "/listRecords";
         var paramNames = Object.keys(params);
         for (var _i = 0, paramNames_1 = paramNames; _i < paramNames_1.length; _i++) {
           var paramName = paramNames_1[_i];
@@ -6040,10 +5933,10 @@ var require_query = __commonJS({
       } else {
         method = "get";
         queryParams = params;
-        path2 = "/" + this._table._urlEncodedNameOrId();
+        path = "/" + this._table._urlEncodedNameOrId();
       }
       var inner = function() {
-        _this._table._base.runAction(method, path2, queryParams, requestData, function(err, response, result) {
+        _this._table._base.runAction(method, path, queryParams, requestData, function(err, response, result) {
           if (err) {
             done(err, null);
           } else {
@@ -6089,7 +5982,6 @@ var require_query = __commonJS({
 var require_table = __commonJS({
   "node_modules/airtable/lib/table.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __assign = exports && exports.__assign || function() {
       __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -6248,12 +6140,12 @@ var require_table = __commonJS({
             opts = {};
           }
           var pathAndParamsAsString = "/" + this._urlEncodedNameOrId() + "?" + object_to_query_param_string_1.default(opts);
-          var path2;
+          var path;
           var listRecordsParameters = {};
           var listRecordsData = null;
           var method;
           if (typeof opts !== "function" && opts.method === "post" || pathAndParamsAsString.length > query_params_1.URL_CHARACTER_LENGTH_LIMIT) {
-            path2 = "/" + this._urlEncodedNameOrId() + "/listRecords";
+            path = "/" + this._urlEncodedNameOrId() + "/listRecords";
             listRecordsData = __assign(__assign({}, pageSize && { pageSize }), offset && { offset });
             method = "post";
             var paramNames = Object.keys(opts);
@@ -6267,10 +6159,10 @@ var require_table = __commonJS({
             }
           } else {
             method = "get";
-            path2 = "/" + this._urlEncodedNameOrId() + "/";
+            path = "/" + this._urlEncodedNameOrId() + "/";
             listRecordsParameters = __assign({ limit: pageSize, offset }, opts);
           }
-          this._base.runAction(method, path2, listRecordsParameters, listRecordsData, function(err, response, results) {
+          this._base.runAction(method, path, listRecordsParameters, listRecordsData, function(err, response, results) {
             if (err) {
               done(err);
               return;
@@ -6320,7 +6212,6 @@ var require_table = __commonJS({
 var require_http_headers = __commonJS({
   "node_modules/airtable/lib/http_headers.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -6379,7 +6270,6 @@ var require_internal_config = __commonJS({
 var require_exponential_backoff_with_jitter = __commonJS({
   "node_modules/airtable/lib/exponential_backoff_with_jitter.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -6480,7 +6370,6 @@ var require_package = __commonJS({
 var require_package_version = __commonJS({
   "node_modules/airtable/lib/package_version.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     module.exports = require_package().version;
   }
 });
@@ -6489,7 +6378,6 @@ var require_package_version = __commonJS({
 var require_run_action = __commonJS({
   "node_modules/airtable/lib/run_action.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -6499,8 +6387,8 @@ var require_run_action = __commonJS({
     var fetch_1 = __importDefault(require_fetch());
     var abort_controller_1 = __importDefault(require_abort_controller2());
     var userAgent = "Airtable.js/" + package_version_1.default;
-    function runAction(base, method, path2, queryParams, bodyData, callback, numAttempts) {
-      var url = base._airtable._endpointUrl + "/v" + base._airtable._apiVersionMajor + "/" + base._id + path2 + "?" + object_to_query_param_string_1.default(queryParams);
+    function runAction(base, method, path, queryParams, bodyData, callback, numAttempts) {
+      var url = base._airtable._endpointUrl + "/v" + base._airtable._apiVersionMajor + "/" + base._id + path + "?" + object_to_query_param_string_1.default(queryParams);
       var headers = {
         authorization: "Bearer " + base._airtable._apiKey,
         "x-api-version": base._airtable._apiVersion,
@@ -6535,7 +6423,7 @@ var require_run_action = __commonJS({
         if (resp.status === 429 && !base._airtable._noRetryIfRateLimited) {
           var backoffDelayMs = exponential_backoff_with_jitter_1.default(numAttempts);
           setTimeout(function() {
-            runAction(base, method, path2, queryParams, bodyData, callback, numAttempts + 1);
+            runAction(base, method, path, queryParams, bodyData, callback, numAttempts + 1);
           }, backoffDelayMs);
         } else {
           resp.json().then(function(body) {
@@ -6564,7 +6452,6 @@ var require_run_action = __commonJS({
 var require_base = __commonJS({
   "node_modules/airtable/lib/base.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __assign = exports && exports.__assign || function() {
       __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -6657,8 +6544,8 @@ var require_base = __commonJS({
             });
           });
         };
-        Base2.prototype.runAction = function(method, path2, queryParams, bodyData, callback) {
-          run_action_1.default(this, method, path2, queryParams, bodyData, callback, 0);
+        Base2.prototype.runAction = function(method, path, queryParams, bodyData, callback) {
+          run_action_1.default(this, method, path, queryParams, bodyData, callback, 0);
         };
         Base2.prototype._getRequestHeaders = function(headers) {
           var result = new http_headers_1.default();
@@ -6735,7 +6622,6 @@ var require_base = __commonJS({
 var require_airtable = __commonJS({
   "node_modules/airtable/lib/airtable.js"(exports, module) {
     "use strict";
-    init_esm_shims();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -6814,7 +6700,6 @@ var require_airtable = __commonJS({
 });
 
 // lib/airtableBase.ts
-init_esm_shims();
 var import_airtable = __toESM(require_airtable(), 1);
 var getAirtableContext = () => {
   const airtableToken = process.env.AIRTABLE_TOKEN;
