@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: ['src/api/**/*.ts'],
@@ -7,6 +7,7 @@ export default defineConfig({
   format: ['cjs'],
   target: 'node20',
   shims: false,
-   outExtension() {  
-    return '.js';  
-  });
+  outExtension() {
+    return '.js';
+  }
+});
