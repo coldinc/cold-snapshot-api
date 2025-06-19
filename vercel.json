@@ -1,5 +1,12 @@
 {
   "version": 2,
   "framework": null,
-  "outputDirectory": "api"
+
+  "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" }
+  ],
+
+  "routes": [
+    // optional: send any non-api request to a static folder, etc.
+  ]
 }
