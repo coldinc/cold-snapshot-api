@@ -1,4 +1,6 @@
 {
   "version": 2,
-  "framework": null
+  "functions": {
+    "api/**/*.js": { "runtime": "@vercel/node@3.3.0-canary" }
+  }
 }
