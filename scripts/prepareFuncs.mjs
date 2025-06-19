@@ -3,7 +3,7 @@ import { join } from 'path';
 import glob from 'fast-glob';
 
 async function run() {
-  const files = await glob('.vercel/output/functions/api/**/*.js', {
+  const files = await glob('.vercel/output/functions/**/*.js', {
     ignore: ['**/*.map']
   });
 
