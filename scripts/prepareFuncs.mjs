@@ -13,7 +13,7 @@ async function run() {
     await fs.rename(file, join(funcDir, 'index.js'));
     await fs.writeFile(
       join(funcDir, '.vc-config.json'),
-      JSON.stringify({ runtime: 'nodejs20.x' })
+      JSON.stringify({ runtime: 'nodejs20.x', handler: 'index.js' })
     );
   }
 
