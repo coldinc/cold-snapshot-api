@@ -9,9 +9,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "prebuild": "find api -name '*.js' -delete -o -name '*.js.map' -delete",
-    "clean": "rm -rf api",
-    "build": "npm run clean && tsup",
+    "prebuild": "rm -rf api",
+    "build": "tsup",
     "vercel-build": "npm run build",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",
