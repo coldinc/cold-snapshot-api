@@ -1,9 +1,10 @@
-// api/health.ts  (Node-style)
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+// api/health.ts     ← exact filename
 
-export default function health(_req: VercelRequest, res: VercelResponse) {
-  res.status(200).json({
-    status: 'ok',
-    timestamp: new Date().toISOString()
-  });
+export const runtime = 'edge';          // tell Vercel this is an Edge Function
+
+export default function health() {
+  return new Response(
+    JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }),
+    { status: 200, headers: { 'content-type': 'application/json' } }
+  );
 }
