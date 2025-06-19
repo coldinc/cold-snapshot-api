@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rm -rf api",
-    "build": "tsup",
+    "build": "npm run prebuild && tsup",
     "vercel-build": "npm run build",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",
