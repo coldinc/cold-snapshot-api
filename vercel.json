@@ -1,6 +1,7 @@
 {
   "version": 2,
-  "functions": {
-    "api/**/*.js": { "runtime": "@vercel/node@3.3.0-canary" }
-  }
+  "builds": [
+    { "src": "package.json", "use": "@vercel/command", "config": { "cmd": "npm run build" } },
+    { "src": "api/**/*.js",  "use": "@vercel/node@3.3.0-canary" }
+  ]
 }
