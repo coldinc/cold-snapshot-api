@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import glob from 'fast-glob';
 
 async function run() {
@@ -16,9 +16,8 @@ async function run() {
       JSON.stringify({ runtime: 'nodejs20.x' })
     );
   }
-  // end for loop
 
-  // ── Write Build-Output manifest ─────────────────────────────────────────
+  // Build-Output manifest
   await fs.mkdir('.vercel/output', { recursive: true });
   await fs.writeFile(
     '.vercel/output/config.json',
@@ -26,7 +25,5 @@ async function run() {
   );
 }
 
-run().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+run().catch(err => { console.error(err); process.exit(1); });
+

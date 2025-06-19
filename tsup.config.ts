@@ -6,8 +6,6 @@ export default defineConfig({
   clean: true,
   format: ['esm'],
   target: 'node20',
+  outbase: 'src',
   shims: false,
-  esbuildOptions(opts) {
-    opts.outbase = 'src'; // keep the 'api/' segment in output paths
-  },
-});
+  });
