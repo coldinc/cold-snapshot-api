@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rm -rf api/*.js api/**/*.js api/**/*.js.map",
-    "build": "tsup",
+    "build": "tsup && echo '----- content of api/ -----' && find api -type f | sort",
     "vercel-build": "npm run build",
     "dev": "tsup --watch",
     "lint": "eslint . --ext .ts,.js",
