@@ -1,2 +1,2 @@
-# Ignore compiled output only
+# ignore sourcemaps
 api/**/*.js.map
