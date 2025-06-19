@@ -11,7 +11,7 @@ export default defineConfig({
     sourcemap: true,
     clean: false,
     minify: false,
-    shims: true,
+    shims: false,
     noExternal: ['uri-js', 'tr46', 'punycode'],
     esbuildOptions(options) {
         options.external = options.external || [];
