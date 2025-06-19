@@ -1,3 +1,2 @@
 # Ignore compiled output only
-api/**/*.js
 api/**/*.js.map
