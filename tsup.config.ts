@@ -2,14 +2,14 @@ import { defineConfig } from "tsup";
 import { join } from "path";
 
 export default defineConfig({
-    entry: ["api/**/*.ts", "lib/**/*.ts", "utils/**/*.ts"],
-    outDir: ".",
+    entry: ['src/api/**/*.ts', 'src/lib/**/*.ts', 'src/utils/**/*.ts'],
+    outDir: "api",
     format: ["esm"],
     target: "node20",
     dts: false,
     splitting: false,
     sourcemap: true,
-    clean: false,
+    clean: true,
     minify: false,
     shims: false,
     noExternal: ['uri-js', 'tr46', 'punycode'],
