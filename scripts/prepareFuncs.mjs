@@ -16,6 +16,14 @@ async function run() {
       JSON.stringify({ runtime: 'nodejs20.x' })
     );
   }
+  // end for loop
+
+  // ── Write Build-Output manifest ─────────────────────────────────────────
+  await fs.mkdir('.vercel/output', { recursive: true });
+  await fs.writeFile(
+    '.vercel/output/config.json',
+    JSON.stringify({ version: 3 })
+  );
 }
 
 run().catch(err => {
