@@ -1,6 +1,6 @@
 {
   "version": 2,
   "functions": {
-    "api/**/*.js": { "runtime": "@vercel/node@3.3.0-canary" }
+    "api/**/*.@(js|cjs)": { "runtime": "@vercel/node@3.3.0-canary" }
   }
 }
