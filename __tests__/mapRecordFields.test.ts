@@ -1,4 +1,4 @@
-import { mapInternalToAirtable, mapAirtableToInternal } from '../lib/mapRecordFields.js';
+import { mapInternalToAirtable, mapAirtableToInternal } from '../src/lib/mapRecordFields.ts';
 
 describe('mapInternalToAirtable', () => {
   it('maps internal keys to Airtable field names', () => {
