@@ -136,10 +136,6 @@ dist
 .pnp.*
 .vercel
 
-# Do not commit compiled artefacts
-api/**/*.js
-api/**/*.js.map
-
 # compiled output – never commit
 api/**/*.js
 api/**/*.js.map
