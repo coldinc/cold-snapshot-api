@@ -1,8 +1,5 @@
 import fs from "fs";
-import path from "path";
-console.log("CWD:", process.cwd());
-console.log("Files at root:", fs.readdirSync(process.cwd()));
-console.log("Files in lib:", fs.existsSync("lib") ? fs.readdirSync("lib") : "lib missing");
+console.log("DEBUG contacts-index: root files", fs.readdirSync(process.cwd()));
 import getAirtableContext from "./airtableBase";
 import { getFieldMap } from "./resolveFieldMap";
 import { mapInternalToAirtable } from "./mapRecordFields";
