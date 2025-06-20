@@ -1,5 +1,5 @@
-import getAirtableContext from "../lib/airtableBase";
-import { getFieldMap } from "../lib/resolveFieldMap";
+import getAirtableContext from "./airtableBase";
+import { getFieldMap } from "./resolveFieldMap";
 import { FieldSet, Record as AirtableRecord } from "airtable";
 import OpenAI from "openai";
 

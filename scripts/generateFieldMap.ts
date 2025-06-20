@@ -151,7 +151,7 @@ async function main() {
   lines.push("");
   lines.push("export { getFieldMap, filterMappedFields };");
 
-  const outputPath = path.join(__dirname, "../lib/resolveFieldMap.ts");
+  const outputPath = path.join(__dirname, "../api/lib/resolveFieldMap.ts");
   fs.writeFileSync(outputPath, lines.join("\n"));
 }
 
