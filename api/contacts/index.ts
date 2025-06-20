@@ -1,4 +1,4 @@
-import getAirtableContext from ""../airtableBase"";
+import getAirtableContext from "../../lib/airtableBase";
 import { getFieldMap } from "../../lib/resolveFieldMap";
 import { mapInternalToAirtable } from "../../lib/mapRecordFields";
 import { FieldSet, Record as AirtableRecord } from "airtable";
