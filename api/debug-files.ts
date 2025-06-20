@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
-import getAirtableContext from "./lib/airtableBase";
+import { foo } from "./lib/foo";
+console.log("foo:", foo);
+
 
 // Helper: Recursively list all files under a directory
 function walk(dir: string): string[] {
