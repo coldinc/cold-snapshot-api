@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import getAirtableContext from "./lib/airtableBase"; // adjust path if needed
 
 // Helper: Recursively list all files under a directory
 function walk(dir: string): string[] {
@@ -12,6 +13,18 @@ function walk(dir: string): string[] {
 }
 
 export default function handler(req: any, res: any) {
+  // Use getAirtableContext so Vercel includes it in the bundle
+  let airtableCtxSummary;
+  try {
+    const ctx = getAirtableContext();
+    airtableCtxSummary = {
+      baseId: ctx.baseId,
+      tables: ctx.TABLES,
+    };
+  } catch (e: any) {
+    airtableCtxSummary = { error: e.message };
+  }
+
   const cwd = process.cwd();
   const rootFiles = fs.readdirSync(cwd);
 
@@ -32,7 +45,7 @@ export default function handler(req: any, res: any) {
     absLibFiles = "error reading abs lib";
   }
 
-  // Recursively list everything under cwd (optional, but super helpful)
+  // Recursively list everything under cwd
   let allFiles;
   try {
     allFiles = walk(cwd);
@@ -47,6 +60,7 @@ export default function handler(req: any, res: any) {
   console.log("DEBUG: libFiles (abs):", absLibFiles);
   console.log("DEBUG: absLibPath:", absLibPath);
   console.log("DEBUG: allFiles:", allFiles);
+  console.log("DEBUG: airtableCtxSummary:", airtableCtxSummary);
 
   res.status(200).json({
     cwd,
@@ -55,5 +69,6 @@ export default function handler(req: any, res: any) {
     absLibPath,
     absLibFiles,
     allFiles,
+    airtableCtxSummary,
   });
 }
