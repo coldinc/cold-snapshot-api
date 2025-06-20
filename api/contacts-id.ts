@@ -1,4 +1,4 @@
-import getAirtableContext from "../lib/airtableBase";
+import getAirtableContext from "./airtableBase";
 
 const idContactsHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();

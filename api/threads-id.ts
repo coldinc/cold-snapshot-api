@@ -1,18 +1,29 @@
-import getAirtableContext from "../lib/airtableBase";
+import getAirtableContext from "./airtableBase";
 
-const idSnapshotsHandler = async (req: any, res: any) => {
+const idThreadsHandler = async (req: any, res: any) => {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
     const { id } = req.query;
     if (!id) {
-        return res.status(400).json({ error: "Missing snapshot ID" });
+        return res.status(400).json({ error: "Missing thread ID" });
     }
 
-    if (!airtableToken || !baseId || !TABLES.SNAPSHOTS) {
-        return res.status(500).json({ error: "Missing Airtable configuration" });
+    if (!airtableToken) {
+        console.error("Missing AIRTABLE_API_KEY");
+        return res.status(500).json({ error: "Missing Airtable API Key" });
     }
 
-    const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.SNAPSHOTS)}/${id}`;
+    if (!baseId) {
+        console.error("Missing AIRTABLE_BASE_ID");
+        return res.status(500).json({ error: "Missing Airtable Base ID" });
+    }
+
+    if (!TABLES?.THREADS) {
+        console.error("Missing AIRTABLE_THREADS_TABLE_NAME");
+        return res.status(500).json({ error: "Missing Airtable Threads Table Name" });
+    }
+
+    const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(TABLES.THREADS)}/${id}`;
 
     const config = {
         headers: {
@@ -59,4 +70,4 @@ const idSnapshotsHandler = async (req: any, res: any) => {
     }
 };
 
-export default idSnapshotsHandler;
+export default idThreadsHandler;

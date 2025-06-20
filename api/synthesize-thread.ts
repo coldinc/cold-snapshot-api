@@ -1,6 +1,6 @@
-import getAirtableContext from "./lib/airtableBase";
-import { getFieldMap } from "./lib/resolveFieldMap";
-import { synthesizeThreadNarrative } from "./lib/synthesisUtils";
+import getAirtableContext from "./airtableBase";
+import { getFieldMap } from "./resolveFieldMap";
+import { synthesizeThreadNarrative } from "./synthesisUtils";
 
 
 const apiSynthesizeThreadHandler = async (req: any, res: any) => {
