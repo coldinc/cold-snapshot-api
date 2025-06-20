@@ -18,19 +18,16 @@ async function airtableSearch(tableName: string, filterFormula: string) {
     console.log("[airtableSearch] url:", url);
   
   const config = {
-    headers: { Authorization: `Bearer ${airtableToken}` },
-    params: { filterByFormula: filterFormula, maxRecords: 10 }
+    headers: { Authorization: `Bearer ${airtableToken}` }
   };
 
-  let fullUrl = url;
-  if (config.params) {
-    const query = new URLSearchParams(config.params as any).toString();
-    fullUrl += `?${query}`;
-  }
-  const response = await fetch(fullUrl, {
-    method: "GET",
-    headers: config.headers
-  });
+  const params = new URLSearchParams({
+    filterByFormula: filterFormula,
+    maxRecords: "10"
+  }).toString();
+  const fullUrl = url + "?" + params;
+
+  const response = await fetch(fullUrl, config);
   if (!response.ok) {
     throw new Error(`Airtable request failed: ${await response.text()}`);
   }
