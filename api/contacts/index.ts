@@ -21,8 +21,9 @@ const apiContactsHandler = async (req: any, res: any) => {
         });
 
       const mappedRecords = records.map((record) => {
-        const mapped: Record<string, any> = { id: record.id };
-        const fields = record.fields as Record<string, any>;
+        const rec = record as AirtableRecord<FieldSet>;
+        const mapped: Record<string, any> = { id: rec.id };
+        const fields = rec.fields as Record<string, any>;
         for (const [internalKey, airtableField] of Object.entries(fieldMap)) {
           const key = airtableField as keyof typeof fields;
           mapped[internalKey] = fields[key] !== undefined ? fields[key] : null;
