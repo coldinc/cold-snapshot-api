@@ -1,7 +1,7 @@
 // Moved to prevent route collision with [id].ts in Next.js
-import { airtableSearch } from "./airtableSearch";
-import getAirtableContext from "./airtable_base";
-import { getFieldMap } from "./resolveFieldMap";
+import { airtableSearch } from "./airtableSearch.js";
+import getAirtableContext from "./airtable_base.js";
+import { getFieldMap } from "./resolveFieldMap.js";
 
 const fieldMap = getFieldMap("Logs");
 

@@ -1,5 +1,5 @@
-import getAirtableContext from "./airtable_base";
-import { getFieldMap, filterMappedFields } from "./resolveFieldMap";
+import getAirtableContext from "./airtable_base.js";
+import { getFieldMap, filterMappedFields } from "./resolveFieldMap.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
 
 
