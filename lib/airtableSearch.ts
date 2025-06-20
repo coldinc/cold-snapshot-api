@@ -7,16 +7,13 @@ async function airtableSearch(tableName: string, filterFormula: string) {
     throw new Error("Missing Airtable configuration");
   }
 
-  
-    console.log("[airtableSearch] baseId:", baseId, "tableName:", tableName);
-    console.log("[airtableSearch] filterFormula:", filterFormula);
-  
+  console.log("[airtableSearch] baseId:", baseId, "tableName:", tableName);
+  console.log("[airtableSearch] filterFormula:", filterFormula);
 
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
 
+  console.log("[airtableSearch] url:", url);
 
-    console.log("[airtableSearch] url:", url);
-  
   const config = {
     headers: { Authorization: `Bearer ${airtableToken}` }
   };
@@ -31,12 +28,20 @@ async function airtableSearch(tableName: string, filterFormula: string) {
   if (!response.ok) {
     throw new Error(`Airtable request failed: ${await response.text()}`);
   }
-  const data = await response.json();
+  const data = (await response.json()) as { records: any[] };
   return data.records;
 }
 
-function createSearchHandler({ tableName, fieldName, queryParam }: { tableName: string; fieldName: string; queryParam: string }) {
-  if (tableName.includes('/')) {
+function createSearchHandler({
+  tableName,
+  fieldName,
+  queryParam
+}: {
+  tableName: string;
+  fieldName: string;
+  queryParam: string;
+}) {
+  if (tableName.includes("/")) {
     throw new Error(`Invalid tableName "${tableName}" - must not contain '/'`);
   }
   return async function (req: any, res: any) {
