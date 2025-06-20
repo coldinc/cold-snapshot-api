@@ -37,6 +37,8 @@ const apiContactsHandler = async (req: any, res: any) => {
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);
       const airtableFields = mapInternalToAirtable(req.body, fieldMap);
+      
+      console.log("Airtable fields being sent:", airtableFields);
 
       const createdRecord = await base(tableName).create([{ fields: airtableFields }]);
 
