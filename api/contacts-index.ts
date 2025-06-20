@@ -1,6 +1,6 @@
 import getAirtableContext from "./airtable_base.js";
-import { getFieldMap } from "./resolveFieldMap";
-import { mapInternalToAirtable } from "./mapRecordFields";
+import { getFieldMap } from "./resolveFieldMap.js";
+import { mapInternalToAirtable } from "./mapRecordFields.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
 
 const apiContactsHandler = async (req: any, res: any) => {

@@ -1,5 +1,5 @@
-import getAirtableContext from "./airtable_base";
-import { getFieldMap } from "./resolveFieldMap";
+import getAirtableContext from "./airtable_base.js";
+import { getFieldMap } from "./resolveFieldMap.js";
 
 export function getLookupValue(tableName: string, fieldKey: string, record: Record<string, any>): string | null {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
