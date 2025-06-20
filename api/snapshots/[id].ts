@@ -22,16 +22,11 @@ const idSnapshotsHandler = async (req: any, res: any) => {
     };
 
     try {
-        if (req.method === "GET") {
-            let url = recordUrl;
-            if (config?.params) {
-                const query = new URLSearchParams(config.params as any).toString();
-                url += `?${query}`;
-            }
-            const response = await fetch(url, {
-                method: "GET",
-                headers: config?.headers
-            });
+  if (req.method === "GET") {
+    const response = await fetch(recordUrl, {
+      method: "GET",
+      headers: config.headers
+    });
             if (!response.ok) {
                 return res.status(response.status).json({ error: await response.text() });
             }
