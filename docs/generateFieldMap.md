@@ -21,7 +21,7 @@ These outputs are used to ensure:
 ## 🚀 How to Run
 
 ```bash
-npx ts-node scripts/generateFieldMap.ts
+node --loader ts-node/esm scripts/generateFieldMap.ts
 ```
 
 Before running:
