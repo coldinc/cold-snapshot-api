@@ -1,4 +1,3 @@
-import axios from "axios";
 import getAirtableContext from "./airtableBase";
 
 async function airtableSearch(tableName: string, filterFormula: string) {
@@ -23,8 +22,20 @@ async function airtableSearch(tableName: string, filterFormula: string) {
     params: { filterByFormula: filterFormula, maxRecords: 10 }
   };
 
-  const response = await axios.get(url, config);
-  return response.data.records;
+  let fullUrl = url;
+  if (config.params) {
+    const query = new URLSearchParams(config.params as any).toString();
+    fullUrl += `?${query}`;
+  }
+  const response = await fetch(fullUrl, {
+    method: "GET",
+    headers: config.headers
+  });
+  if (!response.ok) {
+    throw new Error(`Airtable request failed: ${await response.text()}`);
+  }
+  const data = await response.json();
+  return data.records;
 }
 
 function createSearchHandler({ tableName, fieldName, queryParam }: { tableName: string; fieldName: string; queryParam: string }) {
