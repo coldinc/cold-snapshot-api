@@ -1,6 +1,6 @@
-import getAirtableContext from "../../lib/airtableBase.js";
-import { getFieldMap } from "../../lib/resolveFieldMap.js";
-import { mapInternalToAirtable } from "../../lib/mapRecordFields.js";
+import getAirtableContext from "../../lib/airtableBase";
+import { getFieldMap } from "../../lib/resolveFieldMap";
+import { mapInternalToAirtable } from "../../lib/mapRecordFields";
 import { FieldSet, Record as AirtableRecord } from "airtable";
 
 
