@@ -1,5 +1,5 @@
 import axios from "axios";
-import getAirtableContext from "./airtableBase.js";
+import getAirtableContext from "./airtableBase";
 
 async function airtableSearch(tableName: string, filterFormula: string) {
   const { airtableToken, baseId } = getAirtableContext();

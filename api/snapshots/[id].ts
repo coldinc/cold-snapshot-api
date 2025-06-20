@@ -1,5 +1,5 @@
 import axios from "axios";
-import getAirtableContext from "../../lib/airtableBase.js";
+import getAirtableContext from "../../lib/airtableBase";
 
 const idSnapshotsHandler = async (req: any, res: any) => {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();

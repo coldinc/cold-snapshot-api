@@ -1,4 +1,4 @@
-import getAirtableContext from "../../lib/airtableBase.js";
+import getAirtableContext from "../../lib/airtableBase";
 
 const apiSnapshotsLatestHandler = async (req: any, res: any) => {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
