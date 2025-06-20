@@ -1,4 +1,4 @@
-import getAirtableContext from "./airtableBase";
+import getAirtableContext from "./airtable_base";
 import { getFieldMap } from "./resolveFieldMap";
 import { synthesizeThreadNarrative } from "./synthesisUtils";
 

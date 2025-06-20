@@ -1,4 +1,4 @@
-import getAirtableContext from "./airtableBase";
+import getAirtableContext from "./airtable_base";
 import { getFieldMap } from "./resolveFieldMap";
 
 export function getLookupValue(tableName: string, fieldKey: string, record: Record<string, any>): string | null {

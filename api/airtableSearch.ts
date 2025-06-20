@@ -1,4 +1,4 @@
-import getAirtableContext from "./airtableBase";
+import getAirtableContext from "./airtable_base";
 
 async function airtableSearch(tableName: string, filterFormula: string) {
   const { airtableToken, baseId } = getAirtableContext();

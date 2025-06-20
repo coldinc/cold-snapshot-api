@@ -1,6 +1,6 @@
 import fs from "fs";
 console.log("DEBUG contacts-index: root files", fs.readdirSync(process.cwd()));
-import getAirtableContext from "./airtableBase";
+import getAirtableContext from "./airtable_base";
 import { getFieldMap } from "./resolveFieldMap";
 import { mapInternalToAirtable } from "./mapRecordFields";
 import { FieldSet, Record as AirtableRecord } from "airtable";
