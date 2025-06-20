@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { foo } from "./lib/foo";
+import { foo } from "./foo";
 console.log("foo:", foo);
 
 

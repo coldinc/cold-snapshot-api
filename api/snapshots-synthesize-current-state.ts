@@ -1,5 +1,5 @@
-import getAirtableContext from "../lib/airtableBase";
-import { getFieldMap, filterMappedFields } from "../lib/resolveFieldMap";
+import getAirtableContext from "./airtableBase";
+import { getFieldMap, filterMappedFields } from "./resolveFieldMap";
 
 const apiSnapshotsSynthesizeHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
