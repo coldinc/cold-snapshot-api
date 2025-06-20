@@ -3,7 +3,6 @@ import { getFieldMap } from "../../lib/resolveFieldMap.js";
 import { mapInternalToAirtable } from "../../lib/mapRecordFields.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
 
-
 const apiContactsHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
@@ -16,10 +15,7 @@ const apiContactsHandler = async (req: any, res: any) => {
 
       await base(tableName)
         .select({ view: "Grid view" })
-        .eachPage((
-          recordsPage: readonly AirtableRecord<FieldSet>[],
-          fetchNextPage: () => void
-        ) => {
+        .eachPage((recordsPage, fetchNextPage) => {
           records.push(...recordsPage);
           fetchNextPage();
         });
