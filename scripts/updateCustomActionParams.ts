@@ -67,6 +67,53 @@ for (const [route, config] of Object.entries(openApi.paths)) {
   } else {
     console.log(`Skipped ${route} - no requestBody schema`);
   }
+
+  // ----- PATCH operation generation -----
+  const postOpId = config.post.operationId as string;
+  const baseId = postOpId ? postOpId.replace(/^create/i, "") : toCamelCase(tableName);
+  const updateOpId = `update${baseId.charAt(0).toUpperCase()}${baseId.slice(1)}`;
+
+  const postSummary: string = config.post.summary || tableName;
+  const singular = postSummary.replace(/create (a new |an |a )?/i, "").trim();
+
+  const patchSchemaProps: Record<string, any> = {};
+  if (newSchema.properties) {
+    for (const [key, val] of Object.entries(newSchema.properties)) {
+      if (!(val as any).readOnly) {
+        patchSchemaProps[key] = val;
+      }
+    }
+  }
+
+  const patchOp = config.patch || {};
+  patchOp.operationId = updateOpId;
+  patchOp.summary = `Update an existing ${singular}`;
+  patchOp.description = `Update an existing ${singular}. Do not include read-only fields.`;
+  patchOp.parameters = [
+    {
+      name: "id",
+      in: "query",
+      required: true,
+      schema: { type: "string" }
+    }
+  ];
+  patchOp.requestBody = {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: patchSchemaProps
+        }
+      }
+    }
+  };
+  patchOp.responses = {
+    200: {
+      description: `The updated ${singular}`
+    }
+  };
+
+  config.patch = patchOp;
 }
 
 // Optionally, repeat for GET/response schemas if you want to patch those as well
