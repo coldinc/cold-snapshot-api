@@ -176,7 +176,8 @@
                       "Colleague",
                       "Inbound",
                       "Lunchclub"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Evemt\""
                   },
                   "relationshipType": {
                     "type": "array",
@@ -200,7 +201,8 @@
                       "Weak",
                       "Warm",
                       "Strong"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Cold\""
                   },
                   "status": {
                     "type": "string",
@@ -211,7 +213,8 @@
                       "No Response",
                       "No Fit",
                       "Dormant"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Dormant\""
                   },
                   "patternMatchCollaboration": {
                     "type": "array",
@@ -271,10 +274,7 @@
                     "type": "string"
                   },
                   "latestRelatedLog": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "type": "string"
                   },
                   "id": {
                     "type": "string",
@@ -307,6 +307,50 @@
         "responses": {
           "201": {
             "description": "The created contact"
+          }
+        }
+      }
+    },
+    "/api/contacts-search": {
+      "get": {
+        "operationId": "searchContactsByName",
+        "summary": "Search contacts",
+        "description": "Search contacts by partial name match.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results"
+          }
+        }
+      }
+    },
+    "/api/contacts-id": {
+      "get": {
+        "operationId": "getContactById",
+        "summary": "Get contact by ID",
+        "description": "Fetch a specific partner contact by Airtable record ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The contact record"
           }
         }
       },
@@ -360,7 +404,8 @@
                       "Colleague",
                       "Inbound",
                       "Lunchclub"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Referral\""
                   },
                   "relationshipType": {
                     "type": "array",
@@ -384,7 +429,8 @@
                       "Weak",
                       "Warm",
                       "Strong"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Strong\""
                   },
                   "status": {
                     "type": "string",
@@ -395,7 +441,8 @@
                       "No Response",
                       "No Fit",
                       "Dormant"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"No Fit\""
                   },
                   "patternMatchCollaboration": {
                     "type": "array",
@@ -455,10 +502,7 @@
                     "type": "string"
                   },
                   "latestRelatedLog": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "type": "string"
                   },
                   "logs": {
                     "type": "string"
@@ -477,50 +521,6 @@
         "responses": {
           "200": {
             "description": "The updated contact"
-          }
-        }
-      }
-    },
-    "/api/contacts-search": {
-      "get": {
-        "operationId": "searchContactsByName",
-        "summary": "Search contacts",
-        "description": "Search contacts by partial name match.",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Search results"
-          }
-        }
-      }
-    },
-    "/api/contacts-id": {
-      "get": {
-        "operationId": "getContactById",
-        "summary": "Get contact by ID",
-        "description": "Fetch a specific partner contact by Airtable record ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The contact record"
           }
         }
       }
@@ -640,7 +640,8 @@
                       "In Progress",
                       "Paused",
                       "Complete"
-                    ]
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                   },
                   "description": {
                     "type": "string"
@@ -698,100 +699,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "patch": {
-        "operationId": "updateThread",
-        "summary": "Update an existing thread",
-        "description": "Update an existing thread. Do not include read-only fields.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "Experiment",
-                        "Internal",
-                        "Output",
-                        "Collaboration"
-                      ]
-                    }
-                  },
-                  "status": {
-                    "type": "string",
-                    "enum": [
-                      "Idea",
-                      "In Progress",
-                      "Paused",
-                      "Complete"
-                    ]
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "associatedContacts": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "contactId": {
-                    "type": "string"
-                  },
-                  "associatedLogs": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "logId": {
-                    "type": "string"
-                  },
-                  "parentThread": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "parentThreadId": {
-                    "type": "string"
-                  },
-                  "subthread": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "subthreadId": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The updated thread"
           }
         }
       }
@@ -882,6 +789,101 @@
                 }
               }
             }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateThread",
+        "summary": "Update an existing thread",
+        "description": "Update an existing thread. Do not include read-only fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Experiment",
+                        "Internal",
+                        "Output",
+                        "Collaboration"
+                      ]
+                    }
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Idea",
+                      "In Progress",
+                      "Paused",
+                      "Complete"
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "associatedContacts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "contactId": {
+                    "type": "string"
+                  },
+                  "associatedLogs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "logId": {
+                    "type": "string"
+                  },
+                  "parentThread": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "parentThreadId": {
+                    "type": "string"
+                  },
+                  "subthread": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "subthreadId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated thread"
           }
         }
       }
@@ -1085,7 +1087,9 @@
             "description": "The created log entry"
           }
         }
-      },
+      }
+    },
+    "/api/log-entries-id": {
       "patch": {
         "operationId": "updateLogEntry",
         "summary": "Update an existing log entry",
@@ -1126,7 +1130,7 @@
                       "Note",
                       "Email"
                     ],
-                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Call\""
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Evemt\""
                   },
                   "date": {
                     "type": "string",
@@ -1144,17 +1148,8 @@
                   "tags": {
                     "type": "string"
                   },
-                  "relatedOutput": {
-                    "type": "string"
-                  },
                   "author": {
                     "type": "string"
-                  },
-                  "contacts": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
                   },
                   "threadLinked": {
                     "type": "array",

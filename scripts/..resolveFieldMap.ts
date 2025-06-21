@@ -49,12 +49,10 @@ function getFieldMap(tableName: string): { [key: string]: string } {
         followupNeeded: "Followup Needed",
         followupNotes: "Followup Notes",
         tags: "Tags",
-        relatedOutput: "Related Output",
         logId: "Log ID",
         author: "Author",
         createdAt: "Created At",
         lastModified: "Last Modified",
-        contacts: "Contacts",
         threadLinked: "Thread (Linked)",
         threadId: "Thread ID",
       };

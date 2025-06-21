@@ -30,15 +30,18 @@ const schemasDir = path.join(rootDir, "schemas");
 
 const tableNames: Record<string, string> = {
   "/api/contacts-index": process.env.AIRTABLE_CONTACTS_TABLE_NAME || "Contacts",
+  "/api/contacts-id": process.env.AIRTABLE_CONTACTS_TABLE_NAME || "Contacts",
   "/api/log-entries-index": process.env.AIRTABLE_LOGS_TABLE_NAME || "Logs",
+  "/api/log-entries-id": process.env.AIRTABLE_LOGS_TABLE_NAME || "Logs",
   "/api/snapshots-latest": process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
-  "/api/threads-index": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads"
+  "/api/threads-index": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
+  "/api/threads-id": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
 };
+
 
 const openApi: OpenAPISchema = JSON.parse(fs.readFileSync(openApiPath, "utf8"));
 
 for (const [route, config] of Object.entries(openApi.paths)) {
-  if (!config.post) continue;
   const tableName = tableNames[route];
   if (!tableName) {
     console.log(`Skipped ${route} - no table mapping`);
@@ -51,84 +54,85 @@ for (const [route, config] of Object.entries(openApi.paths)) {
     continue;
   }
   const newSchema = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
-  const reqBodySchema = config.post?.requestBody?.content?.["application/json"]?.schema;
-  if (reqBodySchema) {
-    // Merge properties, preserving manual field-level descriptions (and any other extra keys)
-    reqBodySchema.properties = reqBodySchema.properties || {};
-  for (const [key, newProp] of Object.entries(newSchema.properties as Record<string, any>)) {
-    const oldProp = (reqBodySchema.properties as Record<string, any>)[key] || {};
-    (reqBodySchema.properties as Record<string, any>)[key] = {
-      ...(newProp as Record<string, any>),
-      ...(oldProp.description && !(newProp as any).description ? { description: oldProp.description } : {})
-    };
-  }
-    // Keep any properties that are in the old schema but not in the new one
-    for (const key of Object.keys(reqBodySchema.properties)) {
-      if (!newSchema.properties[key]) {
-        reqBodySchema.properties[key] = reqBodySchema.properties[key];
-      }
-    }
-    console.log(`Patched properties for ${route} from ${fileName}, preserving descriptions`);
-    if (newSchema.required) {
-      reqBodySchema.required = newSchema.required;
-      console.log(`Patched required for ${route} from ${fileName}`);
-    }
-  } else {
-    console.log(`Skipped ${route} - no requestBody schema`);
-  }
 
-  // ----- PATCH operation generation -----
-  const postOpId = config.post.operationId as string;
-  const baseId = postOpId ? postOpId.replace(/^create/i, "") : toCamelCase(tableName);
-  const updateOpId = `update${baseId.charAt(0).toUpperCase()}${baseId.slice(1)}`;
-
-  const postSummary: string = config.post.summary || tableName;
-  const singular = postSummary.replace(/create (a new |an |a )?/i, "").trim();
-
-  const patchSchemaProps: Record<string, any> = {};
-  const oldPatchProps = config.patch?.requestBody?.content?.["application/json"]?.schema?.properties || {};
-  if (newSchema.properties) {
-    for (const [key, val] of Object.entries(newSchema.properties as Record<string, any>)) {
-      if (!(val as any).readOnly) {
-        patchSchemaProps[key] = {
-          ...(val as Record<string, any>),
-          ...(oldPatchProps[key]?.description && !(val as any).description
-            ? { description: oldPatchProps[key].description }
-            : {})
+  // ----- POST (for -index endpoints) -----
+  if (config.post && route.endsWith("-index")) {
+    const reqBodySchema = config.post?.requestBody?.content?.["application/json"]?.schema;
+    if (reqBodySchema) {
+      reqBodySchema.properties = reqBodySchema.properties || {};
+      for (const [key, newProp] of Object.entries(newSchema.properties as Record<string, any>)) {
+        const oldProp = (reqBodySchema.properties as Record<string, any>)[key] || {};
+        (reqBodySchema.properties as Record<string, any>)[key] = {
+          ...(newProp as Record<string, any>),
+          ...(oldProp.description && !(newProp as any).description ? { description: oldProp.description } : {})
         };
       }
+      for (const key of Object.keys(reqBodySchema.properties)) {
+        if (!newSchema.properties[key]) {
+          reqBodySchema.properties[key] = reqBodySchema.properties[key];
+        }
+      }
+      console.log(`Patched properties for ${route} from ${fileName}, preserving descriptions`);
+      if (newSchema.required) {
+        reqBodySchema.required = newSchema.required;
+        console.log(`Patched required for ${route} from ${fileName}`);
+      }
+    } else {
+      console.log(`Skipped ${route} - no requestBody schema`);
     }
   }
 
-  const patchOp = config.patch || {};
-  patchOp.operationId = updateOpId;
-  patchOp.summary = `Update an existing ${singular}`;
-  patchOp.description = `Update an existing ${singular}. Do not include read-only fields.`;
-  patchOp.parameters = [
-    {
-      name: "id",
-      in: "query",
-      required: true,
-      schema: { type: "string" }
-    }
-  ];
-  patchOp.requestBody = {
-    content: {
-      "application/json": {
-        schema: {
-          type: "object",
-          properties: patchSchemaProps
+  // ----- PATCH (for -id endpoints only) -----
+  if (route.endsWith("-id")) {
+    const postConfig = openApi.paths[route.replace("-id", "-index")]?.post;
+    const postOpId = postConfig?.operationId as string;
+    const baseId = postOpId ? postOpId.replace(/^create/i, "") : toCamelCase(tableName);
+    const updateOpId = `update${baseId.charAt(0).toUpperCase()}${baseId.slice(1)}`;
+    const postSummary: string = postConfig?.summary || tableName;
+    const singular = postSummary.replace(/create (a new |an |a )?/i, "").trim();
+    const patchSchemaProps: Record<string, any> = {};
+    const oldPatchProps = config.patch?.requestBody?.content?.["application/json"]?.schema?.properties || {};
+    if (newSchema.properties) {
+      for (const [key, val] of Object.entries(newSchema.properties as Record<string, any>)) {
+        if (!(val as any).readOnly) {
+          patchSchemaProps[key] = {
+            ...(val as Record<string, any>),
+            ...(oldPatchProps[key]?.description && !(val as any).description
+              ? { description: oldPatchProps[key].description }
+              : {})
+          };
         }
       }
     }
-  };
-  patchOp.responses = {
-    200: {
-      description: `The updated ${singular}`
-    }
-  };
-
-  config.patch = patchOp;
+    const patchOp = config.patch || {};
+    patchOp.operationId = updateOpId;
+    patchOp.summary = `Update an existing ${singular}`;
+    patchOp.description = `Update an existing ${singular}. Do not include read-only fields.`;
+    patchOp.parameters = [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" }
+      }
+    ];
+    patchOp.requestBody = {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: patchSchemaProps
+          }
+        }
+      }
+    };
+    patchOp.responses = {
+      200: {
+        description: `The updated ${singular}`
+      }
+    };
+    config.patch = patchOp;
+  }
 }
 
 fs.writeFileSync(openApiPath, JSON.stringify(openApi, null, 2));

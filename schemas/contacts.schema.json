@@ -128,10 +128,7 @@
       "type": "string"
     },
     "latestRelatedLog": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+      "type": "string"
     },
     "id": {
       "type": "string",
