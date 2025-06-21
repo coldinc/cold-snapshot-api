@@ -55,13 +55,13 @@ for (const [route, config] of Object.entries(openApi.paths)) {
   if (reqBodySchema) {
     // Merge properties, preserving manual field-level descriptions (and any other extra keys)
     reqBodySchema.properties = reqBodySchema.properties || {};
-    for (const [key, newProp] of Object.entries(newSchema.properties)) {
-      const oldProp = reqBodySchema.properties[key] || {};
-      reqBodySchema.properties[key] = {
-        ...newProp,
-        ...(oldProp.description && !newProp.description ? { description: oldProp.description } : {})
-      };
-    }
+  for (const [key, newProp] of Object.entries(newSchema.properties as Record<string, any>)) {
+    const oldProp = (reqBodySchema.properties as Record<string, any>)[key] || {};
+    (reqBodySchema.properties as Record<string, any>)[key] = {
+      ...(newProp as Record<string, any>),
+      ...(oldProp.description && !(newProp as any).description ? { description: oldProp.description } : {})
+    };
+  }
     // Keep any properties that are in the old schema but not in the new one
     for (const key of Object.keys(reqBodySchema.properties)) {
       if (!newSchema.properties[key]) {
@@ -88,11 +88,11 @@ for (const [route, config] of Object.entries(openApi.paths)) {
   const patchSchemaProps: Record<string, any> = {};
   const oldPatchProps = config.patch?.requestBody?.content?.["application/json"]?.schema?.properties || {};
   if (newSchema.properties) {
-    for (const [key, val] of Object.entries(newSchema.properties)) {
+    for (const [key, val] of Object.entries(newSchema.properties as Record<string, any>)) {
       if (!(val as any).readOnly) {
         patchSchemaProps[key] = {
-          ...val,
-          ...(oldPatchProps[key]?.description && !val.description
+          ...(val as Record<string, any>),
+          ...(oldPatchProps[key]?.description && !(val as any).description
             ? { description: oldPatchProps[key].description }
             : {})
         };
