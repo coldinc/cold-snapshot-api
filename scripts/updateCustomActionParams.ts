@@ -1,7 +1,6 @@
 console.log("\u{1F680} Running updateCustomActionParams...");
 
 import "dotenv/config";
-
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -54,16 +53,26 @@ for (const [route, config] of Object.entries(openApi.paths)) {
   const newSchema = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
   const reqBodySchema = config.post?.requestBody?.content?.["application/json"]?.schema;
   if (reqBodySchema) {
-    // Only update "properties" and "required" if they exist
-    if (newSchema.properties) {
-      reqBodySchema.properties = newSchema.properties;
-      console.log(`Patched properties for ${route} from ${fileName}`);
+    // Merge properties, preserving manual field-level descriptions (and any other extra keys)
+    reqBodySchema.properties = reqBodySchema.properties || {};
+    for (const [key, newProp] of Object.entries(newSchema.properties)) {
+      const oldProp = reqBodySchema.properties[key] || {};
+      reqBodySchema.properties[key] = {
+        ...newProp,
+        ...(oldProp.description && !newProp.description ? { description: oldProp.description } : {})
+      };
     }
+    // Keep any properties that are in the old schema but not in the new one
+    for (const key of Object.keys(reqBodySchema.properties)) {
+      if (!newSchema.properties[key]) {
+        reqBodySchema.properties[key] = reqBodySchema.properties[key];
+      }
+    }
+    console.log(`Patched properties for ${route} from ${fileName}, preserving descriptions`);
     if (newSchema.required) {
       reqBodySchema.required = newSchema.required;
       console.log(`Patched required for ${route} from ${fileName}`);
     }
-    // Optionally: patch enums, descriptions, etc. if desired
   } else {
     console.log(`Skipped ${route} - no requestBody schema`);
   }
@@ -77,10 +86,16 @@ for (const [route, config] of Object.entries(openApi.paths)) {
   const singular = postSummary.replace(/create (a new |an |a )?/i, "").trim();
 
   const patchSchemaProps: Record<string, any> = {};
+  const oldPatchProps = config.patch?.requestBody?.content?.["application/json"]?.schema?.properties || {};
   if (newSchema.properties) {
     for (const [key, val] of Object.entries(newSchema.properties)) {
       if (!(val as any).readOnly) {
-        patchSchemaProps[key] = val;
+        patchSchemaProps[key] = {
+          ...val,
+          ...(oldPatchProps[key]?.description && !val.description
+            ? { description: oldPatchProps[key].description }
+            : {})
+        };
       }
     }
   }
@@ -115,8 +130,6 @@ for (const [route, config] of Object.entries(openApi.paths)) {
 
   config.patch = patchOp;
 }
-
-// Optionally, repeat for GET/response schemas if you want to patch those as well
 
 fs.writeFileSync(openApiPath, JSON.stringify(openApi, null, 2));
 console.log("custom_action_schema.json updated.");

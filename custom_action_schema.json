@@ -41,14 +41,12 @@
                   },
                   "id": {
                     "type": "string",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "created": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   }
                 }
               }
@@ -76,6 +74,50 @@
                 }
               }
             }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateSnapshot",
+        "summary": "Update an existing snapshot",
+        "description": "Update an existing snapshot. Do not include read-only fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "phaseId": {
+                    "type": "string"
+                  },
+                  "snapshotMarkdown": {
+                    "type": "string"
+                  },
+                  "keyUpdates": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated snapshot"
           }
         }
       }
@@ -236,14 +278,12 @@
                   },
                   "id": {
                     "type": "string",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "lastModified": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "logs": {
                     "type": "string"
@@ -257,8 +297,7 @@
                   "created": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   }
                 }
               }
@@ -268,6 +307,176 @@
         "responses": {
           "201": {
             "description": "The created contact"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateContact",
+        "summary": "Update an existing contact",
+        "description": "Update an existing contact. Do not include read-only fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "website": {
+                    "type": "string"
+                  },
+                  "linkedin": {
+                    "type": "string"
+                  },
+                  "overview": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "Referral",
+                      "Outreach",
+                      "Event",
+                      "Colleague",
+                      "Inbound",
+                      "Lunchclub"
+                    ]
+                  },
+                  "relationshipType": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Partner",
+                        "Customer",
+                        "Mentee",
+                        "Subscriber",
+                        "Lead",
+                        "Network",
+                        "Frenemy"
+                      ]
+                    }
+                  },
+                  "relationshipStrength": {
+                    "type": "string",
+                    "enum": [
+                      "Cold",
+                      "Weak",
+                      "Warm",
+                      "Strong"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Maintenance",
+                      "Active Conversation",
+                      "Needs Follow Up",
+                      "No Response",
+                      "No Fit",
+                      "Dormant"
+                    ]
+                  },
+                  "patternMatchCollaboration": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Collaborated – Referrer",
+                        "Potential – Referrer",
+                        "Potential – Client",
+                        "Collaborated – Client",
+                        "Potential – Sponsor",
+                        "Collaborated – Sponsor",
+                        "Potential – Drop Partner",
+                        "Collaborated – Drop Partner",
+                        "Potential – Event Partner",
+                        "Collaborated – Event Partner",
+                        "Potential – Content Partner",
+                        "Collaborated – Content Partner",
+                        "Potential – Podcast Guest",
+                        "Collaborated – Podcast Guest",
+                        "Collaborated – Mentoring",
+                        "Potential – Mentoring"
+                      ]
+                    }
+                  },
+                  "patternMatchArchetype": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Solo",
+                        "Builder",
+                        "Artist",
+                        "Driver",
+                        "Connector",
+                        "Influencer",
+                        "Agency",
+                        "Educator",
+                        "Investor"
+                      ]
+                    }
+                  },
+                  "importedTable": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "followupNeeded": {
+                    "type": "boolean"
+                  },
+                  "nextFollowupDate": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "followupSummary": {
+                    "type": "string"
+                  },
+                  "latestRelatedLog": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "logs": {
+                    "type": "string"
+                  },
+                  "threads": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated contact"
           }
         }
       }
@@ -352,7 +561,8 @@
                           "In Progress",
                           "Paused",
                           "Complete"
-                        ]
+                        ],
+                        "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                       },
                       "description": {
                         "type": "string"
@@ -456,19 +666,16 @@
                   "createdDate": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "lastModified": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "threadId": {
                     "type": "string",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "parentThread": {
                     "type": "array",
@@ -491,6 +698,100 @@
                 }
               }
             }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateThread",
+        "summary": "Update an existing thread",
+        "description": "Update an existing thread. Do not include read-only fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Experiment",
+                        "Internal",
+                        "Output",
+                        "Collaboration"
+                      ]
+                    }
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Idea",
+                      "In Progress",
+                      "Paused",
+                      "Complete"
+                    ]
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "associatedContacts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "contactId": {
+                    "type": "string"
+                  },
+                  "associatedLogs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "logId": {
+                    "type": "string"
+                  },
+                  "parentThread": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "parentThreadId": {
+                    "type": "string"
+                  },
+                  "subthread": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "subthreadId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated thread"
           }
         }
       }
@@ -539,7 +840,8 @@
                         "In Progress",
                         "Paused",
                         "Complete"
-                      ]
+                      ],
+                      "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                     },
                     "description": {
                       "type": "string"
@@ -630,7 +932,8 @@
                           "In Progress",
                           "Paused",
                           "Complete"
-                        ]
+                        ],
+                        "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                       },
                       "description": {
                         "type": "string"
@@ -742,8 +1045,7 @@
                   },
                   "logId": {
                     "type": "string",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "author": {
                     "type": "string"
@@ -751,14 +1053,12 @@
                   "createdAt": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "lastModified": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true,
-                    "description": "System-generated. Do not include this field when creating or updating a thread."
+                    "readOnly": true
                   },
                   "contacts": {
                     "type": "array",
@@ -783,6 +1083,96 @@
         "responses": {
           "201": {
             "description": "The created log entry"
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateLogEntry",
+        "summary": "Update an existing log entry",
+        "description": "Update an existing log entry. Do not include read-only fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "summary": {
+                    "type": "string"
+                  },
+                  "contactsLinked": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedContactId": {
+                    "type": "string"
+                  },
+                  "logType": {
+                    "type": "string",
+                    "enum": [
+                      "Call",
+                      "Meeting",
+                      "Note",
+                      "Email"
+                    ],
+                    "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Call\""
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "followupNeeded": {
+                    "type": "boolean"
+                  },
+                  "followupNotes": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "relatedOutput": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  },
+                  "contacts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "threadLinked": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "threadId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated log entry"
           }
         }
       }
