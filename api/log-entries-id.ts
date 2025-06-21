@@ -1,4 +1,6 @@
 import getAirtableContext from "./airtable_base.js";
+import { getFieldMap } from "./resolveFieldMap.js";
+import { mapInternalToAirtable } from "./mapRecordFields.js";
 
 const idLogEntryHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -35,10 +37,13 @@ const idLogEntryHandler = async (req: any, res: any) => {
     }
 
     if (req.method === "PATCH") {
+      const fieldMap = getFieldMap(TABLES.LOGS);
+      const airtableFields = mapInternalToAirtable(req.body, fieldMap);
+
       const response = await fetch(recordUrl, {
         method: "PATCH",
         headers: config?.headers,
-        body: JSON.stringify({ fields: req.body })
+        body: JSON.stringify({ fields: airtableFields })
       });
       if (!response.ok) {
         return res.status(response.status).json({ error: await response.text() });
