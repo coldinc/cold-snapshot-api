@@ -44,18 +44,21 @@
       "type": "string"
     },
     "logId": {
-      "type": "string"
+      "type": "string",
+      "readOnly": true
     },
     "author": {
       "type": "string"
     },
     "createdAt": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "readOnly": true
     },
     "lastModified": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "readOnly": true
     },
     "contacts": {
       "type": "array",

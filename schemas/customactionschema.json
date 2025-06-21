@@ -13,6 +13,46 @@
   ],
   "paths": {
     "/api/snapshots-latest": {
+      "get": {
+        "operationId": "getLatestSnapshot",
+        "summary": "Get the latest Cold OS snapshot",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "snapshot": {
+                      "type": "object",
+                      "properties": {
+                        "Date": {
+                          "type": "string"
+                        },
+                        "Snapshot Markdown": {
+                          "type": "string"
+                        },
+                        "Key Updates": {
+                          "type": "string"
+                        },
+                        "Phase ID": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Snapshot Markdown"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/snapshots-latest": {
       "post": {
         "operationId": "createSnapshot",
         "summary": "Create a new snapshot",
@@ -39,13 +79,11 @@
                     "type": "string"
                   },
                   "id": {
-                    "type": "string",
-                    "readOnly": true
+                    "type": "string"
                   },
                   "created": {
                     "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
+                    "format": "date-time"
                   }
                 }
               }
@@ -232,13 +270,11 @@
                     }
                   },
                   "id": {
-                    "type": "string",
-                    "readOnly": true
+                    "type": "string"
                   },
                   "lastModified": {
                     "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
+                    "format": "date-time"
                   },
                   "logs": {
                     "type": "string"
@@ -251,8 +287,7 @@
                   },
                   "created": {
                     "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
+                    "format": "date-time"
                   }
                 }
               }
@@ -311,99 +346,20 @@
       }
     },
     "/api/threads-index": {
-      "get": {
-        "operationId": "getAllThreads",
-        "summary": "List all threads",
-        "responses": {
-          "200": {
-            "description": "A list of threads",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "Experiment",
-                            "Internal",
-                            "Output",
-                            "Collaboration"
-                          ]
-                        }
-                      },
-                      "status": {
-                        "type": "string",
-                        "enum": [
-                          "Idea",
-                          "In Progress",
-                          "Paused",
-                          "Complete"
-                        ]
-                      },
-                      "description": {
-                        "type": "string"
-                      },
-                      "associatedContacts": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "contactId": {
-                        "type": "string"
-                      },
-                      "associatedLogs": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "logId": {
-                        "type": "string"
-                      },
-                      "linkToOutputs": {
-                        "type": "string"
-                      },
-                      "createdDate": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "lastModified": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "threadId": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "createThread",
-        "summary": "Create a new thread",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
+  "get": {
+    "operationId": "getAllThreads",
+    "summary": "List all threads",
+    "responses": {
+      "200": {
+        "description": "A list of threads",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "type": "string"
-                  },
+                  "name": { "type": "string" },
                   "type": {
                     "type": "array",
                     "items": {
@@ -412,7 +368,8 @@
                         "Experiment",
                         "Internal",
                         "Output",
-                        "Collaboration"
+                        "Collaboration",
+                        ""
                       ]
                     }
                   },
@@ -422,250 +379,185 @@
                       "Idea",
                       "In Progress",
                       "Paused",
-                      "Complete"
+                      "Complete",
+                      ""
                     ]
                   },
-                  "description": {
-                    "type": "string"
-                  },
+                  "description": { "type": "string" },
                   "associatedContacts": {
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "items": { "type": "string" }
                   },
-                  "contactId": {
-                    "type": "string"
-                  },
+                  "contactId": { "type": "string" },
                   "associatedLogs": {
                     "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                    "items": { "type": "string" }
                   },
-                  "logId": {
-                    "type": "string"
-                  },
-                  "createdDate": {
-                    "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
-                  },
-                  "lastModified": {
-                    "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
-                  },
-                  "threadId": {
-                    "type": "string",
-                    "readOnly": true
-                  },
-                  "parentThread": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "parentThreadId": {
-                    "type": "string"
-                  },
-                  "subthread": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "subthreadId": {
-                    "type": "string"
-                  }
+                  "logId": { "type": "string" },
+                  "linkToOutputs": { "type": "string" },
+                  "createdDate": { "type": "string", "format": "date-time" },
+                  "lastModified": { "type": "string", "format": "date-time" },
+                  "threadId": { "type": "string" }
                 }
               }
             }
           }
         }
       }
-    },
-    "/api/threads-id": {
-      "get": {
-        "operationId": "getThreadById",
-        "summary": "Get thread by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The thread record",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "enum": [
-                          "Experiment",
-                          "Internal",
-                          "Output",
-                          "Collaboration"
-                        ]
-                      }
-                    },
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "Idea",
-                        "In Progress",
-                        "Paused",
-                        "Complete"
-                      ]
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "associatedContacts": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "contactId": {
-                      "type": "string"
-                    },
-                    "associatedLogs": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "logId": {
-                      "type": "string"
-                    },
-                    "linkToOutputs": {
-                      "type": "string"
-                    },
-                    "createdDate": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "lastModified": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "threadId": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+    }
+  }
+},
+    "/api/threads-index": {
+  "post": {
+    "requestBody": {
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {}
           }
         }
       }
-    },
-    "/api/threads-search": {
-      "get": {
-        "operationId": "searchThreads",
-        "summary": "Search threads by name",
-        "parameters": [
-          {
-            "name": "query",
-            "in": "query",
-            "required": true,
+    }
+  }
+},
+"/api/threads-id": {
+  "get": {
+    "operationId": "getThreadById",
+    "summary": "Get thread by ID",
+    "parameters": [
+      {
+        "name": "id",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "The thread record",
+        "content": {
+          "application/json": {
             "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Search results",
-            "content": {
-              "application/json": {
-                "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "type": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "enum": [
-                            "Experiment",
-                            "Internal",
-                            "Output",
-                            "Collaboration"
-                          ]
-                        }
-                      },
-                      "status": {
-                        "type": "string",
-                        "enum": [
-                          "Idea",
-                          "In Progress",
-                          "Paused",
-                          "Complete"
-                        ]
-                      },
-                      "description": {
-                        "type": "string"
-                      },
-                      "associatedContacts": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "contactId": {
-                        "type": "string"
-                      },
-                      "associatedLogs": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      "logId": {
-                        "type": "string"
-                      },
-                      "linkToOutputs": {
-                        "type": "string"
-                      },
-                      "createdDate": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "lastModified": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "threadId": {
-                        "type": "string"
-                      }
-                    }
+                    "type": "string",
+                    "enum": [
+                      "Experiment",
+                      "Internal",
+                      "Output",
+                      "Collaboration",
+                      ""
+                    ]
                   }
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "Idea",
+                    "In Progress",
+                    "Paused",
+                    "Complete",
+                    ""
+                  ]
+                },
+                "description": { "type": "string" },
+                "associatedContacts": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "contactId": { "type": "string" },
+                "associatedLogs": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "logId": { "type": "string" },
+                "linkToOutputs": { "type": "string" },
+                "createdDate": { "type": "string", "format": "date-time" },
+                "lastModified": { "type": "string", "format": "date-time" },
+                "threadId": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/threads-search": {
+  "get": {
+    "operationId": "searchThreads",
+    "summary": "Search threads by name",
+    "parameters": [
+      {
+        "name": "query",
+        "in": "query",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Search results",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Experiment",
+                        "Internal",
+                        "Output",
+                        "Collaboration",
+                        ""
+                      ]
+                    }
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "Idea",
+                      "In Progress",
+                      "Paused",
+                      "Complete",
+                      ""
+                    ]
+                  },
+                  "description": { "type": "string" },
+                  "associatedContacts": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "contactId": { "type": "string" },
+                  "associatedLogs": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "logId": { "type": "string" },
+                  "linkToOutputs": { "type": "string" },
+                  "createdDate": { "type": "string", "format": "date-time" },
+                  "lastModified": { "type": "string", "format": "date-time" },
+                  "threadId": { "type": "string" }
                 }
               }
             }
           }
         }
       }
-    },
+    }
+  }
+},
     "/api/log-entries-index": {
       "get": {
         "operationId": "getAllLogs",
@@ -731,21 +623,18 @@
                     "type": "string"
                   },
                   "logId": {
-                    "type": "string",
-                    "readOnly": true
+                    "type": "string"
                   },
                   "author": {
                     "type": "string"
                   },
                   "createdAt": {
                     "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
+                    "format": "date-time"
                   },
                   "lastModified": {
                     "type": "string",
-                    "format": "date-time",
-                    "readOnly": true
+                    "format": "date-time"
                   },
                   "contacts": {
                     "type": "array",

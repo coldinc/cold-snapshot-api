@@ -134,11 +134,13 @@
       }
     },
     "id": {
-      "type": "string"
+      "type": "string",
+      "readOnly": true
     },
     "lastModified": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "readOnly": true
     },
     "logs": {
       "type": "string"
@@ -151,7 +153,8 @@
     },
     "created": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "readOnly": true
     }
   }
 }

@@ -14,8 +14,7 @@
           "Experiment",
           "Internal",
           "Output",
-          "Collaboration",
-          ""
+          "Collaboration"
         ]
       }
     },
@@ -25,8 +24,7 @@
         "Idea",
         "In Progress",
         "Paused",
-        "Complete",
-        ""
+        "Complete"
       ]
     },
     "description": {
@@ -50,18 +48,36 @@
     "logId": {
       "type": "string"
     },
-    "linkToOutputs": {
-      "type": "string"
-    },
     "createdDate": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "readOnly": true
     },
     "lastModified": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "readOnly": true
     },
     "threadId": {
+      "type": "string",
+      "readOnly": true
+    },
+    "parentThread": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parentThreadId": {
+      "type": "string"
+    },
+    "subthread": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "subthreadId": {
       "type": "string"
     }
   }

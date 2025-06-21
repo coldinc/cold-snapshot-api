@@ -25,6 +25,15 @@ function toCamelCase(str: string): string {
 function fieldToSchema(field: any): Record<string, any> {
   const type = field.type;
   const schema: Record<string, any> = {};
+  const readOnlyTypes = [
+    "formula",
+    "rollup",
+    "lookup",
+    "createdTime",
+    "lastModifiedTime",
+    "autoNumber",
+    "count"
+  ];
   switch (type) {
     case "singleSelect":
       schema.type = "string";
@@ -68,8 +77,13 @@ function fieldToSchema(field: any): Record<string, any> {
   if (schema.type === "array" && !schema.items) {
     schema.items = { type: "string" };
   }
+  // Add readOnly flag for calculated/system fields
+  if (readOnlyTypes.includes(type)) {
+    schema.readOnly = true;
+  }
   return schema;
 }
+
 
 async function main() {
   const token = process.env.AIRTABLE_TOKEN;
@@ -151,7 +165,7 @@ async function main() {
   lines.push("");
   lines.push("export { getFieldMap, filterMappedFields };");
 
-  const outputPath = path.join(__dirname, "../api/lib/resolveFieldMap.ts");
+  const outputPath = path.join(__dirname, "..resolveFieldMap.ts");
   fs.writeFileSync(outputPath, lines.join("\n"));
 }
 
