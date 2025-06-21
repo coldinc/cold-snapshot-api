@@ -16,6 +16,7 @@
       "post": {
         "operationId": "createSnapshot",
         "summary": "Create a new snapshot",
+        "description": "Create a general snapshot of the current state of the business, including active threads, insights, action items and key decisions made. IMPORTANT: Do not include any fields marked as read-only (such as 'created') in the request payload. These fields are computed automatically.",
         "requestBody": {
           "required": true,
           "content": {
@@ -40,12 +41,14 @@
                   },
                   "id": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "created": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   }
                 }
               }
@@ -91,7 +94,7 @@
       "post": {
         "operationId": "createContact",
         "summary": "Create a contact",
-        "description": "Create a new partner contact in Airtable.",
+        "description": "Create a new partner contact in Airtable.IMPORTANT: Do not include any fields marked as read-only (such as 'id', 'lastModified' or 'created') in the request payload. These fields are computed automatically.",
         "requestBody": {
           "required": true,
           "content": {
@@ -233,12 +236,14 @@
                   },
                   "id": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "lastModified": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "logs": {
                     "type": "string"
@@ -252,7 +257,8 @@
                   "created": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   }
                 }
               }
@@ -394,6 +400,7 @@
       "post": {
         "operationId": "createThread",
         "summary": "Create a new thread",
+        "description": "Create a Thread or Subthread (linked to a parent). Threads are HQs for projects, content, or ideas. Subthreads track related workstreams. IMPORTANT: Do not include read-only fields (like 'createdDate', 'lastModified', 'threadId').",
         "requestBody": {
           "required": true,
           "content": {
@@ -449,16 +456,19 @@
                   "createdDate": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "lastModified": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "threadId": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "parentThread": {
                     "type": "array",
@@ -680,7 +690,7 @@
       "post": {
         "operationId": "createLogEntry",
         "summary": "Create a log entry",
-        "description": "Create a new log entry linked to one or more contacts.",
+        "description": "Create a log entry linked to one or more contacts or threads. Logs capture calls, emails, notes, and updates related to contacts or threads. IMPORTANT: Do not include any read-only fields (like 'logId', 'createdAt', or 'lastModified'); these are set automatically.",
         "requestBody": {
           "required": true,
           "content": {
@@ -732,7 +742,8 @@
                   },
                   "logId": {
                     "type": "string",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "author": {
                     "type": "string"
@@ -740,12 +751,14 @@
                   "createdAt": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "lastModified": {
                     "type": "string",
                     "format": "date-time",
-                    "readOnly": true
+                    "readOnly": true,
+                    "description": "System-generated. Do not include this field when creating or updating a thread."
                   },
                   "contacts": {
                     "type": "array",
