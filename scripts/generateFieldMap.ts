@@ -25,15 +25,7 @@ function toCamelCase(str: string): string {
 function fieldToSchema(field: any): Record<string, any> {
   const type = field.type;
   const schema: Record<string, any> = {};
-  const readOnlyTypes = [
-    "formula",
-    "rollup",
-    "lookup",
-    "createdTime",
-    "lastModifiedTime",
-    "autoNumber",
-    "count"
-  ];
+  const readOnlyTypes = ["formula", "rollup", "lookup", "createdTime", "lastModifiedTime", "autoNumber", "count"];
   switch (type) {
     case "singleSelect":
       schema.type = "string";
@@ -83,7 +75,6 @@ function fieldToSchema(field: any): Record<string, any> {
   }
   return schema;
 }
-
 
 async function main() {
   const token = process.env.AIRTABLE_TOKEN;
@@ -165,7 +156,7 @@ async function main() {
   lines.push("");
   lines.push("export { getFieldMap, filterMappedFields };");
 
-  const outputPath = path.join(__dirname, "resolveFieldMap.ts");
+  const outputPath = path.join(__dirname, "../api/resolveFieldMap.ts");
   fs.writeFileSync(outputPath, lines.join("\n"));
 }
 
