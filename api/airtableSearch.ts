@@ -1,6 +1,16 @@
 import getAirtableContext from "./airtable_base.js";
 
-async function airtableSearch(tableName: string, filterFormula: string) {
+interface SearchOptions {
+  maxRecords?: number;
+  sortField?: string;
+  sortDirection?: "asc" | "desc";
+}
+
+async function airtableSearch(
+  tableName: string,
+  filterFormula: string,
+  options: SearchOptions = {}
+) {
   const { airtableToken, baseId } = getAirtableContext();
 
   if (!airtableToken || !baseId) {
@@ -18,11 +28,17 @@ async function airtableSearch(tableName: string, filterFormula: string) {
     headers: { Authorization: `Bearer ${airtableToken}` }
   };
 
-  const params = new URLSearchParams({
-    filterByFormula: filterFormula,
-    maxRecords: "10"
-  }).toString();
-  const fullUrl = url + "?" + params;
+  const params = new URLSearchParams();
+  if (filterFormula) params.set("filterByFormula", filterFormula);
+  params.set("maxRecords", String(options.maxRecords ?? 10));
+  if (options.sortField) {
+    params.append("sort[0][field]", options.sortField);
+    params.append(
+      "sort[0][direction]",
+      options.sortDirection ?? "asc"
+    );
+  }
+  const fullUrl = url + "?" + params.toString();
 
   const response = await fetch(fullUrl, config);
   if (!response.ok) {
