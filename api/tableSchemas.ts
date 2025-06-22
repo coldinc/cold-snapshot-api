@@ -1,7 +1,7 @@
-import contacts from "../schemas/contacts.schema.json" assert { type: "json" };
-import logs from "../schemas/logs.schema.json" assert { type: "json" };
-import coldSnapshots from "../schemas/coldSnapshots.schema.json" assert { type: "json" };
-import threads from "../schemas/threads.schema.json" assert { type: "json" };
+import contacts from "../schemas/contacts.schema.json" with { type: "json" };
+import logs from "../schemas/logs.schema.json" with { type: "json" };
+import coldSnapshots from "../schemas/coldSnapshots.schema.json" with { type: "json" };
+import threads from "../schemas/threads.schema.json" with { type: "json" };
 
 interface TableSchema {
   properties?: Record<string, any>;
