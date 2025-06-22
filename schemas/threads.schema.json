@@ -30,22 +30,28 @@
     "description": {
       "type": "string"
     },
-    "associatedContacts": {
+    "linkedContacts": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "contactId": {
+    "linkedContactsNames": {
       "type": "string"
     },
-    "associatedLogs": {
+    "linkedContactsId": {
+      "type": "string"
+    },
+    "linkedLogs": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "logId": {
+    "linkedLogsSummary": {
+      "type": "string"
+    },
+    "linkedLogsId": {
       "type": "string"
     },
     "createdDate": {

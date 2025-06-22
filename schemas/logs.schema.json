@@ -6,13 +6,16 @@
     "summary": {
       "type": "string"
     },
-    "contactsLinked": {
+    "linkedContacts": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "linkedContactId": {
+    "linkedContactsNames": {
+      "type": "string"
+    },
+    "linkedContactsId": {
       "type": "string"
     },
     "logType": {
@@ -57,13 +60,16 @@
       "format": "date-time",
       "readOnly": true
     },
-    "threadLinked": {
+    "linkedThreads": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "threadId": {
+    "linkedThreadsName": {
+      "type": "string"
+    },
+    "linkedThreadsId": {
       "type": "string"
     }
   }

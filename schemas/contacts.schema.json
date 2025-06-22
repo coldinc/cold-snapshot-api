@@ -111,11 +111,17 @@
         ]
       }
     },
-    "importedTable": {
+    "linkedLogs": {
       "type": "array",
       "items": {
         "type": "string"
       }
+    },
+    "linkedLogsSummary": {
+      "type": "string"
+    },
+    "linkedLogsId": {
+      "type": "string"
     },
     "followupNeeded": {
       "type": "boolean"
@@ -139,14 +145,17 @@
       "format": "date-time",
       "readOnly": true
     },
-    "logs": {
-      "type": "string"
-    },
-    "threads": {
+    "linkedThreads": {
       "type": "array",
       "items": {
         "type": "string"
       }
+    },
+    "linkedThreadsName": {
+      "type": "string"
+    },
+    "linkedThreadsId": {
+      "type": "string"
     },
     "created": {
       "type": "string",

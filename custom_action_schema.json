@@ -298,6 +298,30 @@
                     "type": "string",
                     "format": "date-time",
                     "readOnly": true
+                  },
+                  "linkedLogs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedLogsSummary": {
+                    "type": "string"
+                  },
+                  "linkedLogsId": {
+                    "type": "string"
+                  },
+                  "linkedThreads": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedThreadsName": {
+                    "type": "string"
+                  },
+                  "linkedThreadsId": {
+                    "type": "string"
                   }
                 }
               }
@@ -485,11 +509,17 @@
                       ]
                     }
                   },
-                  "importedTable": {
+                  "linkedLogs": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "linkedLogsSummary": {
+                    "type": "string"
+                  },
+                  "linkedLogsId": {
+                    "type": "string"
                   },
                   "followupNeeded": {
                     "type": "boolean"
@@ -504,14 +534,17 @@
                   "latestRelatedLog": {
                     "type": "string"
                   },
-                  "logs": {
-                    "type": "string"
-                  },
-                  "threads": {
+                  "linkedThreads": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "linkedThreadsName": {
+                    "type": "string"
+                  },
+                  "linkedThreadsId": {
+                    "type": "string"
                   }
                 }
               }
@@ -695,6 +728,30 @@
                   },
                   "subthreadId": {
                     "type": "string"
+                  },
+                  "linkedContacts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedContactsNames": {
+                    "type": "string"
+                  },
+                  "linkedContactsId": {
+                    "type": "string"
+                  },
+                  "linkedLogs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedLogsSummary": {
+                    "type": "string"
+                  },
+                  "linkedLogsId": {
+                    "type": "string"
                   }
                 }
               }
@@ -840,22 +897,28 @@
                   "description": {
                     "type": "string"
                   },
-                  "associatedContacts": {
+                  "linkedContacts": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
                   },
-                  "contactId": {
+                  "linkedContactsNames": {
                     "type": "string"
                   },
-                  "associatedLogs": {
+                  "linkedContactsId": {
+                    "type": "string"
+                  },
+                  "linkedLogs": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
                   },
-                  "logId": {
+                  "linkedLogsSummary": {
+                    "type": "string"
+                  },
+                  "linkedLogsId": {
                     "type": "string"
                   },
                   "parentThread": {
@@ -1076,6 +1139,30 @@
                   },
                   "threadId": {
                     "type": "string"
+                  },
+                  "linkedContacts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedContactsNames": {
+                    "type": "string"
+                  },
+                  "linkedContactsId": {
+                    "type": "string"
+                  },
+                  "linkedThreads": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "linkedThreadsName": {
+                    "type": "string"
+                  },
+                  "linkedThreadsId": {
+                    "type": "string"
                   }
                 }
               }
@@ -1113,13 +1200,16 @@
                   "summary": {
                     "type": "string"
                   },
-                  "contactsLinked": {
+                  "linkedContacts": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
                   },
-                  "linkedContactId": {
+                  "linkedContactsNames": {
+                    "type": "string"
+                  },
+                  "linkedContactsId": {
                     "type": "string"
                   },
                   "logType": {
@@ -1151,13 +1241,16 @@
                   "author": {
                     "type": "string"
                   },
-                  "threadLinked": {
+                  "linkedThreads": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
                   },
-                  "threadId": {
+                  "linkedThreadsName": {
+                    "type": "string"
+                  },
+                  "linkedThreadsId": {
                     "type": "string"
                   }
                 }
