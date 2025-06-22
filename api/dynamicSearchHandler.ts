@@ -1,6 +1,17 @@
 import { getFieldMap } from "./resolveFieldMap.js";
 import { airtableSearch } from "./airtableSearch.js";
 import { buildAirtableFormula } from "./buildAirtableFormula.js";
+import { getBooleanFields, getSearchableTextFields } from "./tableSchemas.js";
+
+/**
+ * Dynamic search handler used by multiple endpoints.
+ *
+ * - `q` or `search` performs fuzzy matching across text-like fields only.
+ * - Boolean/checkbox fields are excluded from the fuzzy search but can be
+ *   filtered explicitly with query parameters (e.g. `?followupNeeded=true`).
+ * - Text search and explicit boolean filters can be combined in a single
+ *   Airtable formula.
+ */
 
 export function createDynamicSearchHandler(tableName: string) {
   return async function (req: any, res: any) {
@@ -11,11 +22,23 @@ export function createDynamicSearchHandler(tableName: string) {
     }
 
     const fieldMap = getFieldMap(tableName);
-    const { limit, sortBy, sortOrder, q, updatedAfter, createdAfter, recent, ...rest } = query as Record<string, any>;
+    const {
+      limit,
+      sortBy,
+      sortOrder,
+      q,
+      updatedAfter,
+      createdAfter,
+      recent,
+      ...rest
+    } = query as Record<string, any>;
 
+    const booleanFields = getBooleanFields(tableName);
+    const searchableFields = getSearchableTextFields(tableName);
     const formula = buildAirtableFormula(
       { q, params: rest, updatedAfter, createdAfter, recent },
-      fieldMap
+      fieldMap,
+      { searchableFields, booleanFields },
     );
 
     const options: any = {};
@@ -28,7 +51,9 @@ export function createDynamicSearchHandler(tableName: string) {
       if (field) {
         options.sortField = field;
         options.sortDirection =
-          typeof sortOrder === "string" && sortOrder.toLowerCase() === "desc" ? "desc" : "asc";
+          typeof sortOrder === "string" && sortOrder.toLowerCase() === "desc"
+            ? "desc"
+            : "asc";
       }
     }
 

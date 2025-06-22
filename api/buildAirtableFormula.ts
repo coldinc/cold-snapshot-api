@@ -9,11 +9,19 @@ export interface FormulaOptions {
   recent?: string;
 }
 
+export interface FieldTypeOptions {
+  searchableFields?: string[];
+  booleanFields?: string[];
+}
+
 export function buildAirtableFormula(
   options: FormulaOptions,
-  fieldMap: Record<string, string>
+  fieldMap: Record<string, string>,
+  types: FieldTypeOptions = {},
 ): string {
   const conds: string[] = [];
+  const { searchableFields = Object.keys(fieldMap), booleanFields = [] } =
+    types;
   const { q, params, updatedAfter, createdAfter, recent } = options;
 
   const getValue = (v: string | string[] | undefined): string | undefined => {
@@ -23,20 +31,33 @@ export function buildAirtableFormula(
 
   const escape = (val: string) => val.replace(/"/g, '\\"');
 
-  const qVal = getValue(q);
+  const qVal = getValue(q)?.trim();
   if (qVal) {
     const esc = escape(qVal);
-    const subs = Object.values(fieldMap).map(
-      (f) => `FIND(LOWER("${esc}"), LOWER({${f}}))`
-    );
-    if (subs.length) conds.push(`OR(${subs.join(', ')})`);
+    const subs = searchableFields
+      .map((key) => fieldMap[key])
+      .filter(Boolean)
+      .map((f) => `FIND(LOWER("${esc}"), LOWER({${f}}))`);
+    if (subs.length) conds.push(`OR(${subs.join(", ")})`);
   }
 
   for (const [key, value] of Object.entries(params)) {
     const val = getValue(value);
-    if (!val) continue;
+    if (val === undefined) continue;
     const field = fieldMap[key];
     if (!field) continue;
+
+    if (booleanFields.includes(key)) {
+      const boolVal = val.toString().toLowerCase();
+      if (boolVal === "true" || boolVal === "1") {
+        conds.push(`{${field}}`);
+      } else if (boolVal === "false" || boolVal === "0") {
+        conds.push(`NOT({${field}})`);
+      }
+      continue;
+    }
+
+    if (val.trim() === "") continue;
     const esc = escape(val);
     conds.push(`FIND(LOWER("${esc}"), LOWER({${field}}))`);
   }
@@ -65,7 +86,7 @@ export function buildAirtableFormula(
     addDateFilter(dateFieldForUpdated || dateFieldForCreated, date);
   }
 
-  if (conds.length === 0) return '';
+  if (conds.length === 0) return "";
   if (conds.length === 1) return conds[0];
-  return `AND(${conds.join(', ')})`;
+  return `AND(${conds.join(", ")})`;
 }
