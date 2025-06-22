@@ -35,16 +35,13 @@ function getSearchableTextFields(tableName: string): string[] {
   const props = schema.properties || {};
   const result: string[] = [];
   for (const [key, val] of Object.entries(props)) {
-    const t = (val as any).type;
-    if (t === "string") {
-      result.push(key);
-    } else if (
-      t === "array" &&
-      (val as any).items &&
-      (val as any).items.type === "string"
-    ) {
-      result.push(key);
-    }
+    const v = val as any;
+    if (v.type !== "string") continue;
+    if (v.readOnly) continue;
+    if (v.format === "date-time") continue;
+    const name = key.toLowerCase();
+    if (name === "id" || name.endsWith("id") || name.includes("date")) continue;
+    result.push(key);
   }
   return result;
 }

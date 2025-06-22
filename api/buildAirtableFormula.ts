@@ -59,7 +59,12 @@ export function buildAirtableFormula(
 
     if (val.trim() === "") continue;
     const esc = escape(val);
-    conds.push(`FIND(LOWER("${esc}"), LOWER({${field}}))`);
+
+    if (searchableFields.includes(key)) {
+      conds.push(`FIND(LOWER("${esc}"), LOWER({${field}}))`);
+    } else {
+      conds.push(`LOWER({${field}}) = LOWER("${esc}")`);
+    }
   }
 
   const dateFieldForUpdated =
