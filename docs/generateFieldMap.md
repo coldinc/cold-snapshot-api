@@ -51,6 +51,7 @@ Before running:
    * One file per table (e.g. `schemas/contacts.schema.json`)
    * Follows JSON Schema Draft-07 format
    * Contains inferred field types and enum values where possible (from Airtable Metadata)
+   * For linked-record arrays (`multipleRecordLinks`), each `items` schema has `format: "record-id"` to denote Airtable record IDs
 
 3. `custom_action_schema.json` *(planned)*
 

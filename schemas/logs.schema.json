@@ -9,7 +9,8 @@
     "linkedContacts": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "linkedContactsNames": {
@@ -63,7 +64,8 @@
     "linkedThreads": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "linkedThreadsName": {

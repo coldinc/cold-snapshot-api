@@ -114,7 +114,8 @@
     "linkedLogs": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "linkedLogsSummary": {
@@ -148,7 +149,8 @@
     "linkedThreads": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "linkedThreadsName": {
