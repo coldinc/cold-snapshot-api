@@ -37,7 +37,8 @@
       }
     },
     "linkedContactsNames": {
-      "type": "string"
+      "type": "string",
+      "readOnly": true
     },
     "linkedContactsId": {
       "type": "string"
