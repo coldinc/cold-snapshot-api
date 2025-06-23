@@ -33,7 +33,8 @@
     "linkedContacts": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "linkedContactsNames": {
@@ -46,7 +47,8 @@
     "linkedLogs": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "linkedLogsSummary": {
@@ -72,7 +74,8 @@
     "parentThread": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "parentThreadId": {
@@ -81,7 +84,8 @@
     "subthread": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "format": "record-id"
       }
     },
     "subthreadId": {

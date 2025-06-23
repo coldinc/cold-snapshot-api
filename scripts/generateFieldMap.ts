@@ -59,7 +59,12 @@ function fieldToSchema(field: any): Record<string, any> {
       schema.format = "date-time";
       break;
     case "multipleAttachments":
+      schema.type = "array";
+      break;
     case "multipleRecordLinks":
+      schema.type = "array";
+      schema.items = { type: "string", format: "record-id" };
+      break;
     case "multipleCollaborators":
       schema.type = "array";
       break;
