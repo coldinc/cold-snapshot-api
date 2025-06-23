@@ -19,7 +19,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           id: "ID",
           created: "Created",
         },
-        searchableFields: ["snapshotMarkdown", "keyUpdates"],
+        searchableFields: ["phaseId","snapshotMarkdown","keyUpdates","id"],
         booleanFields: [],
       };
     case "Contacts":
@@ -52,22 +52,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           linkedThreadsId: "Linked Threads ID",
           created: "Created",
         },
-        searchableFields: [
-          "name",
-          "role",
-          "company",
-          "website",
-          "linkedin",
-          "overview",
-          "email",
-          "source",
-          "relationshipStrength",
-          "status",
-          "linkedLogsSummary",
-          "followupSummary",
-          "latestRelatedLog",
-          "linkedThreadsName",
-        ],
+        searchableFields: ["name","role","company","overview","followupSummary","latestRelatedLog","id"],
         booleanFields: ["followupNeeded"],
       };
     case "Logs":
@@ -91,16 +76,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           linkedThreadsName: "Linked Threads Name",
           linkedThreadsId: "Linked Threads ID",
         },
-        searchableFields: [
-          "summary",
-          "linkedContactsNames",
-          "logType",
-          "content",
-          "followupNotes",
-          "tags",
-          "author",
-          "linkedThreadsName",
-        ],
+        searchableFields: ["summary","content","followupNotes","tags","logId","author"],
         booleanFields: ["followupNeeded"],
       };
     case "Threads":
@@ -124,12 +100,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           subthread: "Subthread",
           subthreadId: "Subthread ID",
         },
-        searchableFields: [
-          "name",
-          "status",
-          "description",
-          "linkedLogsSummary",
-        ],
+        searchableFields: ["name","description","linkedContactsNames","threadId"],
         booleanFields: [],
       };
     default:
@@ -141,10 +112,7 @@ function getFieldMap(tableName: string): { [key: string]: string } {
   return getTableFieldMap(tableName).fields;
 }
 
-function filterMappedFields(
-  data: Record<string, any>,
-  fieldMap: Record<string, string>,
-): Record<string, any> {
+function filterMappedFields(data: Record<string, any>, fieldMap: Record<string, string>): Record<string, any> {
   const src = (data as any).fields || data;
   const result: Record<string, any> = {};
   for (const [internal, airtable] of Object.entries(fieldMap)) {
