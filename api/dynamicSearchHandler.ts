@@ -1,7 +1,7 @@
-import { getFieldMap } from "./resolveFieldMap.js";
+import { getTableFieldMap } from "./resolveFieldMap.js";
 import { airtableSearch } from "./airtableSearch.js";
 import { buildAirtableFormula } from "./buildAirtableFormula.js";
-import { getBooleanFields, getSearchableTextFields } from "./tableSchemas.js";
+import { getBooleanFields } from "./tableSchemas.js";
 
 /**
  * Dynamic search handler used by multiple endpoints.
@@ -21,7 +21,7 @@ export function createDynamicSearchHandler(tableName: string) {
       return res.status(405).end(`Method ${method} Not Allowed`);
     }
 
-    const fieldMap = getFieldMap(tableName);
+    const { fields: fieldMap, searchableFields } = getTableFieldMap(tableName);
     const {
       limit,
       sortBy,
@@ -34,7 +34,6 @@ export function createDynamicSearchHandler(tableName: string) {
     } = query as Record<string, any>;
 
     const booleanFields = getBooleanFields(tableName);
-    const searchableFields = getSearchableTextFields(tableName);
     const formula = buildAirtableFormula(
       { q, params: rest, updatedAfter, createdAfter, recent },
       fieldMap,
