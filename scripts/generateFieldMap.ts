@@ -104,6 +104,7 @@ async function main() {
       fields: Record<string, string>;
       searchableFields: string[];
       booleanFields: string[];
+      linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }>;
     }
   > = {};
 
@@ -128,6 +129,7 @@ async function main() {
     const properties: Record<string, any> = {};
     const searchableFields: string[] = [];
     const booleanFields: string[] = [];
+    const linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }> = {};
     for (const field of table.fields || []) {
       const key = toCamelCase(field.name);
       mapping[key] = field.name;
@@ -139,8 +141,14 @@ async function main() {
       if (properties[key].type === "boolean") {
         booleanFields.push(key);
       }
+      if (field.type === "multipleRecordLinks") {
+        linkedRecordFields[key] = {
+          linkedTable: field.options?.linkedTableName,
+          isArray: true,
+        };
+      }
     }
-    allMaps[table.name] = { fields: mapping, searchableFields, booleanFields };
+    allMaps[table.name] = { fields: mapping, searchableFields, booleanFields, linkedRecordFields };
     const schema = {
       $schema: "http://json-schema.org/draft-07/schema#",
       title: table.name,
@@ -158,6 +166,7 @@ async function main() {
   lines.push("  fields: { [key: string]: string };");
   lines.push("  searchableFields: string[];");
   lines.push("  booleanFields: string[];");
+  lines.push("  linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }>;" );
   lines.push("}");
   lines.push("");
   lines.push("function getTableFieldMap(tableName: string): TableFieldMap {");
@@ -173,11 +182,18 @@ async function main() {
     lines.push("        },");
     lines.push(`        searchableFields: ${JSON.stringify(info.searchableFields)},`);
     lines.push(`        booleanFields: ${JSON.stringify(info.booleanFields)},`);
+    lines.push("        linkedRecordFields: {");
+    for (const [key, cfg] of Object.entries(info.linkedRecordFields)) {
+      lines.push(
+        `          ${key}: { linkedTable: ${JSON.stringify(cfg.linkedTable)}, isArray: ${cfg.isArray} },`
+      );
+    }
+    lines.push("        },");
     lines.push("      };");
   }
 
   lines.push("    default:");
-  lines.push("      return { fields: {}, searchableFields: [], booleanFields: [] };");
+  lines.push("      return { fields: {}, searchableFields: [], booleanFields: [], linkedRecordFields: {} };");
   lines.push("  }");
   lines.push("}");
   lines.push("");

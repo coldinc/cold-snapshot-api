@@ -5,6 +5,7 @@ interface TableFieldMap {
   fields: { [key: string]: string };
   searchableFields: string[];
   booleanFields: string[];
+  linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }>;
 }
 
 function getTableFieldMap(tableName: string): TableFieldMap {
@@ -21,6 +22,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         },
         searchableFields: ["phaseId","snapshotMarkdown","keyUpdates","id"],
         booleanFields: [],
+        linkedRecordFields: {},
       };
     case "Contacts":
       return {
@@ -54,6 +56,10 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         },
         searchableFields: ["name","role","company","overview","followupSummary","latestRelatedLog","id"],
         booleanFields: ["followupNeeded"],
+        linkedRecordFields: {
+          linkedLogs: { linkedTable: "Logs", isArray: true },
+          linkedThreads: { linkedTable: "Threads", isArray: true },
+        },
       };
     case "Logs":
       return {
@@ -78,6 +84,10 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         },
         searchableFields: ["summary","content","followupNotes","tags","logId","author"],
         booleanFields: ["followupNeeded"],
+        linkedRecordFields: {
+          linkedContacts: { linkedTable: "Contacts", isArray: true },
+          linkedThreads: { linkedTable: "Threads", isArray: true },
+        },
       };
     case "Threads":
       return {
@@ -102,9 +112,15 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         },
         searchableFields: ["name","description","linkedContactsNames","threadId"],
         booleanFields: [],
+        linkedRecordFields: {
+          linkedContacts: { linkedTable: "Contacts", isArray: true },
+          linkedLogs: { linkedTable: "Logs", isArray: true },
+          parentThread: { linkedTable: "Threads", isArray: true },
+          subthread: { linkedTable: "Threads", isArray: true },
+        },
       };
     default:
-      return { fields: {}, searchableFields: [], booleanFields: [] };
+      return { fields: {}, searchableFields: [], booleanFields: [], linkedRecordFields: {} };
   }
 }
 
