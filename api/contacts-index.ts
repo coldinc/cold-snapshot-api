@@ -42,9 +42,9 @@ const apiContactsHandler = async (req: any, res: any) => {
 
       console.log("Airtable fields being sent:", airtableFields);
 
-      const createdRecord = await base(tableName).create([{ fields: airtableFields }]);
+        const [createdRecord] = await base(tableName).create([{ fields: airtableFields }]);
 
-      return res.status(201).json({ id: createdRecord[0]?.id || createdRecord.id, ...req.body });
+        return res.status(201).json({ id: createdRecord.id, ...req.body });
     }
 
     res.setHeader("Allow", ["GET", "POST"]);
