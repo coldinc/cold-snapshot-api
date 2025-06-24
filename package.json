@@ -15,6 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:fieldmap": "ts-node scripts/generateFieldMap.ts",
+    "refresh:airtable": "node scripts/refreshAirtable.js",
     "test": "jest"
   },
   "dependencies": {
