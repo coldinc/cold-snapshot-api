@@ -20,14 +20,14 @@ export async function resolveLinkedRecordIds(
     if (!val) continue;
     const names = Array.isArray(val) ? val : [val];
 
-    const { fields: linkedFields } = getTableFieldMap(cfg.linkedTable);
+    const { fields: linkedFields } = getTableFieldMap(cfg.linkedTable!);
     const primaryField = linkedFields[Object.keys(linkedFields)[0]];
     const ids: string[] = [];
 
     for (const name of names) {
       const escaped = String(name).replace(/"/g, '\\"');
       const formula = `LOWER({${primaryField}}) = LOWER("${escaped}")`;
-      const records = await airtableSearch(cfg.linkedTable, formula, {
+      const records = await airtableSearch(cfg.linkedTable!, formula, {
         maxRecords: 2,
       });
       if (records.length === 0) {

@@ -109,7 +109,7 @@ async function main() {
       fields: Record<string, string>;
       searchableFields: string[];
       booleanFields: string[];
-      linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }>;
+      linkedRecordFields: Record<string, { linkedTable?: string; isArray: boolean }>;
     }
   > = {};
 
@@ -134,7 +134,7 @@ async function main() {
     const properties: Record<string, any> = {};
     const searchableFields: string[] = [];
     const booleanFields: string[] = [];
-    const linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }> = {};
+    const linkedRecordFields: Record<string, { linkedTable?: string; isArray: boolean }> = {};
     for (const field of table.fields || []) {
       const key = toCamelCase(field.name);
       mapping[key] = field.name;
@@ -171,7 +171,7 @@ async function main() {
   lines.push("  fields: { [key: string]: string };");
   lines.push("  searchableFields: string[];");
   lines.push("  booleanFields: string[];");
-  lines.push("  linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }>;" );
+  lines.push("  linkedRecordFields: Record<string, { linkedTable?: string; isArray: boolean }>;" );
   lines.push("}");
   lines.push("");
   lines.push("function getTableFieldMap(tableName: string): TableFieldMap {");

@@ -5,7 +5,7 @@ interface TableFieldMap {
   fields: { [key: string]: string };
   searchableFields: string[];
   booleanFields: string[];
-  linkedRecordFields: Record<string, { linkedTable: string; isArray: boolean }>;
+  linkedRecordFields: Record<string, { linkedTable?: string; isArray: boolean }>;
 }
 
 function getTableFieldMap(tableName: string): TableFieldMap {
