@@ -128,7 +128,9 @@
         "summary": "List snapshots",
         "description": "Fetch all snapshot records.",
         "responses": {
-          "200": { "description": "A list of snapshots" }
+          "200": {
+            "description": "A list of snapshots"
+          }
         }
       },
       "post": {
@@ -144,11 +146,23 @@
                 "title": "Cold Snapshots",
                 "type": "object",
                 "properties": {
-                  "date": { "type": "string", "format": "date-time" },
-                  "phaseId": { "type": "string" },
-                  "snapshotMarkdown": { "type": "string" },
-                  "keyUpdates": { "type": "string" },
-                  "id": { "type": "string", "readOnly": true },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "phaseId": {
+                    "type": "string"
+                  },
+                  "snapshotMarkdown": {
+                    "type": "string"
+                  },
+                  "keyUpdates": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string",
+                    "readOnly": true
+                  },
                   "created": {
                     "type": "string",
                     "format": "date-time",
@@ -159,7 +173,11 @@
             }
           }
         },
-        "responses": { "201": { "description": "The created snapshot" } }
+        "responses": {
+          "201": {
+            "description": "The created snapshot"
+          }
+        }
       }
     },
     "/api/snapshots-id": {
@@ -171,10 +189,16 @@
             "name": "id",
             "in": "query",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "responses": { "200": { "description": "The snapshot record" } }
+        "responses": {
+          "200": {
+            "description": "The snapshot record"
+          }
+        }
       },
       "patch": {
         "operationId": "updateSnapshotRecord",
@@ -185,7 +209,9 @@
             "name": "id",
             "in": "query",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -194,16 +220,29 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "date": { "type": "string", "format": "date-time" },
-                  "phaseId": { "type": "string" },
-                  "snapshotMarkdown": { "type": "string" },
-                  "keyUpdates": { "type": "string" }
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "phaseId": {
+                    "type": "string"
+                  },
+                  "snapshotMarkdown": {
+                    "type": "string"
+                  },
+                  "keyUpdates": {
+                    "type": "string"
+                  }
                 }
               }
             }
           }
         },
-        "responses": { "200": { "description": "The updated snapshot" } }
+        "responses": {
+          "200": {
+            "description": "The updated snapshot"
+          }
+        }
       }
     },
     "/api/snapshots-search": {
@@ -212,9 +251,19 @@
         "summary": "Search snapshots",
         "description": "Fuzzy search snapshots using the `q` parameter. Optional filters like `limit`, `sortBy`, `updatedAfter`, and `recent` are also supported.",
         "parameters": [
-          { "name": "q", "in": "query", "schema": { "type": "string" } }
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
-        "responses": { "200": { "description": "Search results" } }
+        "responses": {
+          "200": {
+            "description": "Search results"
+          }
+        }
       }
     },
     "/api/contacts-index": {
@@ -231,7 +280,7 @@
       "post": {
         "operationId": "createContact",
         "summary": "Create a contact",
-        "description": "Create a new partner contact in Airtable.IMPORTANT: Do not include any fields marked as read-only (such as 'id', 'lastModified' or 'created') in the request payload. These fields are computed automatically. Linked log or thread names may be supplied instead of record IDs and will be resolved automatically.",
+        "description": "Create a new partner contact in Airtable. Do not include any fields marked as read-only (such as 'id', 'lastModified' or 'created') in the request payload, they are computed automatically. Linked log or thread names may be supplied instead of record IDs and will be resolved automatically.",
         "requestBody": {
           "required": true,
           "content": {
@@ -397,7 +446,8 @@
                   "linkedLogs": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedLogsSummary": {
@@ -409,7 +459,8 @@
                   "linkedThreads": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedThreadsName": {
@@ -436,10 +487,18 @@
         "summary": "Search contacts",
         "description": "Fuzzy search contacts using the `q` parameter. Boolean filters (e.g. `followupNeeded=true`) and date filters are also supported.",
         "parameters": [
-          { "name": "q", "in": "query", "schema": { "type": "string" } }
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
-          "200": { "description": "Search results" }
+          "200": {
+            "description": "Search results"
+          }
         }
       }
     },
@@ -467,7 +526,7 @@
       "patch": {
         "operationId": "updateContact",
         "summary": "Update an existing contact",
-        "description": "Update an existing contact. Do not include read-only fields. Linked log or thread names may be supplied instead of IDs and will be resolved automatically.",
+        "description": "Update an existing contact. Do not include read-only fields.",
         "parameters": [
           {
             "name": "id",
@@ -598,7 +657,8 @@
                   "linkedLogs": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedLogsSummary": {
@@ -623,7 +683,8 @@
                   "linkedThreads": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedThreadsName": {
@@ -729,7 +790,7 @@
       "post": {
         "operationId": "createThread",
         "summary": "Create a new thread",
-        "description": "Create a Thread or Subthread (linked to a parent). Threads are HQs for projects, content, or ideas. Subthreads track related workstreams. IMPORTANT: Do not include read-only fields (like 'createdDate', 'lastModified', 'threadId'). Linked record names may be used for contacts or logs and will be resolved to record IDs.",
+        "description": "Create a Thread or Subthread (linked to a parent). Threads are HQs for projects or ideas. Subthreads track related workstreams. Do not include read-only fields (like 'createdDate', 'lastModified', etc.). Linked record names may be used for contacts or logs and will be resolved to record IDs.",
         "requestBody": {
           "required": true,
           "content": {
@@ -800,7 +861,8 @@
                   "parentThread": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "parentThreadId": {
@@ -809,7 +871,8 @@
                   "subthread": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "subthreadId": {
@@ -818,11 +881,13 @@
                   "linkedContacts": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedContactsNames": {
-                    "type": "string"
+                    "type": "string",
+                    "readOnly": true
                   },
                   "linkedContactsId": {
                     "type": "string"
@@ -830,7 +895,8 @@
                   "linkedLogs": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedLogsSummary": {
@@ -938,7 +1004,7 @@
       "patch": {
         "operationId": "updateThread",
         "summary": "Update an existing thread",
-        "description": "Update an existing thread. Do not include read-only fields. Linked record names for contacts or logs may be provided and will be resolved to IDs automatically.",
+        "description": "Update an existing thread. Do not include read-only fields.",
         "parameters": [
           {
             "name": "id",
@@ -986,11 +1052,9 @@
                   "linkedContacts": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
-                  },
-                  "linkedContactsNames": {
-                    "type": "string"
                   },
                   "linkedContactsId": {
                     "type": "string"
@@ -998,7 +1062,8 @@
                   "linkedLogs": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedLogsSummary": {
@@ -1010,7 +1075,8 @@
                   "parentThread": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "parentThreadId": {
@@ -1019,7 +1085,8 @@
                   "subthread": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "subthreadId": {
@@ -1043,7 +1110,13 @@
         "summary": "Search threads",
         "description": "Fuzzy search threads using the `q` parameter. Additional filters and sorting options are supported.",
         "parameters": [
-          { "name": "q", "in": "query", "schema": { "type": "string" } }
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -1138,7 +1211,7 @@
       "post": {
         "operationId": "createLogEntry",
         "summary": "Create a log entry",
-        "description": "Create a log entry linked to one or more contacts or threads. Logs capture calls, emails, notes, and updates related to contacts or threads. IMPORTANT: Do not include any read-only fields (like 'logId', 'createdAt', or 'lastModified'); these are set automatically. Linked contact or thread names will be resolved to their record IDs.",
+        "description": "Create a log entry linked to one or more contacts or threads. Do not include any read-only fields (like 'logId', 'createdAt', or 'lastModified'); these are set automatically. Linked contact or thread names will be resolved to their record IDs.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1223,7 +1296,8 @@
                   "linkedContacts": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedContactsNames": {
@@ -1235,13 +1309,17 @@
                   "linkedThreads": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedThreadsName": {
                     "type": "string"
                   },
                   "linkedThreadsId": {
+                    "type": "string"
+                  },
+                  "name": {
                     "type": "string"
                   }
                 }
@@ -1262,9 +1340,19 @@
         "summary": "Search log entries",
         "description": "Fuzzy search log entries with the `q` parameter. Boolean filters and sorting options are also supported.",
         "parameters": [
-          { "name": "q", "in": "query", "schema": { "type": "string" } }
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
-        "responses": { "200": { "description": "Search results" } }
+        "responses": {
+          "200": {
+            "description": "Search results"
+          }
+        }
       }
     },
     "/api/log-entries-id": {
@@ -1276,15 +1364,21 @@
             "name": "id",
             "in": "query",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "responses": { "200": { "description": "The log entry" } }
+        "responses": {
+          "200": {
+            "description": "The log entry"
+          }
+        }
       },
       "patch": {
         "operationId": "updateLogEntry",
         "summary": "Update an existing log entry",
-        "description": "Update an existing log entry. Do not include read-only fields. Linked contact or thread names may be provided instead of IDs and will be resolved automatically.",
+        "description": "Update an existing log entry. Do not include read-only fields.",
         "parameters": [
           {
             "name": "id",
@@ -1304,10 +1398,14 @@
                   "summary": {
                     "type": "string"
                   },
+                  "name": {
+                    "type": "string"
+                  },
                   "linkedContacts": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedContactsNames": {
@@ -1348,7 +1446,8 @@
                   "linkedThreads": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "format": "record-id"
                     }
                   },
                   "linkedThreadsName": {

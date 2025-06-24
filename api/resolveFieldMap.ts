@@ -22,7 +22,8 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         },
         searchableFields: ["phaseId","snapshotMarkdown","keyUpdates","id"],
         booleanFields: [],
-        linkedRecordFields: {},
+        linkedRecordFields: {
+        },
       };
     case "Contacts":
       return {
@@ -57,14 +58,15 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         searchableFields: ["name","role","company","overview","followupSummary","latestRelatedLog","id"],
         booleanFields: ["followupNeeded"],
         linkedRecordFields: {
-          linkedLogs: { linkedTable: "Logs", isArray: true },
-          linkedThreads: { linkedTable: "Threads", isArray: true },
+          linkedLogs: { linkedTable: undefined, isArray: true },
+          linkedThreads: { linkedTable: undefined, isArray: true },
         },
       };
     case "Logs":
       return {
         fields: {
           summary: "Summary",
+          name: "Name",
           linkedContacts: "Linked Contacts",
           linkedContactsNames: "Linked Contacts Names",
           linkedContactsId: "Linked Contacts ID",
@@ -82,11 +84,11 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           linkedThreadsName: "Linked Threads Name",
           linkedThreadsId: "Linked Threads ID",
         },
-        searchableFields: ["summary","content","followupNotes","tags","logId","author"],
+        searchableFields: ["summary","name","content","followupNotes","tags","logId","author"],
         booleanFields: ["followupNeeded"],
         linkedRecordFields: {
-          linkedContacts: { linkedTable: "Contacts", isArray: true },
-          linkedThreads: { linkedTable: "Threads", isArray: true },
+          linkedContacts: { linkedTable: undefined, isArray: true },
+          linkedThreads: { linkedTable: undefined, isArray: true },
         },
       };
     case "Threads":
@@ -113,10 +115,10 @@ function getTableFieldMap(tableName: string): TableFieldMap {
         searchableFields: ["name","description","linkedContactsNames","threadId"],
         booleanFields: [],
         linkedRecordFields: {
-          linkedContacts: { linkedTable: "Contacts", isArray: true },
-          linkedLogs: { linkedTable: "Logs", isArray: true },
-          parentThread: { linkedTable: "Threads", isArray: true },
-          subthread: { linkedTable: "Threads", isArray: true },
+          linkedContacts: { linkedTable: undefined, isArray: true },
+          linkedLogs: { linkedTable: undefined, isArray: true },
+          parentThread: { linkedTable: undefined, isArray: true },
+          subthread: { linkedTable: undefined, isArray: true },
         },
       };
     default:

@@ -6,6 +6,9 @@
     "summary": {
       "type": "string"
     },
+    "name": {
+      "type": "string"
+    },
     "linkedContacts": {
       "type": "array",
       "items": {
