@@ -38,6 +38,12 @@ To ensure accuracy, we generate these from real Airtable metadata.
 npx ts-node scripts/generateFieldMap.ts
 ```
 
+You can also run both the generator and schema updater at once:
+
+```bash
+npm run refresh:airtable
+```
+
 This generates:
 
 * `lib/resolveFieldMap.ts` → API-level mapping helper

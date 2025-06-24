@@ -24,6 +24,16 @@ These outputs are used to ensure:
 node --loader ts-node/esm scripts/generateFieldMap.ts
 ```
 
+You can also trigger this and the related schema update using the
+`refreshAirtable.js` helper script:
+
+```bash
+npm run refresh:airtable
+```
+
+That command runs this generator and `updateCustomActionParams.ts`, then
+commits any resulting changes.
+
 Before running:
 
 * Ensure your `.env` file is configured with the following:
