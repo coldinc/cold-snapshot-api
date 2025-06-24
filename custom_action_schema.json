@@ -122,6 +122,101 @@
         }
       }
     },
+    "/api/snapshots-index": {
+      "get": {
+        "operationId": "getAllSnapshots",
+        "summary": "List snapshots",
+        "description": "Fetch all snapshot records.",
+        "responses": {
+          "200": { "description": "A list of snapshots" }
+        }
+      },
+      "post": {
+        "operationId": "createSnapshotRecord",
+        "summary": "Create snapshot record",
+        "description": "Create a snapshot of the current business state. IMPORTANT: Do not include read-only fields such as 'id' or 'created'.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Cold Snapshots",
+                "type": "object",
+                "properties": {
+                  "date": { "type": "string", "format": "date-time" },
+                  "phaseId": { "type": "string" },
+                  "snapshotMarkdown": { "type": "string" },
+                  "keyUpdates": { "type": "string" },
+                  "id": { "type": "string", "readOnly": true },
+                  "created": {
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "The created snapshot" } }
+      }
+    },
+    "/api/snapshots-id": {
+      "get": {
+        "operationId": "getSnapshotById",
+        "summary": "Get snapshot by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "The snapshot record" } }
+      },
+      "patch": {
+        "operationId": "updateSnapshotRecord",
+        "summary": "Update a snapshot",
+        "description": "Update a snapshot. Do not include read-only fields.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "date": { "type": "string", "format": "date-time" },
+                  "phaseId": { "type": "string" },
+                  "snapshotMarkdown": { "type": "string" },
+                  "keyUpdates": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "The updated snapshot" } }
+      }
+    },
+    "/api/snapshots-search": {
+      "get": {
+        "operationId": "searchSnapshots",
+        "summary": "Search snapshots",
+        "description": "Fuzzy search snapshots using the `q` parameter. Optional filters like `limit`, `sortBy`, `updatedAfter`, and `recent` are also supported.",
+        "parameters": [
+          { "name": "q", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Search results" } }
+      }
+    },
     "/api/contacts-index": {
       "get": {
         "operationId": "getAllContacts",
@@ -136,7 +231,7 @@
       "post": {
         "operationId": "createContact",
         "summary": "Create a contact",
-        "description": "Create a new partner contact in Airtable.IMPORTANT: Do not include any fields marked as read-only (such as 'id', 'lastModified' or 'created') in the request payload. These fields are computed automatically.",
+        "description": "Create a new partner contact in Airtable.IMPORTANT: Do not include any fields marked as read-only (such as 'id', 'lastModified' or 'created') in the request payload. These fields are computed automatically. Linked log or thread names may be supplied instead of record IDs and will be resolved automatically.",
         "requestBody": {
           "required": true,
           "content": {
@@ -337,23 +432,14 @@
     },
     "/api/contacts-search": {
       "get": {
-        "operationId": "searchContactsByName",
+        "operationId": "searchContacts",
         "summary": "Search contacts",
-        "description": "Search contacts by partial name match.",
+        "description": "Fuzzy search contacts using the `q` parameter. Boolean filters (e.g. `followupNeeded=true`) and date filters are also supported.",
         "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "q", "in": "query", "schema": { "type": "string" } }
         ],
         "responses": {
-          "200": {
-            "description": "Search results"
-          }
+          "200": { "description": "Search results" }
         }
       }
     },
@@ -381,7 +467,7 @@
       "patch": {
         "operationId": "updateContact",
         "summary": "Update an existing contact",
-        "description": "Update an existing contact. Do not include read-only fields.",
+        "description": "Update an existing contact. Do not include read-only fields. Linked log or thread names may be supplied instead of IDs and will be resolved automatically.",
         "parameters": [
           {
             "name": "id",
@@ -643,7 +729,7 @@
       "post": {
         "operationId": "createThread",
         "summary": "Create a new thread",
-        "description": "Create a Thread or Subthread (linked to a parent). Threads are HQs for projects, content, or ideas. Subthreads track related workstreams. IMPORTANT: Do not include read-only fields (like 'createdDate', 'lastModified', 'threadId').",
+        "description": "Create a Thread or Subthread (linked to a parent). Threads are HQs for projects, content, or ideas. Subthreads track related workstreams. IMPORTANT: Do not include read-only fields (like 'createdDate', 'lastModified', 'threadId'). Linked record names may be used for contacts or logs and will be resolved to record IDs.",
         "requestBody": {
           "required": true,
           "content": {
@@ -852,7 +938,7 @@
       "patch": {
         "operationId": "updateThread",
         "summary": "Update an existing thread",
-        "description": "Update an existing thread. Do not include read-only fields.",
+        "description": "Update an existing thread. Do not include read-only fields. Linked record names for contacts or logs may be provided and will be resolved to IDs automatically.",
         "parameters": [
           {
             "name": "id",
@@ -954,16 +1040,10 @@
     "/api/threads-search": {
       "get": {
         "operationId": "searchThreads",
-        "summary": "Search threads by name",
+        "summary": "Search threads",
+        "description": "Fuzzy search threads using the `q` parameter. Additional filters and sorting options are supported.",
         "parameters": [
-          {
-            "name": "query",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
+          { "name": "q", "in": "query", "schema": { "type": "string" } }
         ],
         "responses": {
           "200": {
@@ -1058,7 +1138,7 @@
       "post": {
         "operationId": "createLogEntry",
         "summary": "Create a log entry",
-        "description": "Create a log entry linked to one or more contacts or threads. Logs capture calls, emails, notes, and updates related to contacts or threads. IMPORTANT: Do not include any read-only fields (like 'logId', 'createdAt', or 'lastModified'); these are set automatically.",
+        "description": "Create a log entry linked to one or more contacts or threads. Logs capture calls, emails, notes, and updates related to contacts or threads. IMPORTANT: Do not include any read-only fields (like 'logId', 'createdAt', or 'lastModified'); these are set automatically. Linked contact or thread names will be resolved to their record IDs.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1176,11 +1256,35 @@
         }
       }
     },
+    "/api/log-entries-search": {
+      "get": {
+        "operationId": "searchLogEntries",
+        "summary": "Search log entries",
+        "description": "Fuzzy search log entries with the `q` parameter. Boolean filters and sorting options are also supported.",
+        "parameters": [
+          { "name": "q", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Search results" } }
+      }
+    },
     "/api/log-entries-id": {
+      "get": {
+        "operationId": "getLogEntryById",
+        "summary": "Get log entry by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "The log entry" } }
+      },
       "patch": {
         "operationId": "updateLogEntry",
         "summary": "Update an existing log entry",
-        "description": "Update an existing log entry. Do not include read-only fields.",
+        "description": "Update an existing log entry. Do not include read-only fields. Linked contact or thread names may be provided instead of IDs and will be resolved automatically.",
         "parameters": [
           {
             "name": "id",
