@@ -5,6 +5,7 @@ import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { ProxyAgent } from "undici";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -88,9 +89,20 @@ async function main() {
     throw new Error("Missing AIRTABLE_TOKEN or AIRTABLE_BASE_ID environment variables");
   }
 
+  const proxy =
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy ||
+    process.env.HTTP_PROXY ||
+    process.env.http_proxy;
+  const dispatcher = proxy ? new ProxyAgent(proxy) : undefined;
+
   const query = TABLES.map((t) => `tableNames[]=${encodeURIComponent(t)}`).join("&");
   const url = `https://api.airtable.com/v0/meta/bases/${baseId}/tables?${query}`;
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+    // cast to any for Node <22 type compatibility
+    dispatcher: dispatcher as any,
+  });
   if (!res.ok) {
     throw new Error(`Failed to fetch metadata: ${res.status} ${res.statusText}`);
   }
