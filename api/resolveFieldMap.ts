@@ -65,8 +65,8 @@ function getTableFieldMap(tableName: string): TableFieldMap {
     case "Logs":
       return {
         fields: {
-          summary: "Summary",
           name: "Name",
+          summary: "Summary",
           linkedContacts: "Linked Contacts",
           linkedContactsNames: "Linked Contacts Names",
           linkedContactsId: "Linked Contacts ID",
@@ -84,7 +84,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           linkedThreadsName: "Linked Threads Name",
           linkedThreadsId: "Linked Threads ID",
         },
-        searchableFields: ["summary","name","content","followupNotes","tags","logId","author"],
+        searchableFields: ["name","summary","content","followupNotes","tags","logId","author"],
         booleanFields: ["followupNeeded"],
         linkedRecordFields: {
           linkedContacts: { linkedTable: undefined, isArray: true },

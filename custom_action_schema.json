@@ -1395,10 +1395,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "summary": {
+                  "name": {
                     "type": "string"
                   },
-                  "name": {
+                  "summary": {
                     "type": "string"
                   },
                   "linkedContacts": {
