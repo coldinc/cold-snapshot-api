@@ -1,6 +1,5 @@
 import getAirtableContext from "./airtable_base.js";
-import { getFieldMap } from "./resolveFieldMap.js";
-import { synthesizeThreadNarrative } from "./synthesisUtils.js";
+import { buildSynthesisPrompt, runGPTSynthesis } from "./synthesisUtils.js";
 
 
 const apiSynthesizeThreadHandler = async (req: any, res: any) => {
