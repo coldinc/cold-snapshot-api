@@ -1,15 +1,34 @@
 console.log("🚀 Running generateFieldMap...");
 
-import "dotenv/config";
-
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { config as loadEnv } from "dotenv";
 import { ProxyAgent } from "undici";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const TABLES = ["Contacts", "Logs", "Cold Snapshots", "Threads"];
+// Load environment variables from `.env` if present, otherwise fall back to
+// `.env.example` so that the script can run locally without manual setup.
+const envPath = path.join(__dirname, "../.env");
+if (fs.existsSync(envPath)) {
+  loadEnv({ path: envPath });
+} else {
+  const examplePath = path.join(__dirname, "../.env.example");
+  if (fs.existsSync(examplePath)) {
+    loadEnv({ path: examplePath });
+  } else {
+    // Default to loading from process.env only
+    loadEnv();
+  }
+}
+const TABLES = [
+  process.env.AIRTABLE_CONTACTS_TABLE_NAME || "Contacts",
+  process.env.AIRTABLE_LOGS_TABLE_NAME || "Logs",
+  process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
+  process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
+];
 
 function toCamelCase(str: string): string {
   return str
