@@ -134,6 +134,12 @@ async function main() {
   const schemaDir = path.join(__dirname, "../schemas");
   fs.mkdirSync(schemaDir, { recursive: true });
 
+  // Map Airtable table IDs to their names so we can resolve linked table names
+  const tableIdToName: Record<string, string> = {};
+  for (const tbl of data.tables || []) {
+    tableIdToName[tbl.id] = tbl.name;
+  }
+
   const allMaps: Record<
     string,
     {
@@ -178,8 +184,9 @@ async function main() {
         booleanFields.push(key);
       }
       if (field.type === "multipleRecordLinks") {
+        const linkedId = field.options?.linkedTableId;
         linkedRecordFields[key] = {
-          linkedTable: field.options?.linkedTableName,
+          linkedTable: linkedId ? tableIdToName[linkedId] : undefined,
           isArray: true,
         };
       }

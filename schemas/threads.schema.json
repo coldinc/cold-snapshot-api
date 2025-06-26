@@ -12,7 +12,8 @@
         "type": "string",
         "enum": [
           "Experiment",
-          "Internal",
+          "Internal: Project",
+          "Internal: Ritual",
           "Output",
           "Collaboration"
         ]
