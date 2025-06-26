@@ -1241,7 +1241,8 @@
                       "Call",
                       "Meeting",
                       "Note",
-                      "Email"
+                      "Email",
+                      "Ritual Run"
                     ]
                   },
                   "date": {
@@ -1422,7 +1423,8 @@
                       "Call",
                       "Meeting",
                       "Note",
-                      "Email"
+                      "Email",
+                      "Ritual Run"
                     ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Evemt\""
                   },
