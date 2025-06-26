@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 function runScript(script) {
   const scriptPath = path.join(__dirname, script);
-  execSync(`node --loader ts-node/esm ${scriptPath}`, { stdio: 'inherit' });
+  execSync(`node --loader ts-node/esm "${scriptPath}"`, { stdio: 'inherit' });
 }
 
 function run() {
