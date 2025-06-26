@@ -202,8 +202,8 @@
       },
       "patch": {
         "operationId": "updateSnapshotRecord",
-        "summary": "Update a snapshot",
-        "description": "Update a snapshot. Do not include read-only fields.",
+        "summary": "Update an existing snapshot record",
+        "description": "Update an existing snapshot record. Do not include read-only fields.",
         "parameters": [
           {
             "name": "id",
@@ -240,7 +240,7 @@
         },
         "responses": {
           "200": {
-            "description": "The updated snapshot"
+            "description": "The updated snapshot record"
           }
         }
       }
