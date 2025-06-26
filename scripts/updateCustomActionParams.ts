@@ -34,6 +34,8 @@ const tableNames: Record<string, string> = {
   "/api/log-entries-index": process.env.AIRTABLE_LOGS_TABLE_NAME || "Logs",
   "/api/log-entries-id": process.env.AIRTABLE_LOGS_TABLE_NAME || "Logs",
   "/api/snapshots-latest": process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
+  "/api/snapshots-index": process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
+  "/api/snapshots-id": process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
   "/api/threads-index": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
   "/api/threads-id": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
 };
