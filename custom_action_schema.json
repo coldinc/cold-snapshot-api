@@ -1199,6 +1199,44 @@
         }
       }
     },
+    "/api/threads-link": {
+      "post": {
+        "operationId": "linkThreads",
+        "summary": "Add a parent thread or subthread",
+        "description": "Link two existing threads by setting a parent or subthread relationship. Thread names or record IDs are accepted and resolved automatically.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "childThread": {
+                    "type": "string",
+                    "description": "Child thread name or record ID"
+                  },
+                  "parentThread": {
+                    "type": "string",
+                    "description": "Parent thread name or record ID"
+                  },
+                  "linkType": {
+                    "type": "string",
+                    "enum": ["parent", "subthread"],
+                    "description": "Choose 'parent' to set a parent on the child thread or 'subthread' to add a subthread to the parent thread"
+                  }
+                },
+                "required": ["childThread", "parentThread", "linkType"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Link updated"
+          }
+        }
+      }
+    },
     "/api/log-entries-index": {
       "get": {
         "operationId": "getAllLogs",
