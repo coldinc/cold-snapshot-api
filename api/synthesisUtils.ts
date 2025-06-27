@@ -16,13 +16,15 @@ export async function synthesizeThreadNarrative(threadId: string) {
     // Fetch all logs linked to the given thread
     const logRecords = await base(TABLES.LOGS)
         .select({
-            filterByFormula: `FIND("${threadId}", ARRAYJOIN(${logFieldMap["Thread (Linked)"]}))`,
-            fields: [logFieldMap["Content"]],
-            sort: [{ field: logFieldMap["Date"], direction: "asc" }]
+            filterByFormula: `FIND("${threadId}", ARRAYJOIN({${logFieldMap.linkedThreads}}))`,
+            fields: [logFieldMap.content],
+            sort: [{ field: logFieldMap.date, direction: "asc" }]
         })
         .all();
 
-    const logContentArray = logRecords.map((record: any) => record.fields?.[logFieldMap["Content"]]).filter(Boolean);
+    const logContentArray = logRecords
+        .map((record: any) => record.fields?.[logFieldMap.content])
+        .filter(Boolean);
 
     const logContent = logContentArray.join("\n\n").trim();
 
