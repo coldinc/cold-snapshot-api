@@ -22,7 +22,7 @@ const apiSynthesizeThreadHandler = async (req: any, res: any) => {
     if (!threadRes.ok) {
       return res.status(threadRes.status).json({ error: await threadRes.text() });
     }
-    const thread = await threadRes.json();
+    const thread = (await threadRes.json()) as any;
 
     // 2. Fetch logs linked to this thread
     console.log("Fetching logs from:", `${process.env.NEXT_PUBLIC_BASE_URL}/api/log-entries/search`);
@@ -33,7 +33,7 @@ const apiSynthesizeThreadHandler = async (req: any, res: any) => {
     if (!logsRes.ok) {
       return res.status(logsRes.status).json({ error: await logsRes.text() });
     }
-    const logs = await logsRes.json();
+    const logs = (await logsRes.json()) as any[];
 
     // 3. Fetch contacts linked to this thread
     let contactsUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/contacts/search`;
@@ -42,7 +42,7 @@ const apiSynthesizeThreadHandler = async (req: any, res: any) => {
     if (!contactsRes.ok) {
       return res.status(contactsRes.status).json({ error: await contactsRes.text() });
     }
-    const contacts = await contactsRes.json();
+    const contacts = (await contactsRes.json()) as any[];
 
     // 4. Build synthesis prompt and run GPT
     const prompt = buildSynthesisPrompt({ thread, logs, contacts });
