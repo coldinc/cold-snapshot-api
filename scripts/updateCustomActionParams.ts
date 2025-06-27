@@ -38,6 +38,8 @@ const tableNames: Record<string, string> = {
   "/api/snapshots-id": process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
   "/api/threads-index": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
   "/api/threads-id": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
+  "/api/snapshots-synthesize-current-state": process.env.AIRTABLE_SNAPSHOTS_TABLE_NAME || "Cold Snapshots",
+  "/api/synthesize-thread": process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
 };
 
 
