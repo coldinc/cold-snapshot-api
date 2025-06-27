@@ -2,6 +2,7 @@ import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
 import OpenAI from "openai";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export async function synthesizeThreadNarrative(threadId: string) {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -36,7 +37,7 @@ export async function synthesizeThreadNarrative(threadId: string) {
     }
 
     // Construct the system/user messages for GPT
-    const messages = [
+    const messages: ChatCompletionMessageParam[] = [
         {
             role: "system",
             content:
@@ -133,6 +134,14 @@ export async function runGPTSynthesis(prompt: {
         throw new Error(`OpenAI API error: ${response.status} ${await response.text()}`);
     }
 
-    const data = await response.json();
+    interface ChatCompletionResponse {
+        choices: Array<{
+            message: {
+                content: string;
+            };
+        }>;
+    }
+
+    const data = (await response.json()) as ChatCompletionResponse;
     return data.choices?.[0]?.message?.content?.trim() || "";
 }
