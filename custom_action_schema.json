@@ -1221,11 +1221,18 @@
                   },
                   "linkType": {
                     "type": "string",
-                    "enum": ["parent", "subthread"],
+                    "enum": [
+                      "parent",
+                      "subthread"
+                    ],
                     "description": "Choose 'parent' to set a parent on the child thread or 'subthread' to add a subthread to the parent thread"
                   }
                 },
-                "required": ["childThread", "parentThread", "linkType"]
+                "required": [
+                  "childThread",
+                  "parentThread",
+                  "linkType"
+                ]
               }
             }
           }
@@ -1506,6 +1513,49 @@
         "responses": {
           "200": {
             "description": "The updated log entry"
+          }
+        }
+      }
+    },
+    "/api/snapshots-synthesize-current-state": {
+      "get": {
+        "operationId": "synthesizeCurrentState",
+        "summary": "Synthesize latest snapshot",
+        "description": "Return the most recent snapshot with fields filtered by the field map.",
+        "responses": {
+          "200": {
+            "description": "Latest snapshot"
+          }
+        }
+      }
+    },
+    "/api/synthesize-thread": {
+      "post": {
+        "operationId": "synthesizeThread",
+        "summary": "Generate a thread synthesis",
+        "description": "Fetch logs and contacts for a thread, run GPT synthesis, store the result as a log entry, and return the text.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "threadId": {
+                    "type": "string",
+                    "description": "Thread record ID"
+                  }
+                },
+                "required": [
+                  "threadId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Synthesis generated"
           }
         }
       }
