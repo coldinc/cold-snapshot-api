@@ -468,6 +468,9 @@
                   },
                   "linkedThreadsId": {
                     "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
                   }
                 }
               }
@@ -562,6 +565,9 @@
                     "type": "string"
                   },
                   "email": {
+                    "type": "string"
+                  },
+                  "phone": {
                     "type": "string"
                   },
                   "source": {
@@ -1369,6 +1375,12 @@
                   },
                   "name": {
                     "type": "string"
+                  },
+                  "callTranscriptVectors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -1504,6 +1516,12 @@
                   },
                   "linkedThreadsId": {
                     "type": "string"
+                  },
+                  "callTranscriptVectors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               }
