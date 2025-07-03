@@ -15,8 +15,8 @@
     "/api/snapshots-latest": {
       "post": {
         "operationId": "createSnapshot",
-        "summary": "Create a new snapshot",
-        "description": "Create a general snapshot of the current state of the business, including active threads, insights, action items and key decisions made. IMPORTANT: Do not include any fields marked as read-only (such as 'created') in the request payload. These fields are computed automatically.",
+        "summary": "Save latest snapshot",
+        "description": "Overwrite the single \"latest snapshot\" entry. Use this when you want to update the current snapshot in place rather than create a historical record. IMPORTANT: Do not include read-only fields such as 'created' in the request payload.",
         "requestBody": {
           "required": true,
           "content": {
@@ -135,8 +135,8 @@
       },
       "post": {
         "operationId": "createSnapshotRecord",
-        "summary": "Create snapshot record",
-        "description": "Create a snapshot of the current business state. IMPORTANT: Do not include read-only fields such as 'id' or 'created'.",
+        "summary": "Create historical snapshot",
+        "description": "Add a new record to the snapshot history. Use this endpoint when you want to preserve a snapshot for future reference. Do not include read-only fields such as 'id' or 'created'.",
         "requestBody": {
           "required": true,
           "content": {
