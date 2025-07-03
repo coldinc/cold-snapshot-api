@@ -202,8 +202,8 @@
       },
       "patch": {
         "operationId": "updateSnapshotRecord",
-        "summary": "Update an existing snapshot record",
-        "description": "Update an existing snapshot record. Do not include read-only fields.",
+        "summary": "Update an existing historical snapshot",
+        "description": "Update an existing historical snapshot. Do not include read-only fields.",
         "parameters": [
           {
             "name": "id",
@@ -240,7 +240,7 @@
         },
         "responses": {
           "200": {
-            "description": "The updated snapshot record"
+            "description": "The updated historical snapshot"
           }
         }
       }
@@ -380,7 +380,8 @@
                         "Potential – Podcast Guest",
                         "Collaborated – Podcast Guest",
                         "Collaborated – Mentoring",
-                        "Potential – Mentoring"
+                        "Potential – Mentoring",
+                        "Potential – Co-Founder"
                       ]
                     }
                   },
@@ -471,6 +472,17 @@
                   },
                   "phone": {
                     "type": "string"
+                  },
+                  "sourceDetail": {
+                    "type": "string",
+                    "enum": [
+                      "Lunchclub",
+                      "YC Co-Founder Matching",
+                      "GrowthMentor",
+                      "MentorCruise",
+                      "Website Inquiry",
+                      "LinkedIn"
+                    ]
                   }
                 }
               }
@@ -582,6 +594,17 @@
                     ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Referral\""
                   },
+                  "sourceDetail": {
+                    "type": "string",
+                    "enum": [
+                      "Lunchclub",
+                      "YC Co-Founder Matching",
+                      "GrowthMentor",
+                      "MentorCruise",
+                      "Website Inquiry",
+                      "LinkedIn"
+                    ]
+                  },
                   "relationshipType": {
                     "type": "array",
                     "items": {
@@ -639,7 +662,8 @@
                         "Potential – Podcast Guest",
                         "Collaborated – Podcast Guest",
                         "Collaborated – Mentoring",
-                        "Potential – Mentoring"
+                        "Potential – Mentoring",
+                        "Potential – Co-Founder"
                       ]
                     }
                   },
@@ -1516,12 +1540,6 @@
                   },
                   "linkedThreadsId": {
                     "type": "string"
-                  },
-                  "callTranscriptVectors": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
                   }
                 }
               }
