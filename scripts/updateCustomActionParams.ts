@@ -64,17 +64,27 @@ for (const [route, config] of Object.entries(openApi.paths)) {
     const reqBodySchema = config.post?.requestBody?.content?.["application/json"]?.schema;
     if (reqBodySchema) {
       reqBodySchema.properties = reqBodySchema.properties || {};
-      for (const [key, newProp] of Object.entries(newSchema.properties as Record<string, any>)) {
-        const oldProp = (reqBodySchema.properties as Record<string, any>)[key] || {};
+      for (const [key, newProp] of Object.entries(
+        newSchema.properties as Record<string, any>
+      )) {
+        const oldProp =
+          (reqBodySchema.properties as Record<string, any>)[key] || {};
         (reqBodySchema.properties as Record<string, any>)[key] = {
           ...(newProp as Record<string, any>),
-          ...(oldProp.description && !(newProp as any).description ? { description: oldProp.description } : {})
+          ...(oldProp.description && !(newProp as any).description
+            ? { description: oldProp.description }
+            : {}),
         };
       }
       for (const key of Object.keys(reqBodySchema.properties)) {
         if (!newSchema.properties[key]) {
-          reqBodySchema.properties[key] = reqBodySchema.properties[key];
+          delete (reqBodySchema.properties as Record<string, any>)[key];
         }
+      }
+      if (Array.isArray(reqBodySchema.required)) {
+        reqBodySchema.required = reqBodySchema.required.filter((r: string) =>
+          Boolean(newSchema.properties[r])
+        );
       }
       console.log(`Patched properties for ${route} from ${fileName}, preserving descriptions`);
       if (newSchema.required) {
