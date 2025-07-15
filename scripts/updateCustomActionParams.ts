@@ -59,14 +59,18 @@ for (const [route, config] of Object.entries(openApi.paths)) {
   }
   const newSchema = JSON.parse(fs.readFileSync(schemaFile, "utf8"));
 
-  // ----- POST (for -index endpoints) -----
-  if (config.post && route.endsWith("-index")) {
+  // ----- POST (create endpoints) -----
+  if (
+    config.post &&
+    (route.endsWith("-index") || route === "/api/snapshots-latest")
+  ) {
     const reqBodySchema = config.post?.requestBody?.content?.["application/json"]?.schema;
     if (reqBodySchema) {
       reqBodySchema.properties = reqBodySchema.properties || {};
       for (const [key, newProp] of Object.entries(
         newSchema.properties as Record<string, any>
       )) {
+        if ((newProp as any).readOnly) continue;
         const oldProp =
           (reqBodySchema.properties as Record<string, any>)[key] || {};
         (reqBodySchema.properties as Record<string, any>)[key] = {
@@ -77,18 +81,22 @@ for (const [route, config] of Object.entries(openApi.paths)) {
         };
       }
       for (const key of Object.keys(reqBodySchema.properties)) {
-        if (!newSchema.properties[key]) {
+        const newProp = (newSchema.properties as Record<string, any>)[key];
+        if (!newProp || (newProp as any).readOnly) {
           delete (reqBodySchema.properties as Record<string, any>)[key];
         }
       }
       if (Array.isArray(reqBodySchema.required)) {
         reqBodySchema.required = reqBodySchema.required.filter((r: string) =>
-          Boolean(newSchema.properties[r])
+          Boolean((newSchema.properties as Record<string, any>)[r]) &&
+          !(newSchema.properties as Record<string, any>)[r].readOnly
         );
       }
       console.log(`Patched properties for ${route} from ${fileName}, preserving descriptions`);
       if (newSchema.required) {
-        reqBodySchema.required = newSchema.required;
+        reqBodySchema.required = newSchema.required.filter(
+          (r: string) => !(newSchema.properties as Record<string, any>)[r]?.readOnly
+        );
         console.log(`Patched required for ${route} from ${fileName}`);
       }
     } else {
