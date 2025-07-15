@@ -12,3 +12,13 @@ Two routes help generate GPT summaries:
 2. **POST `/api/synthesize-thread`** – builds a prompt from a thread, calls GPT‑4 and saves the result as a log entry.
 
 See [docs/synthesisEndpoints.md](docs/synthesisEndpoints.md) for examples and more details.
+
+### `GET /api/log-entries-index`
+
+List log entries with optional pagination.
+
+```bash
+curl "https://your-domain.com/api/log-entries-index?limit=5"
+```
+
+The response includes a list of records and an `offset` token for fetching the next page.

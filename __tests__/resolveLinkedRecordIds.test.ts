@@ -1,5 +1,8 @@
 import { jest } from "@jest/globals";
-import { resolveLinkedRecordIds, resolveRecordId } from "../api/resolveLinkedRecordIds";
+import {
+  resolveLinkedRecordIds,
+  resolveRecordId,
+} from "../api/resolveLinkedRecordIds";
 import { airtableSearch } from "../api/airtableSearch";
 
 jest.mock("../api/airtableSearch", () => ({
@@ -8,7 +11,10 @@ jest.mock("../api/airtableSearch", () => ({
 
 describe("resolveLinkedRecordIds", () => {
   it("converts display names to record ids", async () => {
-    (airtableSearch as jest.Mock).mockResolvedValueOnce([{ id: "rec123" }]);
+    (airtableSearch as jest.Mock).mockResolvedValueOnce({
+      records: [{ id: "rec123" }],
+      offset: undefined,
+    });
     const result = await resolveLinkedRecordIds("Contacts", {
       linkedLogs: ["Log A"],
     });
@@ -27,7 +33,10 @@ describe("resolveLinkedRecordIds", () => {
 
 describe("resolveRecordId", () => {
   it("resolves a name to an id", async () => {
-    (airtableSearch as jest.Mock).mockResolvedValueOnce([{ id: "rec789" }]);
+    (airtableSearch as jest.Mock).mockResolvedValueOnce({
+      records: [{ id: "rec789" }],
+      offset: undefined,
+    });
     const id = await resolveRecordId("Threads", "My Thread");
     expect(id).toBe("rec789");
   });

@@ -68,9 +68,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             }
@@ -340,12 +338,7 @@
                   },
                   "relationshipStrength": {
                     "type": "string",
-                    "enum": [
-                      "Cold",
-                      "Weak",
-                      "Warm",
-                      "Strong"
-                    ],
+                    "enum": ["Cold", "Weak", "Warm", "Strong"],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Cold\""
                   },
                   "status": {
@@ -622,12 +615,7 @@
                   },
                   "relationshipStrength": {
                     "type": "string",
-                    "enum": [
-                      "Cold",
-                      "Weak",
-                      "Warm",
-                      "Strong"
-                    ],
+                    "enum": ["Cold", "Weak", "Warm", "Strong"],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Strong\""
                   },
                   "status": {
@@ -766,12 +754,7 @@
                       },
                       "status": {
                         "type": "string",
-                        "enum": [
-                          "Idea",
-                          "In Progress",
-                          "Paused",
-                          "Complete"
-                        ],
+                        "enum": ["Idea", "In Progress", "Paused", "Complete"],
                         "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                       },
                       "description": {
@@ -846,12 +829,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "Idea",
-                      "In Progress",
-                      "Paused",
-                      "Complete"
-                    ],
+                    "enum": ["Idea", "In Progress", "Paused", "Complete"],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                   },
                   "description": {
@@ -982,12 +960,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "Idea",
-                        "In Progress",
-                        "Paused",
-                        "Complete"
-                      ],
+                      "enum": ["Idea", "In Progress", "Paused", "Complete"],
                       "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                     },
                     "description": {
@@ -1070,12 +1043,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "Idea",
-                      "In Progress",
-                      "Paused",
-                      "Complete"
-                    ],
+                    "enum": ["Idea", "In Progress", "Paused", "Complete"],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                   },
                   "description": {
@@ -1177,12 +1145,7 @@
                       },
                       "status": {
                         "type": "string",
-                        "enum": [
-                          "Idea",
-                          "In Progress",
-                          "Paused",
-                          "Complete"
-                        ],
+                        "enum": ["Idea", "In Progress", "Paused", "Complete"],
                         "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                       },
                       "description": {
@@ -1251,18 +1214,11 @@
                   },
                   "linkType": {
                     "type": "string",
-                    "enum": [
-                      "parent",
-                      "subthread"
-                    ],
+                    "enum": ["parent", "subthread"],
                     "description": "Choose 'parent' to set a parent on the child thread or 'subthread' to add a subthread to the parent thread"
                   }
                 },
-                "required": [
-                  "childThread",
-                  "parentThread",
-                  "linkType"
-                ]
+                "required": ["childThread", "parentThread", "linkType"]
               }
             }
           }
@@ -1279,6 +1235,18 @@
         "operationId": "getAllLogs",
         "summary": "List log entries",
         "description": "Fetch all log entries from the Logs database.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "minimum": 1 }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of log entries"
@@ -1312,13 +1280,7 @@
                   },
                   "logType": {
                     "type": "string",
-                    "enum": [
-                      "Call",
-                      "Meeting",
-                      "Note",
-                      "Email",
-                      "Ritual Run"
-                    ]
+                    "enum": ["Call", "Meeting", "Note", "Email", "Ritual Run"]
                   },
                   "date": {
                     "type": "string",
@@ -1500,13 +1462,7 @@
                   },
                   "logType": {
                     "type": "string",
-                    "enum": [
-                      "Call",
-                      "Meeting",
-                      "Note",
-                      "Email",
-                      "Ritual Run"
-                    ],
+                    "enum": ["Call", "Meeting", "Note", "Email", "Ritual Run"],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Evemt\""
                   },
                   "date": {
@@ -1582,9 +1538,7 @@
                     "description": "Thread record ID"
                   }
                 },
-                "required": [
-                  "threadId"
-                ]
+                "required": ["threadId"]
               }
             }
           }

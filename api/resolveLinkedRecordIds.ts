@@ -20,7 +20,9 @@ export async function resolveRecordId(
 
   const escaped = value.replace(/"/g, '\\"');
   const formula = `LOWER({${primaryField}}) = LOWER("${escaped}")`;
-  const records = await airtableSearch(tableName, formula, { maxRecords: 2 });
+  const { records } = await airtableSearch(tableName, formula, {
+    maxRecords: 2,
+  });
   if (records.length === 0) {
     throw new Error(`No record in ${tableName} matches "${value}"`);
   }
