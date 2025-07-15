@@ -57,7 +57,7 @@ export function createDynamicSearchHandler(tableName: string) {
     }
 
     try {
-      const records = await airtableSearch(tableName, formula, options);
+      const { records } = await airtableSearch(tableName, formula, options);
       if (!records || records.length === 0) {
         return res.status(404).json({ message: "No matching record found" });
       }

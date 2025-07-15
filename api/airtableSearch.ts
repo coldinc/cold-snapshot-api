@@ -4,12 +4,13 @@ interface SearchOptions {
   maxRecords?: number;
   sortField?: string;
   sortDirection?: "asc" | "desc";
+  offset?: string;
 }
 
 async function airtableSearch(
   tableName: string,
   filterFormula: string,
-  options: SearchOptions = {}
+  options: SearchOptions = {},
 ) {
   const { airtableToken, baseId } = getAirtableContext();
 
@@ -25,18 +26,16 @@ async function airtableSearch(
   console.log("[airtableSearch] url:", url);
 
   const config = {
-    headers: { Authorization: `Bearer ${airtableToken}` }
+    headers: { Authorization: `Bearer ${airtableToken}` },
   };
 
   const params = new URLSearchParams();
   if (filterFormula) params.set("filterByFormula", filterFormula);
   params.set("maxRecords", String(options.maxRecords ?? 10));
+  if (options.offset) params.set("offset", options.offset);
   if (options.sortField) {
     params.append("sort[0][field]", options.sortField);
-    params.append(
-      "sort[0][direction]",
-      options.sortDirection ?? "asc"
-    );
+    params.append("sort[0][direction]", options.sortDirection ?? "asc");
   }
   const fullUrl = url + "?" + params.toString();
 
@@ -44,14 +43,14 @@ async function airtableSearch(
   if (!response.ok) {
     throw new Error(`Airtable request failed: ${await response.text()}`);
   }
-  const data = (await response.json()) as { records: any[] };
-  return data.records;
+  const data = (await response.json()) as { records: any[]; offset?: string };
+  return { records: data.records, offset: data.offset };
 }
 
 function createSearchHandler({
   tableName,
   fieldName,
-  queryParam
+  queryParam,
 }: {
   tableName: string;
   fieldName: string;
@@ -63,14 +62,16 @@ function createSearchHandler({
   return async function (req: any, res: any) {
     const value = req.query[queryParam];
     if (!value || typeof value !== "string") {
-      return res.status(400).json({ error: `Missing or invalid ${queryParam} parameter` });
+      return res
+        .status(400)
+        .json({ error: `Missing or invalid ${queryParam} parameter` });
     }
 
     const escaped = (value as string).replace(/"/g, '\\"');
     const formula = `FIND(LOWER("${escaped}"), LOWER({${fieldName}}))`;
 
     try {
-      const records = await airtableSearch(tableName, formula);
+      const { records } = await airtableSearch(tableName, formula);
       if (!records || records.length === 0) {
         return res.status(404).json({ message: "No matching record found" });
       }
@@ -79,7 +80,7 @@ function createSearchHandler({
       console.error("Search API error:", {
         message: error.message,
         config: error.config,
-        response: error.response?.data
+        response: error.response?.data,
       });
       return res.status(500).json({ error: "Internal Server Error" });
     }
