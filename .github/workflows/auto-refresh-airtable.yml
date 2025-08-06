@@ -7,6 +7,13 @@ on:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    env:
+      AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
+      AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+      AIRTABLE_CONTACTS_TABLE_NAME: ${{ secrets.AIRTABLE_CONTACTS_TABLE_NAME }}
+      AIRTABLE_LOGS_TABLE_NAME: ${{ secrets.AIRTABLE_LOGS_TABLE_NAME }}
+      AIRTABLE_SNAPSHOTS_TABLE_NAME: ${{ secrets.AIRTABLE_SNAPSHOTS_TABLE_NAME }}
+      AIRTABLE_THREADS_TABLE_NAME: ${{ secrets.AIRTABLE_THREADS_TABLE_NAME }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -16,13 +23,6 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: npm run refresh:airtable
-        env:
-          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
-          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
-          AIRTABLE_CONTACTS_TABLE_NAME: ${{ secrets.AIRTABLE_CONTACTS_TABLE_NAME }}
-          AIRTABLE_LOGS_TABLE_NAME: ${{ secrets.AIRTABLE_LOGS_TABLE_NAME }}
-          AIRTABLE_SNAPSHOTS_TABLE_NAME: ${{ secrets.AIRTABLE_SNAPSHOTS_TABLE_NAME }}
-          AIRTABLE_THREADS_TABLE_NAME: ${{ secrets.AIRTABLE_THREADS_TABLE_NAME }}
       - name: Commit and push changes
         run: |
           git config user.name 'github-actions'
