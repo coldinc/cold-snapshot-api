@@ -1,12 +1,18 @@
 import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
-import OpenAI from "openai";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+
+// Minimal message type to avoid requiring the OpenAI package during tests
+type ChatCompletionMessageParam = {
+    role: string;
+    content: string;
+};
 
 export async function synthesizeThreadNarrative(threadId: string) {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
 
+    // Dynamically import OpenAI so tests can run without the package installed
+    const { default: OpenAI } = await import("openai");
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY
     });
