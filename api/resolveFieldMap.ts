@@ -86,7 +86,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           linkedThreadsName: "Linked Threads Name",
           linkedThreadsId: "Linked Threads ID",
         },
-        searchableFields: ["name","summary","content","followupNotes","tags","logId","author"],
+        searchableFields: ["name","content","followupNotes","tags","logId","author"],
         booleanFields: ["followupNeeded"],
         linkedRecordFields: {
           linkedContacts: { linkedTable: "Contacts", isArray: true },
@@ -114,7 +114,7 @@ function getTableFieldMap(tableName: string): TableFieldMap {
           subthread: "Subthread",
           subthreadId: "Subthread ID",
         },
-        searchableFields: ["name","description","linkedContactsNames","threadId"],
+        searchableFields: ["name","linkedContactsNames","threadId"],
         booleanFields: [],
         linkedRecordFields: {
           linkedContacts: { linkedTable: "Contacts", isArray: true },

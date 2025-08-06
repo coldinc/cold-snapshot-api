@@ -59,7 +59,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 }
               }
             }
@@ -320,7 +322,12 @@
                   },
                   "relationshipStrength": {
                     "type": "string",
-                    "enum": ["Cold", "Weak", "Warm", "Strong"],
+                    "enum": [
+                      "Cold",
+                      "Weak",
+                      "Warm",
+                      "Strong"
+                    ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Cold\""
                   },
                   "status": {
@@ -355,7 +362,8 @@
                         "Potential – Podcast Guest",
                         "Collaborated – Podcast Guest",
                         "Collaborated – Mentoring",
-                        "Potential – Mentoring"
+                        "Potential – Mentoring",
+                        "Potential – Co-Founder"
                       ]
                     }
                   },
@@ -414,6 +422,21 @@
                   },
                   "linkedThreadsId": {
                     "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "sourceDetail": {
+                    "type": "string",
+                    "enum": [
+                      "Lunchclub",
+                      "YC Co-Founder Matching",
+                      "GrowthMentor",
+                      "MentorCruise",
+                      "Website Inquiry",
+                      "LinkedIn",
+                      "Selby Trust"
+                    ]
                   }
                 }
               }
@@ -510,6 +533,9 @@
                   "email": {
                     "type": "string"
                   },
+                  "phone": {
+                    "type": "string"
+                  },
                   "source": {
                     "type": "string",
                     "enum": [
@@ -521,6 +547,18 @@
                       "Lunchclub"
                     ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Referral\""
+                  },
+                  "sourceDetail": {
+                    "type": "string",
+                    "enum": [
+                      "Lunchclub",
+                      "YC Co-Founder Matching",
+                      "GrowthMentor",
+                      "MentorCruise",
+                      "Website Inquiry",
+                      "LinkedIn",
+                      "Selby Trust"
+                    ]
                   },
                   "relationshipType": {
                     "type": "array",
@@ -539,7 +577,12 @@
                   },
                   "relationshipStrength": {
                     "type": "string",
-                    "enum": ["Cold", "Weak", "Warm", "Strong"],
+                    "enum": [
+                      "Cold",
+                      "Weak",
+                      "Warm",
+                      "Strong"
+                    ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Strong\""
                   },
                   "status": {
@@ -574,7 +617,8 @@
                         "Potential – Podcast Guest",
                         "Collaborated – Podcast Guest",
                         "Collaborated – Mentoring",
-                        "Potential – Mentoring"
+                        "Potential – Mentoring",
+                        "Potential – Co-Founder"
                       ]
                     }
                   },
@@ -677,7 +721,12 @@
                       },
                       "status": {
                         "type": "string",
-                        "enum": ["Idea", "In Progress", "Paused", "Complete"],
+                        "enum": [
+                          "Idea",
+                          "In Progress",
+                          "Paused",
+                          "Complete"
+                        ],
                         "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                       },
                       "description": {
@@ -746,13 +795,21 @@
                         "Internal: Project",
                         "Internal: Ritual",
                         "Output",
-                        "Collaboration"
+                        "Collaboration",
+                        "Mentorship",
+                        "Consulting",
+                        "Partner Program"
                       ]
                     }
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["Idea", "In Progress", "Paused", "Complete"],
+                    "enum": [
+                      "Idea",
+                      "In Progress",
+                      "Paused",
+                      "Complete"
+                    ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                   },
                   "description": {
@@ -847,7 +904,12 @@
                     },
                     "status": {
                       "type": "string",
-                      "enum": ["Idea", "In Progress", "Paused", "Complete"],
+                      "enum": [
+                        "Idea",
+                        "In Progress",
+                        "Paused",
+                        "Complete"
+                      ],
                       "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                     },
                     "description": {
@@ -924,13 +986,21 @@
                         "Internal: Project",
                         "Internal: Ritual",
                         "Output",
-                        "Collaboration"
+                        "Collaboration",
+                        "Mentorship",
+                        "Consulting",
+                        "Partner Program"
                       ]
                     }
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["Idea", "In Progress", "Paused", "Complete"],
+                    "enum": [
+                      "Idea",
+                      "In Progress",
+                      "Paused",
+                      "Complete"
+                    ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                   },
                   "description": {
@@ -1032,7 +1102,12 @@
                       },
                       "status": {
                         "type": "string",
-                        "enum": ["Idea", "In Progress", "Paused", "Complete"],
+                        "enum": [
+                          "Idea",
+                          "In Progress",
+                          "Paused",
+                          "Complete"
+                        ],
                         "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Idea\""
                       },
                       "description": {
@@ -1101,11 +1176,18 @@
                   },
                   "linkType": {
                     "type": "string",
-                    "enum": ["parent", "subthread"],
+                    "enum": [
+                      "parent",
+                      "subthread"
+                    ],
                     "description": "Choose 'parent' to set a parent on the child thread or 'subthread' to add a subthread to the parent thread"
                   }
                 },
-                "required": ["childThread", "parentThread", "linkType"]
+                "required": [
+                  "childThread",
+                  "parentThread",
+                  "linkType"
+                ]
               }
             }
           }
@@ -1126,12 +1208,17 @@
           {
             "name": "limit",
             "in": "query",
-            "schema": { "type": "integer", "minimum": 1 }
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
           },
           {
             "name": "offset",
             "in": "query",
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1158,7 +1245,13 @@
                   },
                   "logType": {
                     "type": "string",
-                    "enum": ["Call", "Meeting", "Note", "Email", "Ritual Run"]
+                    "enum": [
+                      "Call",
+                      "Meeting",
+                      "Note",
+                      "Email",
+                      "Ritual Run"
+                    ]
                   },
                   "date": {
                     "type": "string",
@@ -1302,7 +1395,13 @@
                   },
                   "logType": {
                     "type": "string",
-                    "enum": ["Call", "Meeting", "Note", "Email", "Ritual Run"],
+                    "enum": [
+                      "Call",
+                      "Meeting",
+                      "Note",
+                      "Email",
+                      "Ritual Run"
+                    ],
                     "description": "This field must be provided as a single string value (not an array). Choose one value from the list of allowed options. Example: \"Evemt\""
                   },
                   "date": {
@@ -1378,7 +1477,9 @@
                     "description": "Thread record ID"
                   }
                 },
-                "required": ["threadId"]
+                "required": [
+                  "threadId"
+                ]
               }
             }
           }
