@@ -24,6 +24,9 @@
     "email": {
       "type": "string"
     },
+    "phone": {
+      "type": "string"
+    },
     "source": {
       "type": "string",
       "enum": [
@@ -33,6 +36,18 @@
         "Colleague",
         "Inbound",
         "Lunchclub"
+      ]
+    },
+    "sourceDetail": {
+      "type": "string",
+      "enum": [
+        "Lunchclub",
+        "YC Co-Founder Matching",
+        "GrowthMentor",
+        "MentorCruise",
+        "Website Inquiry",
+        "LinkedIn",
+        "Selby Trust"
       ]
     },
     "relationshipType": {
@@ -90,7 +105,8 @@
           "Potential – Podcast Guest",
           "Collaborated – Podcast Guest",
           "Collaborated – Mentoring",
-          "Potential – Mentoring"
+          "Potential – Mentoring",
+          "Potential – Co-Founder"
         ]
       }
     },
