@@ -22,7 +22,14 @@ jobs:
         with:
           node-version: '20'
       - run: npm ci
+      - name: Validate Airtable env vars
+        run: |
+          if [[ -z "$AIRTABLE_TOKEN" || -z "$AIRTABLE_BASE_ID" ]]; then
+            echo "Required Airtable secrets missing, skipping refresh"
+            exit 0
+          fi
       - run: npm run refresh:airtable
+        if: ${{ env.AIRTABLE_TOKEN != '' && env.AIRTABLE_BASE_ID != '' }}
       - name: Commit and push changes
         run: |
           git config user.name 'github-actions'
