@@ -1,8 +1,7 @@
 import getAirtableContext from "./airtable_base.js";
-import { getFieldMap, filterMappedFields } from "./resolveFieldMap.js";
+import { getFieldMap } from "./resolveFieldMap.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
-import { resolveLinkedRecordIds } from "./resolveLinkedRecordIds.js";
-import { scrubPayload } from "./scrubPayload.js";
+import { prepareFields } from "./preparePayload.js";
 
 
 const apiThreadsHandler = async (req: any, res: any) => {
@@ -41,12 +40,10 @@ const apiThreadsHandler = async (req: any, res: any) => {
         }
 
         if (req.method === "POST") {
-            const fieldMap = getFieldMap(tableName);
-            const resolvedBody = await resolveLinkedRecordIds(tableName, req.body);
-            const scrubbedBody = await scrubPayload(tableName, resolvedBody);
+            const airtableFields = await prepareFields(tableName, req.body);
 
             const createdRecord = await base(tableName).create([
-                { fields: filterMappedFields({ fields: scrubbedBody }, fieldMap) }
+                { fields: airtableFields }
             ]);
 
             return res.status(201).json(createdRecord);

@@ -35,10 +35,16 @@ async function getWritableFields(entity: string): Promise<Set<string>> {
 export async function scrubPayload(entity: string, payload: Record<string, any>): Promise<Record<string, any>> {
   const writable = await getWritableFields(entity);
   const clean: Record<string, any> = {};
+  const stripped: string[] = [];
   for (const [key, value] of Object.entries(payload || {})) {
     if (writable.has(key)) {
       clean[key] = value;
+    } else {
+      stripped.push(key);
     }
+  }
+  if (stripped.length > 0) {
+    console.log(`[scrubPayload] stripped fields for ${entity}:`, stripped);
   }
   return clean;
 }

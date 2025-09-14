@@ -1,8 +1,7 @@
 import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
-import { mapInternalToAirtable } from "./mapRecordFields.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
-import { scrubPayload } from "./scrubPayload.js";
+import { prepareFields } from "./preparePayload.js";
 
 
 const apiSnapshotsHandler = async (req: any, res: any) => {
@@ -41,9 +40,7 @@ const apiSnapshotsHandler = async (req: any, res: any) => {
         }
 
         if (req.method === "POST") {
-            const fieldMap = getFieldMap(tableName);
-            const scrubbedBody = await scrubPayload(tableName, req.body);
-            const airtableFields = mapInternalToAirtable(scrubbedBody, fieldMap);
+            const airtableFields = await prepareFields(tableName, req.body);
 
             const createdRecord = await base(tableName).create([{ fields: airtableFields }]);
             const record = Array.isArray(createdRecord) ? createdRecord[0] : createdRecord;

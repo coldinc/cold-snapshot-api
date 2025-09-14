@@ -1,8 +1,5 @@
 import getAirtableContext from "./airtable_base.js";
-import { getFieldMap } from "./resolveFieldMap.js";
-import { mapInternalToAirtable } from "./mapRecordFields.js";
-import { resolveLinkedRecordIds } from "./resolveLinkedRecordIds.js";
-import { scrubPayload } from "./scrubPayload.js";
+import { prepareFields } from "./preparePayload.js";
 
 const idThreadsHandler = async (req: any, res: any) => {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -50,10 +47,7 @@ const idThreadsHandler = async (req: any, res: any) => {
         }
 
         if (req.method === "PATCH") {
-            const fieldMap = getFieldMap(TABLES.THREADS);
-            const resolvedBody = await resolveLinkedRecordIds(TABLES.THREADS, req.body);
-            const scrubbedBody = await scrubPayload(TABLES.THREADS, resolvedBody);
-            const airtableFields = mapInternalToAirtable(scrubbedBody, fieldMap);
+            const airtableFields = await prepareFields(TABLES.THREADS, req.body);
 
             const response = await fetch(recordUrl, {
                 method: "PATCH",

@@ -1,9 +1,7 @@
 import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
-import { mapInternalToAirtable } from "./mapRecordFields.js";
-import { resolveLinkedRecordIds } from "./resolveLinkedRecordIds.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
-import { scrubPayload } from "./scrubPayload.js";
+import { prepareFields } from "./preparePayload.js";
 
 const apiContactsHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -37,16 +35,10 @@ const apiContactsHandler = async (req: any, res: any) => {
     }
 
     if (req.method === "POST") {
-      const fieldMap = getFieldMap(tableName);
-      const resolvedBody = await resolveLinkedRecordIds(tableName, req.body);
-      const scrubbedBody = await scrubPayload(tableName, resolvedBody);
-      const airtableFields = mapInternalToAirtable(scrubbedBody, fieldMap);
-
+      const airtableFields = await prepareFields(tableName, req.body);
       console.log("Airtable fields being sent:", airtableFields);
-
-        const [createdRecord] = await base(tableName).create([{ fields: airtableFields }]);
-
-        return res.status(201).json({ id: createdRecord.id, ...req.body });
+      const [createdRecord] = await base(tableName).create([{ fields: airtableFields }]);
+      return res.status(201).json({ id: createdRecord.id, ...req.body });
     }
 
     res.setHeader("Allow", ["GET", "POST"]);
