@@ -1,7 +1,5 @@
 import getAirtableContext from "./airtable_base.js";
-import { getFieldMap } from "./resolveFieldMap.js";
-import { mapInternalToAirtable } from "./mapRecordFields.js";
-import { scrubPayload } from "./scrubPayload.js";
+import { prepareFields } from "./preparePayload.js";
 
 const idSnapshotsHandler = async (req: any, res: any) => {
     const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -38,9 +36,7 @@ const idSnapshotsHandler = async (req: any, res: any) => {
         }
 
         if (req.method === "PATCH") {
-            const fieldMap = getFieldMap(TABLES.SNAPSHOTS);
-            const scrubbedBody = await scrubPayload(TABLES.SNAPSHOTS, req.body);
-            const airtableFields = mapInternalToAirtable(scrubbedBody, fieldMap);
+            const airtableFields = await prepareFields(TABLES.SNAPSHOTS, req.body);
 
             const response = await fetch(recordUrl, {
                 method: "PATCH",
