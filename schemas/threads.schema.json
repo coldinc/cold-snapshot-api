@@ -49,8 +49,7 @@
       }
     },
     "linkedLogsSummary": {
-      "type": "string",
-      "readOnly": true
+      "type": "string"
     },
     "createdDate": {
       "type": "string",

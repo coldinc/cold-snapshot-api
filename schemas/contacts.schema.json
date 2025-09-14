@@ -127,7 +127,7 @@
         ]
       }
     },
-  "linkedLogs": {
+    "linkedLogs": {
       "type": "array",
       "items": {
         "type": "string",
@@ -135,8 +135,7 @@
       }
     },
     "linkedLogsSummary": {
-      "type": "string",
-      "readOnly": true
+      "type": "string"
     },
     "followupNeeded": {
       "type": "boolean"
@@ -149,8 +148,7 @@
       "type": "string"
     },
     "latestRelatedLog": {
-      "type": "string",
-      "readOnly": true
+      "type": "string"
     },
     "id": {
       "type": "string",
