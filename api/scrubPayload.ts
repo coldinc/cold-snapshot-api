@@ -46,5 +46,6 @@ export async function scrubPayload(entity: string, payload: Record<string, any>)
   if (stripped.length > 0) {
     console.log(`[scrubPayload] stripped fields for ${entity.toLowerCase()}:`, stripped);
   }
+  console.log("[scrubPayload] returning clean payload:", clean);
   return clean;
 }
