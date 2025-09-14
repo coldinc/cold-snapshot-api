@@ -40,10 +40,26 @@ const apiThreadsHandler = async (req: any, res: any) => {
         }
 
         if (req.method === "POST") {
+            const fieldMap = getFieldMap(tableName);
             const airtableFields = await prepareFields(tableName, req.body);
 
+            // Final scrub: ensure only mapped fields are sent to Airtable
+            const cleanFields: Record<string, any> = {};
+            const stripped: string[] = [];
+            const validFields = new Set(Object.values(fieldMap));
+            for (const [key, value] of Object.entries(airtableFields)) {
+                if (validFields.has(key)) {
+                    cleanFields[key] = value;
+                } else {
+                    stripped.push(key);
+                }
+            }
+            if (stripped.length > 0) {
+                console.log(`[finalScrub] stripped fields for ${tableName}:`, stripped);
+            }
+
             const createdRecord = await base(tableName).create([
-                { fields: airtableFields }
+                { fields: cleanFields }
             ]);
 
             return res.status(201).json(createdRecord);
