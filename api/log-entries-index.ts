@@ -1,7 +1,8 @@
 import getAirtableContext from "./airtable_base.js";
-import { getFieldMap } from "./resolveFieldMap.js";
+import { getFieldMap, filterMappedFields } from "./resolveFieldMap.js";
 import { airtableSearch } from "./airtableSearch.js";
-import { prepareFields } from "./preparePayload.js";
+import { scrubPayload } from "./scrubPayload.js";
+import { mapInternalToAirtable } from "./mapRecordFields.js";
 
 const apiLogEntriesHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -55,30 +56,21 @@ const apiLogEntriesHandler = async (req: any, res: any) => {
 
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);
-      const airtableFields = await prepareFields(tableName, req.body);
-      console.log("[createLogEntry] final Airtable fields:", airtableFields);
+
+      // Sanitize the incoming payload immediately
+      const scrubbed = await scrubPayload(tableName, req.body);
+      const cleanFields = mapInternalToAirtable(scrubbed, fieldMap);
+      console.log("[createLogEntry] sanitized fields:", cleanFields);
       console.log("[createLogEntry] raw request body:", req.body);
 
-      // Final scrub: ensure only mapped fields are sent to Airtable
-      const cleanFields: Record<string, any> = {};
-      const stripped: string[] = [];
-      const validFields = new Set(Object.values(fieldMap));
-      for (const [key, value] of Object.entries(airtableFields)) {
-        if (validFields.has(key)) {
-          cleanFields[key] = value;
-        } else {
-          stripped.push(key);
-        }
-      }
-      if (stripped.length > 0) {
-        console.log(`[finalScrub] stripped fields for ${tableName}:`, stripped);
-      }
+      // Final guard: only allow mapped fields
+      const safeFields = filterMappedFields(cleanFields, fieldMap);
 
       const [createdRecord] = await base(tableName).create([
-        { fields: cleanFields },
+        { fields: safeFields },
       ]);
 
-      return res.status(201).json({ id: createdRecord.id, ...req.body });
+      return res.status(201).json({ id: createdRecord.id, ...scrubbed });
     }
 
     res.setHeader("Allow", ["GET", "POST"]);
