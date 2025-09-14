@@ -3,6 +3,7 @@ import { getFieldMap } from "./resolveFieldMap.js";
 import { mapInternalToAirtable } from "./mapRecordFields.js";
 import { resolveLinkedRecordIds } from "./resolveLinkedRecordIds.js";
 import { airtableSearch } from "./airtableSearch.js";
+import { scrubPayload } from "./scrubPayload.js";
 
 const apiLogEntriesHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -57,7 +58,8 @@ const apiLogEntriesHandler = async (req: any, res: any) => {
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);
       const resolvedBody = await resolveLinkedRecordIds(tableName, req.body);
-      const airtableFields = mapInternalToAirtable(resolvedBody, fieldMap);
+      const scrubbedBody = await scrubPayload(tableName, resolvedBody);
+      const airtableFields = mapInternalToAirtable(scrubbedBody, fieldMap);
 
       const [createdRecord] = await base(tableName).create([
         { fields: airtableFields },

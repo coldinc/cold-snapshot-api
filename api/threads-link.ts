@@ -2,6 +2,7 @@ import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
 import { mapInternalToAirtable } from "./mapRecordFields.js";
 import { resolveRecordId } from "./resolveLinkedRecordIds.js";
+import { scrubPayload } from "./scrubPayload.js";
 
 const threadsLinkHandler = async (req: any, res: any) => {
   const { baseId, airtableToken, TABLES } = getAirtableContext();
@@ -28,9 +29,10 @@ const threadsLinkHandler = async (req: any, res: any) => {
     const updateData = linkType === "parent"
       ? { parentThread: [parentId] }
       : { subthread: [childId] };
+    const scrubbedData = await scrubPayload(tableName, updateData);
 
     const fieldMap = getFieldMap(tableName);
-    const airtableFields = mapInternalToAirtable(updateData, fieldMap);
+    const airtableFields = mapInternalToAirtable(scrubbedData, fieldMap);
     const recordUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${recordId}`;
     const headers = {
       Authorization: `Bearer ${airtableToken}`,

@@ -3,6 +3,7 @@ import { getFieldMap } from "./resolveFieldMap.js";
 import { mapInternalToAirtable } from "./mapRecordFields.js";
 import { resolveLinkedRecordIds } from "./resolveLinkedRecordIds.js";
 import { FieldSet, Record as AirtableRecord } from "airtable";
+import { scrubPayload } from "./scrubPayload.js";
 
 const apiContactsHandler = async (req: any, res: any) => {
   const { base, TABLES, airtableToken, baseId } = getAirtableContext();
@@ -38,7 +39,8 @@ const apiContactsHandler = async (req: any, res: any) => {
     if (req.method === "POST") {
       const fieldMap = getFieldMap(tableName);
       const resolvedBody = await resolveLinkedRecordIds(tableName, req.body);
-      const airtableFields = mapInternalToAirtable(resolvedBody, fieldMap);
+      const scrubbedBody = await scrubPayload(tableName, resolvedBody);
+      const airtableFields = mapInternalToAirtable(scrubbedBody, fieldMap);
 
       console.log("Airtable fields being sent:", airtableFields);
 
