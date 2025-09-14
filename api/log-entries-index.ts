@@ -55,7 +55,8 @@ const apiLogEntriesHandler = async (req: any, res: any) => {
 
     if (req.method === "POST") {
       const airtableFields = await prepareFields(tableName, req.body);
-
+      console.log("[createLogEntry] final Airtable fields:", airtableFields);
+      console.log("[createLogEntry] raw request body:", req.body);
       const [createdRecord] = await base(tableName).create([
         { fields: airtableFields },
       ]);
