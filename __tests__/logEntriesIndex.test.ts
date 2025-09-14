@@ -3,12 +3,16 @@ import logEntriesHandler from "../api/log-entries-index";
 import getAirtableContext from "../api/airtable_base";
 import { getFieldMap } from "../api/resolveFieldMap";
 import { airtableSearch } from "../api/airtableSearch";
-import { prepareFields } from "../api/preparePayload";
 
 jest.mock("../api/airtable_base");
-jest.mock("../api/resolveFieldMap");
+jest.mock("../api/resolveFieldMap", () => {
+  const actual = jest.requireActual("../api/resolveFieldMap");
+  return {
+    ...actual,
+    getFieldMap: jest.fn(),
+  };
+});
 jest.mock("../api/airtableSearch");
-jest.mock("../api/preparePayload");
 
 const json = jest.fn();
 const status = jest.fn(() => ({ json }));
@@ -54,11 +58,6 @@ it("strips unmapped fields and logs them on create", async () => {
     baseId: "base",
   });
   (getFieldMap as jest.Mock).mockReturnValue({ summary: "Summary" });
-  (prepareFields as jest.Mock).mockResolvedValue({
-    Summary: "hello",
-    linkedContactsId: "rec123",
-    lastModified: "2024-06-01",
-  });
 
   const consoleSpy = jest.spyOn(console, "log").mockImplementation();
 
@@ -70,14 +69,13 @@ it("strips unmapped fields and logs them on create", async () => {
 
   await logEntriesHandler({ method: "POST", body } as any, res);
 
-  expect(prepareFields).toHaveBeenCalledWith("Logs", body);
   expect(create).toHaveBeenCalledWith([{ fields: { Summary: "hello" } }]);
   expect(consoleSpy).toHaveBeenCalledWith(
-    "[finalScrub] stripped fields for Logs:",
+    "[scrubPayload] stripped fields for logs:",
     ["linkedContactsId", "lastModified"],
   );
   expect(status).toHaveBeenCalledWith(201);
-  expect(json).toHaveBeenCalledWith({ id: "rec1", ...body });
+  expect(json).toHaveBeenCalledWith({ id: "rec1", summary: "hello" });
 
   consoleSpy.mockRestore();
 });
