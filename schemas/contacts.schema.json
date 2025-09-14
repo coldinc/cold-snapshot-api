@@ -127,7 +127,7 @@
         ]
       }
     },
-    "linkedLogs": {
+  "linkedLogs": {
       "type": "array",
       "items": {
         "type": "string",
@@ -135,10 +135,8 @@
       }
     },
     "linkedLogsSummary": {
-      "type": "string"
-    },
-    "linkedLogsId": {
-      "type": "string"
+      "type": "string",
+      "readOnly": true
     },
     "followupNeeded": {
       "type": "boolean"
@@ -151,7 +149,8 @@
       "type": "string"
     },
     "latestRelatedLog": {
-      "type": "string"
+      "type": "string",
+      "readOnly": true
     },
     "id": {
       "type": "string",
@@ -168,12 +167,6 @@
         "type": "string",
         "format": "record-id"
       }
-    },
-    "linkedThreadsName": {
-      "type": "string"
-    },
-    "linkedThreadsId": {
-      "type": "string"
     },
     "created": {
       "type": "string",

@@ -30,6 +30,11 @@ const TABLES = [
   process.env.AIRTABLE_THREADS_TABLE_NAME || "Threads",
 ];
 
+// Suffixes that indicate synthetic helper fields returned alongside real
+// Airtable fields (e.g. "Linked Contacts ID"). These helpers are not part of
+// the Airtable metadata and should be excluded from generated schemas.
+const SYNTHETIC_SUFFIXES = [" ID", " IDs", " Name", " Names"]; 
+
 function toCamelCase(str: string): string {
   return str
     .replace(/[^a-zA-Z0-9]+/g, " ")
@@ -173,6 +178,16 @@ async function main() {
     const booleanFields: string[] = [];
     const linkedRecordFields: Record<string, { linkedTable?: string; isArray: boolean }> = {};
     for (const field of table.fields || []) {
+      const lowerName = field.name.toLowerCase();
+      const suffix = SYNTHETIC_SUFFIXES.find((s) => lowerName.endsWith(s.toLowerCase()));
+      if (suffix) {
+        const baseName = field.name.slice(0, -suffix.length);
+        const hasBase = (table.fields || []).some((f: any) => f.name === baseName);
+        if (hasBase) {
+          // Skip synthetic helper fields like "Linked Contacts ID" or "Linked Contacts Names"
+          continue;
+        }
+      }
       const key = toCamelCase(field.name);
       mapping[key] = field.name;
       properties[key] = fieldToSchema(field);
