@@ -41,13 +41,6 @@
         "format": "record-id"
       }
     },
-    "linkedContactsNames": {
-      "type": "string",
-      "readOnly": true
-    },
-    "linkedContactsId": {
-      "type": "string"
-    },
     "linkedLogs": {
       "type": "array",
       "items": {
@@ -56,10 +49,8 @@
       }
     },
     "linkedLogsSummary": {
-      "type": "string"
-    },
-    "linkedLogsId": {
-      "type": "string"
+      "type": "string",
+      "readOnly": true
     },
     "createdDate": {
       "type": "string",
@@ -82,18 +73,12 @@
         "format": "record-id"
       }
     },
-    "parentThreadId": {
-      "type": "string"
-    },
     "subthread": {
       "type": "array",
       "items": {
         "type": "string",
         "format": "record-id"
       }
-    },
-    "subthreadId": {
-      "type": "string"
     }
   }
 }
