@@ -31,35 +31,76 @@ const inquiriesHandler = async (req: any, res: any) => {
       .json({ status: "error", error: "Missing inbound thread configuration" });
   }
 
-  const payload = req.body as InquiryPayload | undefined;
+  const rawBody = req.body;
+  let parsedBody: unknown = rawBody;
 
-  if (!payload || typeof payload !== "object") {
-    return res.status(400).json({ status: "error", error: "Invalid payload" });
+  if (typeof rawBody === "string") {
+    try {
+      parsedBody = JSON.parse(rawBody);
+    } catch {
+      return res
+        .status(400)
+        .json({ status: "error", error: "Invalid JSON payload" });
+    }
   }
 
-  const { name, email, company, message, source } = payload;
+  if (!parsedBody || typeof parsedBody !== "object" || Array.isArray(parsedBody)) {
+    return res
+      .status(400)
+      .json({ status: "error", error: "Invalid payload format" });
+  }
 
-  if (!email || typeof email !== "string") {
+  const normalizedPayload: Partial<Record<keyof InquiryPayload, unknown>> = {};
+
+  for (const [key, value] of Object.entries(parsedBody as Record<string, unknown>)) {
+    const normalizedKey = key.toLowerCase();
+
+    switch (normalizedKey) {
+      case "name":
+      case "email":
+      case "company":
+      case "message":
+      case "source":
+        normalizedPayload[normalizedKey] = value === null ? undefined : value;
+        break;
+      default:
+        break;
+    }
+  }
+
+  const emailValue = normalizedPayload.email;
+
+  if (typeof emailValue !== "string" || !emailValue.trim()) {
     return res
       .status(400)
       .json({ status: "error", error: "Email is required" });
   }
 
-  if (message !== undefined && typeof message !== "string") {
-    return res.status(400).json({ status: "error", error: "Message must be a string" });
-  }
-
-  if (name !== undefined && typeof name !== "string") {
+  const rawName = normalizedPayload.name;
+  if (rawName !== undefined && typeof rawName !== "string") {
     return res.status(400).json({ status: "error", error: "Name must be a string" });
   }
 
-  if (company !== undefined && typeof company !== "string") {
+  const rawCompany = normalizedPayload.company;
+  if (rawCompany !== undefined && typeof rawCompany !== "string") {
     return res.status(400).json({ status: "error", error: "Company must be a string" });
   }
 
-  if (source !== undefined && typeof source !== "string") {
+  const rawMessage = normalizedPayload.message;
+  if (rawMessage !== undefined && typeof rawMessage !== "string") {
+    return res.status(400).json({ status: "error", error: "Message must be a string" });
+  }
+
+  const rawSource = normalizedPayload.source;
+  if (rawSource !== undefined && typeof rawSource !== "string") {
     return res.status(400).json({ status: "error", error: "Source must be a string" });
   }
+
+  const email = emailValue;
+  const name = rawName as string | undefined;
+  const company = rawCompany as string | undefined;
+  const message = rawMessage as string | undefined;
+  const source = rawSource as string | undefined;
 
   try {
     const { base, TABLES } = getAirtableContext();
