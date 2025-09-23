@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+
 import { airtableSearch } from "./airtableSearch.js";
 import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
@@ -9,6 +11,7 @@ interface InquiryPayload {
   company?: string;
   message?: string;
   source?: string;
+  sourceDetail?: string;
 }
 
 interface InquiryResponse {
@@ -32,11 +35,69 @@ const inquiriesHandler = async (req: any, res: any) => {
   }
 
   const rawBody = req.body;
+  const rawBodyString =
+    typeof rawBody === "string"
+      ? rawBody
+      : Buffer.isBuffer(rawBody)
+      ? rawBody.toString("utf8")
+      : typeof (req as any).rawBody === "string"
+      ? (req as any).rawBody
+      : Buffer.isBuffer((req as any).rawBody)
+      ? (req as any).rawBody.toString("utf8")
+      : undefined;
+
+  const secret = process.env.INQUIRIES_SECRET;
+  if (!secret) {
+    return res
+      .status(500)
+      .json({ status: "error", error: "Missing inquiries secret configuration" });
+  }
+
+  const framerSignatureHeader = req.headers["framer-signature"];
+  const submissionIdHeader = req.headers["framer-webhook-submission-id"];
+  const framerSignature = Array.isArray(framerSignatureHeader)
+    ? framerSignatureHeader[0]
+    : framerSignatureHeader;
+  const submissionId = Array.isArray(submissionIdHeader)
+    ? submissionIdHeader[0]
+    : submissionIdHeader;
+
+  if (
+    !framerSignature ||
+    typeof framerSignature !== "string" ||
+    !submissionId ||
+    typeof submissionId !== "string" ||
+    !rawBodyString
+  ) {
+    return res.status(403).json({ status: "error", error: "Unauthorized" });
+  }
+
+  const payloadToSign = rawBodyString + submissionId;
+  const computed = crypto.createHmac("sha256", secret).update(payloadToSign).digest("hex");
+  const expectedSignature = `sha256=${computed}`;
+  const expectedBuffer = Buffer.from(expectedSignature, "utf8");
+  const providedBuffer = Buffer.from(framerSignature, "utf8");
+
+  if (
+    expectedBuffer.length !== providedBuffer.length ||
+    !crypto.timingSafeEqual(expectedBuffer, providedBuffer)
+  ) {
+    return res.status(403).json({ status: "error", error: "Unauthorized" });
+  }
+
   let parsedBody: unknown = rawBody;
 
   if (typeof rawBody === "string") {
     try {
       parsedBody = JSON.parse(rawBody);
+    } catch {
+      return res
+        .status(400)
+        .json({ status: "error", error: "Invalid JSON payload" });
+    }
+  } else if (Buffer.isBuffer(rawBody) && rawBodyString) {
+    try {
+      parsedBody = JSON.parse(rawBodyString);
     } catch {
       return res
         .status(400)
@@ -50,18 +111,26 @@ const inquiriesHandler = async (req: any, res: any) => {
       .json({ status: "error", error: "Invalid payload format" });
   }
 
-  const normalizedPayload: Partial<Record<keyof InquiryPayload, unknown>> = {};
+  const normalizedPayload: Partial<InquiryPayload> = {};
 
   for (const [key, value] of Object.entries(parsedBody as Record<string, unknown>)) {
     const normalizedKey = key.toLowerCase();
+    const normalizedValue = value === null ? undefined : value;
 
     switch (normalizedKey) {
       case "name":
       case "email":
       case "company":
       case "message":
+        normalizedPayload[normalizedKey as keyof InquiryPayload] = normalizedValue as
+          | string
+          | undefined;
+        break;
       case "source":
-        normalizedPayload[normalizedKey] = value === null ? undefined : value;
+        normalizedPayload.source = normalizedValue as string | undefined;
+        break;
+      case "sourcedetail":
+        normalizedPayload.sourceDetail = normalizedValue as string | undefined;
         break;
       default:
         break;
@@ -96,11 +165,22 @@ const inquiriesHandler = async (req: any, res: any) => {
     return res.status(400).json({ status: "error", error: "Source must be a string" });
   }
 
+  const rawSourceDetail = normalizedPayload.sourceDetail;
+  if (rawSourceDetail !== undefined && typeof rawSourceDetail !== "string") {
+    return res
+      .status(400)
+      .json({ status: "error", error: "Source detail must be a string" });
+  }
+
   const email = emailValue;
   const name = rawName as string | undefined;
   const company = rawCompany as string | undefined;
   const message = rawMessage as string | undefined;
   const source = rawSource as string | undefined;
+  const sourceDetail =
+    typeof rawSourceDetail === "string" && rawSourceDetail.trim()
+      ? rawSourceDetail.trim()
+      : "Website Inquiry";
 
   try {
     const { base, TABLES } = getAirtableContext();
@@ -131,6 +211,8 @@ const inquiriesHandler = async (req: any, res: any) => {
       contactInput.email = email.trim();
       if (company?.trim()) contactInput.company = company.trim();
       if (source?.trim()) contactInput.source = source.trim();
+      contactInput.sourceDetail = sourceDetail;
+      contactInput.followupNeeded = true;
 
       const contactData = mapInternalToAirtable(contactInput, contactFieldMap);
 
@@ -142,12 +224,16 @@ const inquiriesHandler = async (req: any, res: any) => {
     }
 
     const logSummaryName = name?.trim() || email.trim();
+    const summaryText = `Inbound inquiry from ${logSummaryName}`;
     const logInput: Record<string, any> = {
-      summary: `Inbound inquiry from ${logSummaryName}`,
+      summary: summaryText,
+      name: summaryText,
       content: message ?? "",
       logType: "Inquiry",
       linkedContacts: [contactId],
       linkedThreads: [inboundThreadId],
+      date: new Date().toISOString(),
+      followupNeeded: true,
     };
 
     const logData = mapInternalToAirtable(logInput, logFieldMap);
