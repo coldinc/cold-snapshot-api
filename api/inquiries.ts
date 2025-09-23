@@ -36,28 +36,21 @@ const inquiriesHandler = async (req: any, res: any) => {
       .json({ status: "error", error: "Missing inbound thread configuration" });
   }
 
-  let rawBodyString: string | undefined;
-
+  let rawBodyBuffer: Buffer;
   try {
-    rawBodyString = await getRawBody(req, {
-      encoding: "utf8",
-    });
+    rawBodyBuffer = await getRawBody(req);
   } catch (error: any) {
     console.error("[inquiries] failed to read raw body", {
       message: error?.message,
     });
     return res
       .status(400)
-      .json({ status: "error", error: "Invalid request payload" });
+      .json({ status: "error", error: "Invalid request body" });
   }
+
+  const rawBodyString = rawBodyBuffer.toString("utf8");
 
   const secret = process.env.INQUIRIES_SECRET;
-  if (!secret) {
-    return res
-      .status(500)
-      .json({ status: "error", error: "Missing inquiries secret configuration" });
-  }
-
   const framerSignatureHeader = req.headers["framer-signature"];
   const submissionIdHeader = req.headers["framer-webhook-submission-id"];
   const framerSignature = Array.isArray(framerSignatureHeader)
@@ -67,27 +60,23 @@ const inquiriesHandler = async (req: any, res: any) => {
     ? submissionIdHeader[0]
     : submissionIdHeader;
 
-  if (
-    !framerSignature ||
-    typeof framerSignature !== "string" ||
-    !submissionId ||
-    typeof submissionId !== "string" ||
-    !rawBodyString
-  ) {
+  if (!secret || !framerSignature || !submissionId) {
     return res.status(403).json({ status: "error", error: "Unauthorized" });
   }
 
-  const payloadToSign = rawBodyString + submissionId + secret;
-  const computed = crypto.createHmac("sha256", secret).update(payloadToSign).digest("hex");
-  const expectedSignature = `sha256=${computed}`;
-  const expectedBuffer = Buffer.from(expectedSignature, "utf8");
+  const hmac = crypto.createHmac("sha256", secret);
+  hmac.update(rawBodyBuffer);
+  hmac.update(submissionId);
+  const expectedSignature = "sha256=" + hmac.digest("hex");
+
   const providedBuffer = Buffer.from(framerSignature, "utf8");
+  const expectedBuffer = Buffer.from(expectedSignature, "utf8");
 
   if (
-    expectedBuffer.length !== providedBuffer.length ||
-    !crypto.timingSafeEqual(expectedBuffer, providedBuffer)
+    providedBuffer.length !== expectedBuffer.length ||
+    !crypto.timingSafeEqual(providedBuffer, expectedBuffer)
   ) {
-    return res.status(403).json({ status: "error", error: "Unauthorized" });
+    return res.status(403).json({ status: "error", error: "Invalid signature" });
   }
 
   let parsedBody: unknown;
@@ -110,72 +99,80 @@ const inquiriesHandler = async (req: any, res: any) => {
 
   for (const [key, value] of Object.entries(parsedBody as Record<string, unknown>)) {
     const normalizedKey = key.toLowerCase();
-    const normalizedValue = value === null ? undefined : value;
+    let fieldKey: keyof InquiryPayload | null = null;
 
     switch (normalizedKey) {
       case "name":
+        fieldKey = "name";
+        break;
       case "email":
+        fieldKey = "email";
+        break;
       case "company":
+        fieldKey = "company";
+        break;
       case "message":
-        normalizedPayload[normalizedKey as keyof InquiryPayload] = normalizedValue as
-          | string
-          | undefined;
+        fieldKey = "message";
         break;
       case "source":
-        normalizedPayload.source = normalizedValue as string | undefined;
+        fieldKey = "source";
         break;
       case "sourcedetail":
-        normalizedPayload.sourceDetail = normalizedValue as string | undefined;
+        fieldKey = "sourceDetail";
         break;
       default:
-        break;
+        fieldKey = null;
     }
+
+    if (!fieldKey) continue;
+
+    const normalizedValue = value === null ? undefined : value;
+
+    if (normalizedValue === undefined) {
+      normalizedPayload[fieldKey] = undefined;
+      continue;
+    }
+
+    if (
+      typeof normalizedValue === "object" ||
+      typeof normalizedValue === "function"
+    ) {
+      return res
+        .status(400)
+        .json({ status: "error", error: "Invalid payload value" });
+    }
+
+    normalizedPayload[fieldKey] = String(normalizedValue);
   }
 
   const emailValue = normalizedPayload.email;
 
-  if (typeof emailValue !== "string" || !emailValue.trim()) {
+  const email = typeof emailValue === "string" ? emailValue.trim() : "";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!email || !emailRegex.test(email)) {
     return res
       .status(400)
-      .json({ status: "error", error: "Email is required" });
+      .json({ status: "error", error: "Valid email is required" });
   }
 
-  const rawName = normalizedPayload.name;
-  if (rawName !== undefined && typeof rawName !== "string") {
-    return res.status(400).json({ status: "error", error: "Name must be a string" });
-  }
+  const rawName = typeof normalizedPayload.name === "string" ? normalizedPayload.name : undefined;
+  const rawCompany =
+    typeof normalizedPayload.company === "string" ? normalizedPayload.company : undefined;
+  const rawMessage =
+    typeof normalizedPayload.message === "string" ? normalizedPayload.message : undefined;
+  const rawSource =
+    typeof normalizedPayload.source === "string" ? normalizedPayload.source : undefined;
+  const rawSourceDetail =
+    typeof normalizedPayload.sourceDetail === "string"
+      ? normalizedPayload.sourceDetail
+      : undefined;
 
-  const rawCompany = normalizedPayload.company;
-  if (rawCompany !== undefined && typeof rawCompany !== "string") {
-    return res.status(400).json({ status: "error", error: "Company must be a string" });
-  }
-
-  const rawMessage = normalizedPayload.message;
-  if (rawMessage !== undefined && typeof rawMessage !== "string") {
-    return res.status(400).json({ status: "error", error: "Message must be a string" });
-  }
-
-  const rawSource = normalizedPayload.source;
-  if (rawSource !== undefined && typeof rawSource !== "string") {
-    return res.status(400).json({ status: "error", error: "Source must be a string" });
-  }
-
-  const rawSourceDetail = normalizedPayload.sourceDetail;
-  if (rawSourceDetail !== undefined && typeof rawSourceDetail !== "string") {
-    return res
-      .status(400)
-      .json({ status: "error", error: "Source detail must be a string" });
-  }
-
-  const email = emailValue;
-  const name = rawName as string | undefined;
-  const company = rawCompany as string | undefined;
-  const message = rawMessage as string | undefined;
-  const source = rawSource as string | undefined;
-  const sourceDetail =
-    typeof rawSourceDetail === "string" && rawSourceDetail.trim()
-      ? rawSourceDetail.trim()
-      : "Website Inquiry";
+  const name = rawName?.trim() || undefined;
+  const company = rawCompany?.trim() || undefined;
+  const message = rawMessage?.trim() || undefined;
+  const source = rawSource?.trim() || undefined;
+  const sourceDetail = rawSourceDetail?.trim() || "Website Inquiry";
 
   try {
     const { base, TABLES } = getAirtableContext();
