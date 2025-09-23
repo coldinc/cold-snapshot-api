@@ -1,5 +1,7 @@
 import crypto from "node:crypto";
 
+import getRawBody from "raw-body";
+
 import { airtableSearch } from "./airtableSearch.js";
 import getAirtableContext from "./airtable_base.js";
 import { getFieldMap } from "./resolveFieldMap.js";
@@ -34,17 +36,20 @@ const inquiriesHandler = async (req: any, res: any) => {
       .json({ status: "error", error: "Missing inbound thread configuration" });
   }
 
-  const rawBody = req.body;
-  const rawBodyString =
-    typeof rawBody === "string"
-      ? rawBody
-      : Buffer.isBuffer(rawBody)
-      ? rawBody.toString("utf8")
-      : typeof (req as any).rawBody === "string"
-      ? (req as any).rawBody
-      : Buffer.isBuffer((req as any).rawBody)
-      ? (req as any).rawBody.toString("utf8")
-      : undefined;
+  let rawBodyString: string | undefined;
+
+  try {
+    rawBodyString = await getRawBody(req, {
+      encoding: "utf8",
+    });
+  } catch (error: any) {
+    console.error("[inquiries] failed to read raw body", {
+      message: error?.message,
+    });
+    return res
+      .status(400)
+      .json({ status: "error", error: "Invalid request payload" });
+  }
 
   const secret = process.env.INQUIRIES_SECRET;
   if (!secret) {
@@ -72,7 +77,7 @@ const inquiriesHandler = async (req: any, res: any) => {
     return res.status(403).json({ status: "error", error: "Unauthorized" });
   }
 
-  const payloadToSign = rawBodyString + submissionId;
+  const payloadToSign = rawBodyString + submissionId + secret;
   const computed = crypto.createHmac("sha256", secret).update(payloadToSign).digest("hex");
   const expectedSignature = `sha256=${computed}`;
   const expectedBuffer = Buffer.from(expectedSignature, "utf8");
@@ -85,24 +90,14 @@ const inquiriesHandler = async (req: any, res: any) => {
     return res.status(403).json({ status: "error", error: "Unauthorized" });
   }
 
-  let parsedBody: unknown = rawBody;
+  let parsedBody: unknown;
 
-  if (typeof rawBody === "string") {
-    try {
-      parsedBody = JSON.parse(rawBody);
-    } catch {
-      return res
-        .status(400)
-        .json({ status: "error", error: "Invalid JSON payload" });
-    }
-  } else if (Buffer.isBuffer(rawBody) && rawBodyString) {
-    try {
-      parsedBody = JSON.parse(rawBodyString);
-    } catch {
-      return res
-        .status(400)
-        .json({ status: "error", error: "Invalid JSON payload" });
-    }
+  try {
+    parsedBody = JSON.parse(rawBodyString);
+  } catch {
+    return res
+      .status(400)
+      .json({ status: "error", error: "Invalid JSON payload" });
   }
 
   if (!parsedBody || typeof parsedBody !== "object" || Array.isArray(parsedBody)) {
@@ -259,3 +254,9 @@ const inquiriesHandler = async (req: any, res: any) => {
 };
 
 export default inquiriesHandler;
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
