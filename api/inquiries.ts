@@ -182,6 +182,30 @@ const inquiriesHandler = async (req: any, res: any) => {
     const contactFieldMap = getFieldMap(contactsTable);
     const logFieldMap = getFieldMap(logsTable);
 
+    const logIdFieldName = logFieldMap.logId || "Log ID";
+    const escapedSubmissionId = submissionId.replace(/"/g, '\\"');
+
+    const { records: existingLogs } = await airtableSearch(
+      logsTable,
+      `{${logIdFieldName}} = "${escapedSubmissionId}"`,
+      { maxRecords: 1 },
+    );
+
+    if (existingLogs && existingLogs.length > 0) {
+      const existingLog = existingLogs[0];
+      const linkedContactsFieldName = logFieldMap.linkedContacts || "Linked Contacts";
+      const linkedContacts = existingLog.fields?.[linkedContactsFieldName];
+
+      return res.status(200).json({
+        status: "success",
+        contactId:
+          Array.isArray(linkedContacts) && linkedContacts.length > 0
+            ? linkedContacts[0]
+            : undefined,
+        logId: existingLog.id,
+      });
+    }
+
     const emailFieldName = contactFieldMap.email || "Email";
     const normalizedEmail = email.trim().toLowerCase();
     const escapedEmail = normalizedEmail.replace(/"/g, '\\"');
@@ -222,6 +246,7 @@ const inquiriesHandler = async (req: any, res: any) => {
       name: summaryText,
       content: message ?? "",
       logType: "Inquiry",
+      logId: submissionId,
       linkedContacts: [contactId],
       linkedThreads: [inboundThreadId],
       date: new Date().toISOString(),
